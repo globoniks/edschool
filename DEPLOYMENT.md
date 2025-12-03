@@ -1,8 +1,9 @@
 # 🚀 Quick Deployment Guide - EdSchool on Hostinger
 
 ## Prerequisites
+- ✅ Hostinger VPS
+- ✅ PostgreSQL already installed and running on port 5432
 - ✅ Existing project: edumapping (port 5000) - **No conflicts!**
-- ✅ PostgreSQL running on port 5432
 - ✅ Nginx running on ports 80/443
 - ✅ EdSchool will use port **3001**
 
@@ -30,6 +31,26 @@ cd edschool
 
 ## Step 3: Create PostgreSQL Database
 
+**Option A: Using Command Line (Recommended for VPS)**
+
+```bash
+# Switch to postgres user
+sudo -u postgres psql
+
+# In PostgreSQL prompt, run:
+CREATE DATABASE edschool_db;
+CREATE USER edschool_user WITH PASSWORD 'your_strong_password_here';
+GRANT ALL PRIVILEGES ON DATABASE edschool_db TO edschool_user;
+\q
+
+# Grant schema permissions (IMPORTANT - fixes permission denied error)
+sudo -u postgres psql -d edschool_db -c "GRANT ALL ON SCHEMA public TO edschool_user;"
+sudo -u postgres psql -d edschool_db -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO edschool_user;"
+sudo -u postgres psql -d edschool_db -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO edschool_user;"
+```
+
+**Option B: Using hPanel**
+
 1. **Login to hPanel** → **Databases** → **PostgreSQL Databases**
 2. Click **Create Database**
 3. Fill in:
@@ -38,6 +59,13 @@ cd edschool
    - Password: (choose a strong password)
 4. **Note down** the connection details
 
+**Test connection:**
+```bash
+psql -U edschool_user -d edschool_db -h localhost
+# Enter password when prompted
+# Type \q to exit
+```
+
 ---
 
 ## Step 4: Install Dependencies
@@ -45,8 +73,7 @@ cd edschool
 ```bash
 cd /var/www/edschool
 npm install
-cd backend && npm install
-cd ../frontend && npm install
+cd backend && npm install; cd ../frontend && npm install
 ```
 
 ---
@@ -63,7 +90,7 @@ nano .env
 Paste this (replace with your actual database credentials):
 
 ```env
-DATABASE_URL="postgresql://edschool_user:YOUR_PASSWORD@localhost:5432/edschool_db?schema=public"
+DATABASE_URL="postgresql://edschool_user:root@localhost:5432/edschool_db?schema=public"
 JWT_SECRET="change-this-to-a-random-32-character-secret-key"
 JWT_EXPIRES_IN="7d"
 PORT=3001
@@ -243,7 +270,9 @@ node dist/index.js  # Test directly
 
 ### Database connection error?
 - Check `.env` file has correct `DATABASE_URL`
-- Verify database exists: `psql -U edschool_user -d edschool_db`
+- Verify database exists: `psql -U edschool_user -d edschool_db -h localhost`
+- Check PostgreSQL is running: `sudo systemctl status postgresql`
+- Test connection: `psql -U postgres -c "\l"` (list all databases)
 
 ### Frontend shows 404?
 - Check Nginx config: `sudo nginx -t`

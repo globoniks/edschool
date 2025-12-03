@@ -26,9 +26,6 @@ export const sendMessage = async (
         senderId,
         attachments: data.attachments || [],
       },
-      include: {
-        // Note: You'd need to add relations to User model for sender/receiver
-      },
     });
 
     res.status(201).json(message);
