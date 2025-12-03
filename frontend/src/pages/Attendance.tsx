@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
-import { Calendar, Check, X, Clock, UserCheck } from 'lucide-react';
+import { Check, X, Clock, UserCheck } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
 type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED';
@@ -48,18 +48,22 @@ export default function Attendance() {
   });
 
   // Fetch existing attendance for the date
-  const { data: existingAttendance, isLoading } = useQuery({
+  const { data: existingAttendance, isLoading } = useQuery<AttendanceRecord[]>({
     queryKey: ['attendance', date, classId],
     queryFn: () => api.get(`/attendance?date=${date}&classId=${classId}`).then((res) => res.data),
     enabled: !!classId && !!date,
-    onSuccess: (data: AttendanceRecord[]) => {
+  });
+
+  // Update attendance statuses when existing attendance data changes
+  useEffect(() => {
+    if (existingAttendance && Array.isArray(existingAttendance)) {
       const statusMap: Record<string, AttendanceStatus> = {};
-      data.forEach((att) => {
+      existingAttendance.forEach((att) => {
         statusMap[att.studentId] = att.status;
       });
       setAttendanceStatuses(statusMap);
-    },
-  });
+    }
+  }, [existingAttendance]);
 
   const students = studentsData?.students || [];
 

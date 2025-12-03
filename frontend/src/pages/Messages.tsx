@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/api';
-import { MessageSquare } from 'lucide-react';
 
 export default function Messages() {
   const { data: messages, isLoading } = useQuery({

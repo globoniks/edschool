@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/api';
-import { BookMarked } from 'lucide-react';
 
 export default function Academic() {
   const [activeTab, setActiveTab] = useState<'classes' | 'subjects'>('classes');

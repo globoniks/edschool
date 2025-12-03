@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../lib/api';
-import { Clock } from 'lucide-react';
 
 export default function Timetable() {
   const [classId, setClassId] = useState('');
@@ -62,7 +61,7 @@ export default function Timetable() {
                     <th className="sticky left-0 bg-gray-50 z-10 px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b">
                       Time
                     </th>
-                    {days.map((day, index) => (
+                    {days.map((day) => (
                       <th key={day} className="px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b">
                         {day.substring(0, 3)}
                       </th>
