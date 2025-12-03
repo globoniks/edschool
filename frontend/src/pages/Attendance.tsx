@@ -129,9 +129,9 @@ export default function Attendance() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Attendance</h1>
-        <p className="text-gray-600 mt-2">Mark and track student attendance</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Attendance</h1>
+        <p className="text-sm sm:text-base text-gray-600 mt-2">Mark and track student attendance</p>
       </div>
 
       <div className="card mb-6">
@@ -205,18 +205,18 @@ export default function Attendance() {
           ) : classId && students.length > 0 ? (
             <>
               <div className="card mb-6">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                   <h2 className="text-lg font-semibold">Mark Attendance</h2>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleMarkAll('PRESENT')}
-                      className="btn btn-secondary text-sm"
+                      className="btn btn-secondary text-xs sm:text-sm flex-1 sm:flex-none"
                     >
                       Mark All Present
                     </button>
                     <button
                       onClick={() => handleMarkAll('ABSENT')}
-                      className="btn btn-secondary text-sm"
+                      className="btn btn-secondary text-xs sm:text-sm flex-1 sm:flex-none"
                     >
                       Mark All Absent
                     </button>
@@ -228,23 +228,23 @@ export default function Attendance() {
                     return (
                       <div
                         key={student.id}
-                        className="flex items-center justify-between border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
+                        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border border-gray-200 rounded-lg p-3 sm:p-4 hover:bg-gray-50"
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600 w-24">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                          <span className="text-xs sm:text-sm text-gray-600 w-16 sm:w-24 flex-shrink-0">
                             {student.admissionNumber}
                           </span>
-                          <span className="font-medium">
+                          <span className="font-medium text-sm sm:text-base truncate">
                             {student.firstName} {student.lastName}
                           </span>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-1 sm:gap-2 flex-wrap">
                           {(['PRESENT', 'ABSENT', 'LATE', 'EXCUSED'] as AttendanceStatus[]).map(
                             (s) => (
                               <button
                                 key={s}
                                 onClick={() => handleStatusChange(student.id, s)}
-                                className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                                className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium transition-colors ${
                                   status === s
                                     ? getStatusColor(s)
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'

@@ -60,15 +60,15 @@ export default function Exams() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Exams & Marks</h1>
-          <p className="text-gray-600 mt-2">Manage exams and student marks</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Exams & Marks</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">Manage exams and student marks</p>
         </div>
         {isAdminOrTeacher && (
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="btn btn-primary flex items-center"
+            className="btn btn-primary flex items-center justify-center w-full sm:w-auto"
           >
             <Plus className="w-5 h-5 mr-2" />
             Create Exam
@@ -113,8 +113,8 @@ export default function Exams() {
 
       {/* Create Exam Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">Create New Exam</h2>
               <button
@@ -222,8 +222,8 @@ export default function Exams() {
 
       {/* Exam Details Modal */}
       {selectedExam && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">Exam Marks</h2>
               <button

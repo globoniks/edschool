@@ -10,9 +10,9 @@ export default function Messages() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Messages</h1>
-        <p className="text-gray-600 mt-2">Communicate with teachers and parents</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Messages</h1>
+        <p className="text-sm sm:text-base text-gray-600 mt-2">Communicate with teachers and parents</p>
       </div>
 
       {isLoading ? (

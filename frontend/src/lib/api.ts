@@ -1,8 +1,13 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
+// Use environment variable for API URL, fallback to relative path
+// In production, if using subdirectory: leave empty (uses '/api')
+// If using separate domain/IP: set VITE_API_URL="http://your-ip:3001/api"
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

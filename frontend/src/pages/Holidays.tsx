@@ -88,17 +88,17 @@ export default function Holidays() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Holiday Calendar</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Holiday Calendar</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
             View school holidays, exam days, and important events
           </p>
         </div>
         {isAdmin && (
           <button
             onClick={() => setShowAddModal(true)}
-            className="btn btn-primary flex items-center gap-2"
+            className="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <Plus className="w-5 h-5" />
             Add Holiday
@@ -107,16 +107,16 @@ export default function Holidays() {
       </div>
 
       <div className="card mb-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <p className="text-sm text-gray-600">Showing</p>
-            <p className="text-lg font-semibold">{monthLabel}</p>
+            <p className="text-xs sm:text-sm text-gray-600">Showing</p>
+            <p className="text-base sm:text-lg font-semibold">{monthLabel}</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setViewMode('calendar')}
-                className={`px-3 py-1 rounded ${
+                className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm ${
                   viewMode === 'calendar' 
                     ? 'bg-primary-600 text-white' 
                     : 'bg-gray-100 text-gray-700'
@@ -126,7 +126,7 @@ export default function Holidays() {
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-1 rounded ${
+                className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm ${
                   viewMode === 'list' 
                     ? 'bg-primary-600 text-white' 
                     : 'bg-gray-100 text-gray-700'
@@ -135,9 +135,9 @@ export default function Holidays() {
                 List
               </button>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
                 onClick={() => {
                   const newDate = new Date(year, month - 2, 1);
                   setMonth(newDate.getMonth() + 1);
@@ -147,7 +147,7 @@ export default function Holidays() {
                 Previous
               </button>
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
                 onClick={() => {
                   setMonth(today.getMonth() + 1);
                   setYear(today.getFullYear());
@@ -156,7 +156,7 @@ export default function Holidays() {
                 Today
               </button>
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
                 onClick={() => {
                   const newDate = new Date(year, month, 1);
                   setMonth(newDate.getMonth() + 1);
@@ -337,8 +337,8 @@ function AddHolidayModal({ onClose, onSuccess }: { onClose: () => void; onSucces
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-bold">Add Holiday</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">

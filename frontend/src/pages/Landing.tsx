@@ -72,19 +72,19 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <GraduationCap className="w-8 h-8 text-primary-600" />
-              <span className="ml-2 text-2xl font-bold text-gray-900">EdSchool</span>
+              <GraduationCap className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600" />
+              <span className="ml-2 text-xl sm:text-2xl font-bold text-gray-900">EdSchool</span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Link
                 to="/login"
-                className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
+                className="text-sm sm:text-base text-gray-700 hover:text-primary-600 font-medium transition-colors"
               >
                 Login
               </Link>
               <Link
                 to="/login"
-                className="btn btn-primary"
+                className="btn btn-primary text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2"
               >
                 Get Started
               </Link>
@@ -94,23 +94,23 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-primary-100 py-20">
+      <section className="bg-gradient-to-br from-primary-50 to-primary-100 py-12 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
               Modern School Management
               <span className="text-primary-600"> Made Simple</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-4">
               A comprehensive, cloud-based school management system designed to streamline
               operations, enhance communication, and improve educational outcomes.
             </p>
-            <div className="flex justify-center gap-4">
-              <Link to="/login" className="btn btn-primary text-lg px-8 py-3">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4">
+              <Link to="/login" className="btn btn-primary text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3">
                 Get Started
-                <ArrowRight className="w-5 h-5 ml-2 inline" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 inline" />
               </Link>
-              <button className="btn btn-secondary text-lg px-8 py-3">
+              <button className="btn btn-secondary text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3">
                 Learn More
               </button>
             </div>
@@ -119,15 +119,15 @@ export default function Landing() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Powerful Features</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-8 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Powerful Features</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4">
               Everything you need to manage your school efficiently
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -148,14 +148,14 @@ export default function Landing() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
                 Why Choose EdSchool?
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8">
                 Built with modern technology and best practices to provide a seamless experience
                 for administrators, teachers, parents, and students.
               </p>
@@ -198,21 +198,21 @@ export default function Landing() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary-600">
+      <section className="py-12 sm:py-20 bg-primary-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 px-4">
             Ready to Transform Your School Management?
           </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-primary-100 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
             Join schools already using EdSchool to streamline their operations and improve
             communication.
           </p>
           <Link
             to="/login"
-            className="inline-flex items-center bg-white text-primary-600 font-semibold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center bg-white text-primary-600 font-semibold px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base"
           >
             Get Started Today
-            <ArrowRight className="w-5 h-5 ml-2" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
           </Link>
         </div>
       </section>

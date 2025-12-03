@@ -29,15 +29,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 p-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
-              <GraduationCap className="w-8 h-8 text-primary-600" />
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-primary-100 rounded-full mb-3 sm:mb-4">
+              <GraduationCap className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">EdSchool</h1>
-            <p className="text-gray-600 mt-2">School Management System</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">EdSchool</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-2">School Management System</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

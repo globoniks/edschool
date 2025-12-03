@@ -67,10 +67,10 @@ export default function Students() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Students</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Students</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
             {isAdminOrTeacher
               ? 'Manage all students in your school'
               : 'View your student profile and basic details'}
@@ -79,7 +79,7 @@ export default function Students() {
         {isAdminOrTeacher && (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="btn btn-primary flex items-center"
+            className="btn btn-primary flex items-center justify-center w-full sm:w-auto"
           >
             <Plus className="w-5 h-5 mr-2" />
             Add Student
@@ -104,52 +104,70 @@ export default function Students() {
         <div className="text-center py-12">Loading...</div>
       ) : (
         <div className="card">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Admission No.</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Name</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Class</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.students?.map((student: any) => (
-                  <tr key={student.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4">{student.admissionNumber}</td>
-                    <td className="py-3 px-4">
-                      {student.firstName} {student.lastName}
-                    </td>
-                    <td className="py-3 px-4">{student.class?.name || 'N/A'}</td>
-                    <td className="py-3 px-4">
-                      <span className={`badge ${student.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {student.isActive ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      {isAdminOrTeacher ? (
-                        <>
-                          <button className="text-primary-600 hover:text-primary-700 mr-3">View</button>
-                          <button className="text-gray-600 hover:text-gray-700">Edit</button>
-                        </>
-                      ) : (
-                        <span className="text-xs text-gray-500">Read only</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="inline-block min-w-full align-middle">
+              <div className="overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Admission No.
+                      </th>
+                      <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Class
+                      </th>
+                      <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {data?.students?.map((student: any) => (
+                      <tr key={student.id} className="hover:bg-gray-50">
+                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                          {student.admissionNumber}
+                        </td>
+                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {student.firstName} {student.lastName}
+                        </td>
+                        <td className="hidden sm:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                          {student.class?.name || 'N/A'}
+                        </td>
+                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap">
+                          <span className={`badge ${student.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            {student.isActive ? 'Active' : 'Inactive'}
+                          </span>
+                        </td>
+                        <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-sm">
+                          {isAdminOrTeacher ? (
+                            <div className="flex flex-col sm:flex-row gap-2">
+                              <button className="text-primary-600 hover:text-primary-700">View</button>
+                              <button className="text-gray-600 hover:text-gray-700">Edit</button>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-500">Read only</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {/* Add Student Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">Add New Student</h2>
               <button

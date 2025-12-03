@@ -18,16 +18,16 @@ export default function Academic() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Academic Management</h1>
-        <p className="text-gray-600 mt-2">Manage classes, subjects, and academic settings</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Academic Management</h1>
+        <p className="text-sm sm:text-base text-gray-600 mt-2">Manage classes, subjects, and academic settings</p>
       </div>
 
       <div className="card mb-6">
-        <div className="flex space-x-4 border-b border-gray-200">
+        <div className="flex space-x-2 sm:space-x-4 border-b border-gray-200 overflow-x-auto">
           <button
             onClick={() => setActiveTab('classes')}
-            className={`px-4 py-2 font-medium ${
+            className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${
               activeTab === 'classes'
                 ? 'border-b-2 border-primary-600 text-primary-600'
                 : 'text-gray-600'
@@ -37,7 +37,7 @@ export default function Academic() {
           </button>
           <button
             onClick={() => setActiveTab('subjects')}
-            className={`px-4 py-2 font-medium ${
+            className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${
               activeTab === 'subjects'
                 ? 'border-b-2 border-primary-600 text-primary-600'
                 : 'text-gray-600'

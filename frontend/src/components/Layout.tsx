@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import {
@@ -13,6 +14,8 @@ import {
   MessageSquare,
   BookMarked,
   LogOut,
+  Menu,
+  X,
 } from 'lucide-react';
 
 const navigation = [
@@ -33,14 +36,32 @@ const navigation = [
 export default function Layout() {
   const location = useLocation();
   const { user, logout } = useAuthStore();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Mobile header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white shadow-md h-16 flex items-center justify-between px-4">
+        <div className="flex items-center">
+          <h1 className="text-xl font-bold text-primary-600">EdSchool</h1>
+        </div>
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 rounded-md text-gray-600 hover:bg-gray-100"
+        >
+          {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
       {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center justify-center h-16 border-b border-gray-200">
+      <div
+        className={`fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-30 lg:translate-x-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col h-full pt-16 lg:pt-0">
+          {/* Logo - Desktop only */}
+          <div className="hidden lg:flex items-center justify-center h-16 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-primary-600">EdSchool</h1>
           </div>
 
@@ -49,23 +70,24 @@ export default function Layout() {
             {navigation
               .filter((item) => !user?.role || item.roles.includes(user.role))
               .map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                    isActive
-                      ? 'bg-primary-50 text-primary-700 font-medium'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 mr-3" />
-                  {item.name}
-                </Link>
-              );
-            })}
+                const Icon = item.icon;
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-primary-50 text-primary-700 font-medium'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 mr-3" />
+                    {item.name}
+                  </Link>
+                );
+              })}
           </nav>
 
           {/* User info */}
@@ -89,9 +111,17 @@ export default function Layout() {
         </div>
       </div>
 
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Main content */}
-      <div className="pl-64">
-        <main className="p-8">
+      <div className="lg:pl-64 pt-16 lg:pt-0">
+        <main className="p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

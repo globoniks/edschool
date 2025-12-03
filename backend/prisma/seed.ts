@@ -325,6 +325,164 @@ async function main() {
 
   console.log('✅ Parent-Student links created');
 
+  // Create additional dummy users for testing
+  const additionalUsers = [
+    // Additional Admin
+    {
+      email: 'admin2@school.com',
+      password: 'admin123',
+      role: 'ADMIN' as const,
+      firstName: 'Sarah',
+      lastName: 'Administrator',
+      phone: '+1234567895',
+    },
+    // Additional Teachers
+    {
+      email: 'teacher2@school.com',
+      password: 'teacher123',
+      role: 'TEACHER' as const,
+      firstName: 'Emily',
+      lastName: 'Johnson',
+      phone: '+1234567896',
+      employeeId: 'EMP002',
+      qualification: 'B.Ed. English',
+      experience: 3,
+    },
+    {
+      email: 'teacher3@school.com',
+      password: 'teacher123',
+      role: 'TEACHER' as const,
+      firstName: 'Michael',
+      lastName: 'Brown',
+      phone: '+1234567897',
+      employeeId: 'EMP003',
+      qualification: 'M.Sc. Physics',
+      experience: 8,
+    },
+    // Additional Parents
+    {
+      email: 'parent2@school.com',
+      password: 'parent123',
+      role: 'PARENT' as const,
+      firstName: 'Robert',
+      lastName: 'Smith',
+      phone: '+1234567898',
+      occupation: 'Doctor',
+    },
+    {
+      email: 'parent3@school.com',
+      password: 'parent123',
+      role: 'PARENT' as const,
+      firstName: 'Lisa',
+      lastName: 'Williams',
+      phone: '+1234567899',
+      occupation: 'Lawyer',
+    },
+    // Additional Students
+    {
+      email: 'student2@school.com',
+      password: 'student123',
+      role: 'STUDENT' as const,
+      firstName: 'Charlie',
+      lastName: 'Student',
+      phone: '+1234567900',
+      admissionNumber: 'ADM003',
+      dateOfBirth: new Date('2011-03-10'),
+      gender: 'Male',
+      classId: class1.id,
+    },
+    {
+      email: 'student3@school.com',
+      password: 'student123',
+      role: 'STUDENT' as const,
+      firstName: 'Diana',
+      lastName: 'Student',
+      phone: '+1234567901',
+      admissionNumber: 'ADM004',
+      dateOfBirth: new Date('2010-11-25'),
+      gender: 'Female',
+      classId: class2.id,
+    },
+  ];
+
+  for (const userData of additionalUsers) {
+    const hashedPwd = await bcrypt.hash(userData.password, 10);
+    
+    const user = await prisma.user.upsert({
+      where: { email: userData.email },
+      update: {},
+      create: {
+        email: userData.email,
+        password: hashedPwd,
+        role: userData.role,
+        schoolId: school.id,
+        isActive: true,
+        profile: {
+          create: {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            phone: userData.phone,
+          },
+        },
+      },
+      include: { profile: true },
+    });
+
+    // Create role-specific records
+    if (userData.role === 'TEACHER' && 'employeeId' in userData) {
+      await prisma.teacher.upsert({
+        where: { employeeId: userData.employeeId },
+        update: {},
+        create: {
+          schoolId: school.id,
+          userId: user.id,
+          employeeId: userData.employeeId,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          phone: userData.phone,
+          qualification: userData.qualification || '',
+          experience: userData.experience || 0,
+          isActive: true,
+        },
+      });
+    } else if (userData.role === 'PARENT') {
+      await prisma.parent.upsert({
+        where: { phone: userData.phone },
+        update: {},
+        create: {
+          userId: user.id,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          phone: userData.phone,
+          email: userData.email,
+          occupation: 'occupation' in userData ? userData.occupation : undefined,
+        },
+      });
+    } else if (userData.role === 'STUDENT' && 'admissionNumber' in userData) {
+      await prisma.student.upsert({
+        where: { admissionNumber: userData.admissionNumber },
+        update: {},
+        create: {
+          schoolId: school.id,
+          userId: user.id,
+          admissionNumber: userData.admissionNumber,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          dateOfBirth: userData.dateOfBirth,
+          gender: userData.gender,
+          phone: userData.phone,
+          email: userData.email,
+          classId: userData.classId,
+          admissionDate: new Date('2024-04-01'),
+          isActive: true,
+        },
+      });
+    }
+
+    console.log(`✅ ${userData.role} user created: ${userData.email}`);
+  }
+
   // Create Fee Structure
   const tuitionFee = await prisma.feeStructure.create({
     data: {
@@ -564,18 +722,37 @@ async function main() {
   console.log('\n🎉 Seeding completed successfully!');
   console.log('\n📝 Test Credentials:');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('Admin:');
+  console.log('\n👑 ADMIN USERS:');
   console.log('  Email: admin@school.com');
   console.log('  Password: password123');
-  console.log('\nTeacher:');
+  console.log('  Email: admin2@school.com');
+  console.log('  Password: admin123');
+  console.log('\n👨‍🏫 TEACHER USERS:');
   console.log('  Email: teacher@school.com');
   console.log('  Password: password123');
-  console.log('\nParent:');
+  console.log('  Email: teacher2@school.com');
+  console.log('  Password: teacher123');
+  console.log('  Email: teacher3@school.com');
+  console.log('  Password: teacher123');
+  console.log('\n👨‍👩‍👧 PARENT USERS:');
   console.log('  Email: parent@school.com');
   console.log('  Password: password123');
-  console.log('\nStudent:');
+  console.log('  Email: parent2@school.com');
+  console.log('  Password: parent123');
+  console.log('  Email: parent3@school.com');
+  console.log('  Password: parent123');
+  console.log('\n🎓 STUDENT USERS:');
   console.log('  Email: student@school.com');
   console.log('  Password: password123');
+  console.log('  Email: student2@school.com');
+  console.log('  Password: student123');
+  console.log('  Email: student3@school.com');
+  console.log('  Password: student123');
+  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('💡 Quick Login Tips:');
+  console.log('  - All passwords follow pattern: [role]123 or password123');
+  console.log('  - Default password for original users: password123');
+  console.log('  - New users use: [role]123 (e.g., admin123, teacher123)');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 }
 
