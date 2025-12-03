@@ -1,4 +1,4 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const generateToken = (payload: {
   id: string;
@@ -10,10 +10,9 @@ export const generateToken = (payload: {
   if (!secret) {
     throw new Error('JWT_SECRET is not defined');
   }
-  const options: SignOptions = {
+  return jwt.sign(payload, secret, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  };
-  return jwt.sign(payload, secret, options);
+  } as jwt.SignOptions);
 };
 
 export const verifyToken = (token: string) => {
