@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
 export const generateToken = (payload: {
   id: string;
@@ -6,12 +6,14 @@ export const generateToken = (payload: {
   role: string;
   schoolId: string;
 }): string => {
-  if (!process.env.JWT_SECRET) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
     throw new Error('JWT_SECRET is not defined');
   }
-  return jwt.sign(payload, process.env.JWT_SECRET, {
+  const options: SignOptions = {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  });
+  };
+  return jwt.sign(payload, secret, options);
 };
 
 export const verifyToken = (token: string) => {
