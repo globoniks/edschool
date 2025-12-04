@@ -1,0 +1,111 @@
+# Complete Nginx configuration for edumapping + edschool
+# Copy this to /etc/nginx/sites-enabled/edumapping
+
+server {
+    server_name EduMapping.com www.EduMapping.com edumapping.com www.edumapping.com _;
+
+    # Increase client body size for file uploads
+    client_max_body_size 20M;
+
+    # EdSchool frontend - subdirectory (MUST come before location /)
+    location /edschool {
+        alias /var/www/edschool/frontend/dist;
+        try_files $uri $uri/ /edschool/index.html;
+        index index.html;
+    }
+    
+    # EdSchool API - subdirectory
+    location /edschool/api {
+        rewrite ^/edschool/api/(.*) /api/$1 break;
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # API proxy to backend (edumapping)
+    location /api/ {
+        proxy_pass http://localhost:5000/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 75s;
+    }
+
+    # MinIO proxy (optional - for direct file access)
+    location /files/ {
+        proxy_pass http://localhost:9000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # Serve React app (edumapping - catch-all, must be last)
+    location / {
+        root /var/www/campusconnect/client/build;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/edumapping.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/edumapping.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# HTTP server block (port 80)
+server {
+    listen 80;
+    server_name EduMapping.com www.EduMapping.com edumapping.com www.edumapping.com _;
+
+    # EdSchool frontend - subdirectory (allow HTTP access)
+    location /edschool {
+        alias /var/www/edschool/frontend/dist;
+        try_files $uri $uri/ /edschool/index.html;
+        index index.html;
+    }
+    
+    # EdSchool API - subdirectory (allow HTTP access)
+    location /edschool/api {
+        rewrite ^/edschool/api/(.*) /api/$1 break;
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Redirect domain requests to HTTPS (but /edschool works on HTTP)
+    if ($host ~ ^(edumapping\.com|www\.edumapping\.com|EduMapping\.com|www\.EduMapping\.com)$) {
+        set $redirect_to_https 1;
+    }
+    
+    # Redirect everything except /edschool to HTTPS
+    location / {
+        if ($redirect_to_https) {
+            return 301 https://$host$request_uri;
+        }
+        return 404;
+    }
+}
+

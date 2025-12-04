@@ -21,7 +21,7 @@ function App() {
   const { token } = useAuthStore();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/edschool">
       <Routes>
         <Route
           path="/"

@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
 // Use environment variable for API URL, fallback to relative path
-// In production, if using subdirectory: leave empty (uses '/api')
+// In production, if using subdirectory: use '/edschool/api'
 // If using separate domain/IP: set VITE_API_URL="http://your-ip:3001/api"
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/edschool/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -28,7 +28,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
-      window.location.href = '/login';
+      window.location.href = '/edschool/login';
     }
     return Promise.reject(error);
   }

@@ -4,6 +4,8 @@ module.exports = {
     script: './backend/dist/index.js',
     instances: 1,
     exec_mode: 'fork',
+    cwd: '/var/www/edschool',
+    env_file: './backend/.env',
     env: {
       NODE_ENV: 'production',
       PORT: 3001, // Different from edumapping (port 5000)
