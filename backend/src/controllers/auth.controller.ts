@@ -8,7 +8,17 @@ import { prisma } from '../lib/prisma.js';
 const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
-  role: z.enum(['ADMIN', 'TEACHER', 'PARENT', 'STUDENT']),
+  role: z.enum([
+    'SUPER_ADMIN',
+    'SCHOOL_ADMIN',
+    'ACADEMIC_ADMIN',
+    'FINANCE_ADMIN',
+    'HR_ADMIN',
+    'HOD',
+    'TEACHER',
+    'PARENT',
+    'STUDENT',
+  ]),
   schoolId: z.string().optional(),
   profile: z.object({
     firstName: z.string(),

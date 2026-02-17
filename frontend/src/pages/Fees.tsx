@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Download } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { usePermissions } from '../hooks/usePermissions';
+import { useToast } from '../components/ToastProvider';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Fees() {
   const { user } = useAuthStore();
+  const { canManageFees } = usePermissions();
   const [isFeeStructureModalOpen, setIsFeeStructureModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const queryClient = useQueryClient();
-  const isAdminOrTeacher = user?.role === 'ADMIN' || user?.role === 'TEACHER';
+  const { showSuccess, showError } = useToast();
 
   const [feeStructureData, setFeeStructureData] = useState({
     name: '',
@@ -31,6 +35,7 @@ export default function Fees() {
     transactionId: '',
     remarks: '',
   });
+  const [paymentStudentSearch, setPaymentStudentSearch] = useState('');
 
   const { data: feeStructures } = useQuery({
     queryKey: ['fee-structures'],
@@ -43,9 +48,19 @@ export default function Fees() {
   });
 
   const { data: students } = useQuery({
-    queryKey: ['students'],
-    queryFn: () => api.get('/students').then((res) => res.data),
+    queryKey: ['students-for-payment', isPaymentModalOpen],
+    queryFn: () => api.get('/students?limit=6000&status=active').then((res) => res.data),
+    enabled: isPaymentModalOpen,
   });
+
+  const paymentStudentList = (students as any)?.students ?? [];
+  const filteredPaymentStudents = paymentStudentSearch.trim()
+    ? paymentStudentList.filter(
+        (s: any) =>
+          `${s.firstName} ${s.lastName}`.toLowerCase().includes(paymentStudentSearch.toLowerCase()) ||
+          (s.admissionNumber || '').toLowerCase().includes(paymentStudentSearch.toLowerCase())
+      )
+    : paymentStudentList;
 
   const { data: classes } = useQuery({
     queryKey: ['classes'],
@@ -65,9 +80,10 @@ export default function Fees() {
         billingCycle: 'MONTHLY',
         dueDate: 5,
       });
+      showSuccess('Fee structure created successfully');
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Failed to create fee structure');
+      showError(error.response?.data?.message || 'Failed to create fee structure');
     },
   });
 
@@ -76,6 +92,7 @@ export default function Fees() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       setIsPaymentModalOpen(false);
+      setPaymentStudentSearch('');
       setPaymentData({
         studentId: '',
         feeStructureId: '',
@@ -87,9 +104,10 @@ export default function Fees() {
         transactionId: '',
         remarks: '',
       });
+      showSuccess('Payment recorded successfully');
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Failed to create payment');
+      showError(error.response?.data?.message || 'Failed to create payment');
     },
   });
 
@@ -118,10 +136,35 @@ export default function Fees() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Fees Management</h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-2">Manage fee structures and payments</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
+            {canManageFees() ? 'Manage fee structures and payments' : 'View fee payments for your children'}
+          </p>
         </div>
-        {isAdminOrTeacher && (
+        {canManageFees() && (
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <button
+              onClick={async () => {
+                try {
+                  const response = await api.get('/export/fees?format=csv', {
+                    responseType: 'blob',
+                  });
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', `fee_payments_${Date.now()}.csv`);
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+                  showSuccess('Fee payments exported successfully');
+                } catch (error: any) {
+                  showError(error.response?.data?.message || 'Failed to export fee payments');
+                }
+              }}
+              className="btn btn-secondary flex items-center justify-center w-full sm:w-auto"
+            >
+              <Download className="w-5 h-5 mr-2" />
+              Export CSV
+            </button>
             <button
               onClick={() => setIsFeeStructureModalOpen(true)}
               className="btn btn-primary flex items-center justify-center w-full sm:w-auto"
@@ -328,7 +371,7 @@ export default function Fees() {
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">Create Payment</h2>
               <button
-                onClick={() => setIsPaymentModalOpen(false)}
+                onClick={() => { setPaymentStudentSearch(''); setIsPaymentModalOpen(false); }}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <X className="w-6 h-6" />
@@ -338,14 +381,21 @@ export default function Fees() {
             <form onSubmit={handlePaymentSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Student *</label>
+                <input
+                  type="text"
+                  className="input mb-2"
+                  placeholder="Search by name or admission number..."
+                  value={paymentStudentSearch}
+                  onChange={(e) => setPaymentStudentSearch(e.target.value)}
+                />
                 <select
                   required
                   className="input"
                   value={paymentData.studentId}
                   onChange={(e) => setPaymentData({ ...paymentData, studentId: e.target.value })}
                 >
-                  <option value="">Select Student</option>
-                  {students?.students?.map((student: any) => (
+                  <option value="">Select Student ({filteredPaymentStudents.length} available)</option>
+                  {filteredPaymentStudents.map((student: any) => (
                     <option key={student.id} value={student.id}>
                       {student.firstName} {student.lastName} ({student.admissionNumber})
                     </option>
@@ -471,7 +521,7 @@ export default function Fees() {
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setIsPaymentModalOpen(false)}
+                  onClick={() => { setPaymentStudentSearch(''); setIsPaymentModalOpen(false); }}
                   className="btn btn-secondary"
                 >
                   Cancel

@@ -1,15 +1,25 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Download, Edit3 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { usePermissions } from '../hooks/usePermissions';
+import { useToast } from '../components/ToastProvider';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { FormField, Input, Select } from '../components/FormField';
+import EmptyState from '../components/EmptyState';
 
 export default function Exams() {
   const { user } = useAuthStore();
+  const { canCreateExams, canEnterExamMarks } = usePermissions();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
+  const [enterMarksOpen, setEnterMarksOpen] = useState(false);
+  const [marksClassId, setMarksClassId] = useState('');
+  const [marksSubjectId, setMarksSubjectId] = useState('');
+  const [marksRows, setMarksRows] = useState<Record<string, { maxMarks: number; marksObtained: number; grade: string }>>({});
   const queryClient = useQueryClient();
-  const isAdminOrTeacher = user?.role === 'ADMIN' || user?.role === 'TEACHER';
+  const { showSuccess, showError } = useToast();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -27,6 +37,23 @@ export default function Exams() {
   const { data: classes } = useQuery({
     queryKey: ['classes'],
     queryFn: () => api.get('/academic/classes').then((res) => res.data),
+  });
+
+  const { data: subjects } = useQuery({
+    queryKey: ['subjects'],
+    queryFn: () => api.get('/academic/subjects').then((res) => res.data),
+  });
+
+  const selectedExamObj = useMemo(() => {
+    if (!selectedExam || !exams || !Array.isArray(exams)) return null;
+    return (exams as any[]).find((e: any) => e.id === selectedExam) || null;
+  }, [selectedExam, exams]);
+
+  const marksClassIdResolved = selectedExamObj?.classId || marksClassId;
+  const { data: marksStudents } = useQuery({
+    queryKey: ['students-for-marks', marksClassIdResolved],
+    queryFn: () => api.get(`/students?classId=${marksClassIdResolved}&limit=1000&status=active`).then((res) => res.data),
+    enabled: !!marksClassIdResolved && enterMarksOpen,
   });
 
   const { data: examDetails } = useQuery({
@@ -47,9 +74,46 @@ export default function Exams() {
         endDate: '',
         passingMarks: 33,
       });
+      showSuccess('Exam created successfully');
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Failed to create exam');
+      showError(error.response?.data?.message || 'Failed to create exam');
+    },
+  });
+
+  const saveMarksMutation = useMutation({
+    mutationFn: async ({
+      examId,
+      rows,
+      subjectId,
+    }: {
+      examId: string;
+      subjectId: string;
+      rows: { studentId: string; maxMarks: number; marksObtained: number; grade?: string }[];
+    }) => {
+      await Promise.all(
+        rows
+          .filter((r) => r.maxMarks > 0 || r.marksObtained > 0)
+          .map((r) =>
+            api.post('/exams/marks', {
+              examId,
+              studentId: r.studentId,
+              subjectId,
+              maxMarks: r.maxMarks,
+              marksObtained: r.marksObtained,
+              grade: r.grade || undefined,
+            })
+          )
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exam-marks', selectedExam] });
+      queryClient.invalidateQueries({ queryKey: ['exams'] });
+      setMarksRows({});
+      showSuccess('Marks saved successfully');
+    },
+    onError: (error: any) => {
+      showError(error.response?.data?.message || 'Failed to save marks');
     },
   });
 
@@ -63,9 +127,11 @@ export default function Exams() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Exams & Marks</h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-2">Manage exams and student marks</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
+            {canCreateExams() ? 'Manage exams and student marks' : 'View exam results for your children'}
+          </p>
         </div>
-        {isAdminOrTeacher && (
+        {canCreateExams() && (
           <button
             onClick={() => setIsCreateModalOpen(true)}
             className="btn btn-primary flex items-center justify-center w-full sm:w-auto"
@@ -95,18 +161,46 @@ export default function Exams() {
                         Passing Marks: {exam.passingMarks}% • Marks Entered: {exam._count?.marks || 0}
                       </p>
                     </div>
-                    <button
-                      onClick={() => setSelectedExam(exam.id)}
-                      className="btn btn-secondary"
-                    >
-                      View Details
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={async () => {
+                          try {
+                            const response = await api.get(`/export/exams?examId=${exam.id}&format=csv`, {
+                              responseType: 'blob',
+                            });
+                            const url = window.URL.createObjectURL(new Blob([response.data]));
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.setAttribute('download', `exam_${exam.name.replace(/\s+/g, '_')}_${Date.now()}.csv`);
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+                            showSuccess('Exam results exported successfully');
+                          } catch (error: any) {
+                            showError(error.response?.data?.message || 'Failed to export exam results');
+                          }
+                        }}
+                        className="btn btn-secondary text-sm"
+                      >
+                        <Download className="w-4 h-4 mr-1" />
+                        Export
+                      </button>
+                      <button
+                        onClick={() => setSelectedExam(exam.id)}
+                        className="btn btn-secondary"
+                      >
+                        View Details
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-center py-12">No exams found</p>
+            <EmptyState
+              title="No exams found"
+              description="No exams have been created yet"
+            />
           )}
         </div>
       )}
@@ -126,24 +220,18 @@ export default function Exams() {
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Exam Name *
-                </label>
-                <input
+              <FormField label="Exam Name" required>
+                <Input
                   type="text"
                   required
-                  className="input"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g., Mid-term Exam 2024"
                 />
-              </div>
+              </FormField>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Class</label>
-                <select
-                  className="input"
+              <FormField label="Class">
+                <Select
                   value={formData.classId}
                   onChange={(e) => setFormData({ ...formData, classId: e.target.value })}
                 >
@@ -153,51 +241,39 @@ export default function Exams() {
                       {cls.name} {cls.section ? `- ${cls.section}` : ''}
                     </option>
                   ))}
-                </select>
-              </div>
+                </Select>
+              </FormField>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Start Date *
-                  </label>
-                  <input
+                <FormField label="Start Date" required>
+                  <Input
                     type="date"
                     required
-                    className="input"
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    End Date *
-                  </label>
-                  <input
+                </FormField>
+                <FormField label="End Date" required>
+                  <Input
                     type="date"
                     required
-                    className="input"
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
                   />
-                </div>
+                </FormField>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Passing Marks (%)
-                </label>
-                <input
+              <FormField label="Passing Marks (%)" hint="Minimum percentage required to pass">
+                <Input
                   type="number"
                   min="0"
                   max="100"
-                  className="input"
                   value={formData.passingMarks}
                   onChange={(e) =>
                     setFormData({ ...formData, passingMarks: parseFloat(e.target.value) || 33 })
                   }
                 />
-              </div>
+              </FormField>
 
               <div className="flex justify-end gap-3 pt-4">
                 <button
@@ -226,16 +302,178 @@ export default function Exams() {
           <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">Exam Marks</h2>
-              <button
-                onClick={() => setSelectedExam(null)}
-                className="text-gray-400 hover:text-gray-500"
-              >
-                <X className="w-6 h-6" />
-              </button>
+              <div className="flex items-center gap-2">
+                {canEnterExamMarks() && !enterMarksOpen && (
+                  <button
+                    onClick={() => {
+                      setEnterMarksOpen(true);
+                      if (!selectedExamObj?.classId) setMarksClassId(marksClassId || (classes?.[0]?.id ?? ''));
+                    }}
+                    className="btn btn-primary text-sm flex items-center gap-1"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    Enter / Edit marks
+                  </button>
+                )}
+                {canEnterExamMarks() && enterMarksOpen && (
+                  <button
+                    onClick={() => {
+                      setEnterMarksOpen(false);
+                      setMarksSubjectId('');
+                      setMarksRows({});
+                    }}
+                    className="btn btn-secondary text-sm"
+                  >
+                    Back to view
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setSelectedExam(null);
+                    setEnterMarksOpen(false);
+                    setMarksClassId('');
+                    setMarksSubjectId('');
+                    setMarksRows({});
+                  }}
+                  className="text-gray-400 hover:text-gray-500"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
             </div>
 
             <div className="p-6">
-              {examDetails && examDetails.length > 0 ? (
+              {enterMarksOpen && canEnterExamMarks() ? (
+                <div className="space-y-6">
+                  {!selectedExamObj?.classId && (
+                    <FormField label="Class (for this exam)">
+                      <Select
+                        value={marksClassId}
+                        onChange={(e) => setMarksClassId(e.target.value)}
+                      >
+                        <option value="">Select class</option>
+                        {classes?.map((cls: any) => (
+                          <option key={cls.id} value={cls.id}>{cls.name} {cls.section ? `- ${cls.section}` : ''}</option>
+                        ))}
+                      </Select>
+                    </FormField>
+                  )}
+                  <FormField label="Subject">
+                    <Select
+                      value={marksSubjectId}
+                      onChange={(e) => {
+                        const sid = e.target.value;
+                        setMarksSubjectId(sid);
+                        const students = (marksStudents as any)?.students ?? [];
+                        const existing = (examDetails as any[]) ?? [];
+                        const next: Record<string, { maxMarks: number; marksObtained: number; grade: string }> = {};
+                        students.forEach((s: any) => {
+                          const mark = existing.find((m: any) => m.studentId === s.id && m.subjectId === sid);
+                          next[s.id] = mark
+                            ? { maxMarks: mark.maxMarks, marksObtained: mark.marksObtained, grade: mark.grade || '' }
+                            : { maxMarks: 100, marksObtained: 0, grade: '' };
+                        });
+                        setMarksRows(next);
+                      }}
+                    >
+                      <option value="">Select subject</option>
+                      {subjects?.map((subj: any) => (
+                        <option key={subj.id} value={subj.id}>{subj.name}</option>
+                      ))}
+                    </Select>
+                  </FormField>
+                  {marksSubjectId && marksStudents?.students?.length > 0 ? (
+                    <>
+                      <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="bg-gray-50 border-b border-gray-200">
+                              <th className="text-left py-3 px-4 font-semibold text-gray-700">Student</th>
+                              <th className="text-left py-3 px-4 font-semibold text-gray-700 w-28">Max Marks</th>
+                              <th className="text-left py-3 px-4 font-semibold text-gray-700 w-28">Obtained</th>
+                              <th className="text-left py-3 px-4 font-semibold text-gray-700 w-24">Grade</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(marksStudents as any).students.map((s: any) => (
+                              <tr key={s.id} className="border-b border-gray-100">
+                                <td className="py-2 px-4">{s.firstName} {s.lastName}</td>
+                                <td className="py-2 px-4">
+                                  <Input
+                                    type="number"
+                                    min={0}
+                                    className="w-full"
+                                    value={marksRows[s.id]?.maxMarks ?? 100}
+                                    onChange={(e) =>
+                                      setMarksRows((prev) => ({
+                                        ...prev,
+                                        [s.id]: { ...(prev[s.id] ?? { maxMarks: 100, marksObtained: 0, grade: '' }), maxMarks: parseInt(e.target.value) || 0 },
+                                      }))
+                                    }
+                                  />
+                                </td>
+                                <td className="py-2 px-4">
+                                  <Input
+                                    type="number"
+                                    min={0}
+                                    className="w-full"
+                                    value={marksRows[s.id]?.marksObtained ?? 0}
+                                    onChange={(e) =>
+                                      setMarksRows((prev) => ({
+                                        ...prev,
+                                        [s.id]: { ...(prev[s.id] ?? { maxMarks: 100, marksObtained: 0, grade: '' }), marksObtained: parseInt(e.target.value) || 0 },
+                                      }))
+                                    }
+                                  />
+                                </td>
+                                <td className="py-2 px-4">
+                                  <Input
+                                    type="text"
+                                    className="w-full"
+                                    placeholder="A/B/C"
+                                    value={marksRows[s.id]?.grade ?? ''}
+                                    onChange={(e) =>
+                                      setMarksRows((prev) => ({
+                                        ...prev,
+                                        [s.id]: { ...(prev[s.id] ?? { maxMarks: 100, marksObtained: 0, grade: '' }), grade: e.target.value },
+                                      }))
+                                    }
+                                  />
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const students = (marksStudents as any).students ?? [];
+                            saveMarksMutation.mutate({
+                              examId: selectedExam,
+                              subjectId: marksSubjectId,
+                              rows: students.map((s: any) => ({
+                                studentId: s.id,
+                                maxMarks: marksRows[s.id]?.maxMarks ?? 100,
+                                marksObtained: marksRows[s.id]?.marksObtained ?? 0,
+                                grade: marksRows[s.id]?.grade || undefined,
+                              })),
+                            });
+                          }}
+                          disabled={saveMarksMutation.isPending}
+                          className="btn btn-primary flex items-center gap-2"
+                        >
+                          {saveMarksMutation.isPending && <LoadingSpinner size="sm" />}
+                          {saveMarksMutation.isPending ? 'Saving...' : 'Save marks'}
+                        </button>
+                      </div>
+                    </>
+                  ) : marksSubjectId && (!marksStudents?.students?.length) ? (
+                    <p className="text-gray-500">No students in this class.</p>
+                  ) : null}
+                </div>
+              ) : examDetails && (examDetails as any[]).length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
@@ -247,7 +485,7 @@ export default function Exams() {
                       </tr>
                     </thead>
                     <tbody>
-                      {examDetails.map((mark: any) => (
+                      {(examDetails as any[]).map((mark: any) => (
                         <tr key={mark.id} className="border-b border-gray-100">
                           <td className="py-3 px-4">
                             {mark.student?.firstName} {mark.student?.lastName}
@@ -265,7 +503,9 @@ export default function Exams() {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500 text-center py-12">No marks entered for this exam</p>
+                <p className="text-gray-500 text-center py-12">
+                  {enterMarksOpen ? 'Select a class and subject to enter marks.' : 'No marks entered for this exam'}
+                </p>
               )}
             </div>
           </div>

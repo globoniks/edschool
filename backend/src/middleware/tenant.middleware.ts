@@ -15,8 +15,8 @@ export const tenantGuard = (
   // Extract schoolId from params or body
   const requestedSchoolId = req.params.schoolId || req.body.schoolId;
 
-  // Admin can access any school, others only their own
-  if (req.user.role !== 'ADMIN' && requestedSchoolId && requestedSchoolId !== req.user.schoolId) {
+  // SUPER_ADMIN can access any school, others only their own
+  if (req.user.role !== 'SUPER_ADMIN' && requestedSchoolId && requestedSchoolId !== req.user.schoolId) {
     return next(new AppError('Access denied to this school', 403));
   }
 

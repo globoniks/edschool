@@ -173,6 +173,11 @@ A comprehensive, modern school management system built with Node.js, TypeScript,
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:3001
 
+### Production deployment
+
+- **Backend**: Copy `backend/.env.example` to `backend/.env` and set `DATABASE_URL`, `JWT_SECRET` (use a strong random value), and `PORT`. Set `CORS_ORIGIN` to your frontend origin(s), e.g. `https://yourdomain.com`, so the API only accepts requests from your app.
+- **Frontend**: If the API is on a different host than the frontend, set `VITE_API_URL` at build time to the backend base URL (e.g. `https://api.yourdomain.com` or `https://yourdomain.com/edschool/api`). Otherwise the app uses a relative path (`/edschool/api` or `/api`).
+
 ## Project Structure
 
 ```

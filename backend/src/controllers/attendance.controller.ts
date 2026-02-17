@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { canTeacherAccessClass, getTeacherAccessibleClasses, getParentAccessibleStudents } from '../utils/permissions.js';
 
 const markAttendanceSchema = z.object({
   studentId: z.string(),
@@ -31,6 +32,20 @@ export const markAttendance = async (
     const data = markAttendanceSchema.parse(req.body);
     const schoolId = req.user!.schoolId;
     const markedBy = req.user!.id;
+
+    // Verify teacher has access to this class
+    if (req.user!.role === 'TEACHER') {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (teacher) {
+        const hasAccess = await canTeacherAccessClass(teacher.id, data.classId);
+        if (!hasAccess) {
+          throw new AppError('Teacher does not have access to this class', 403);
+        }
+      }
+    }
 
     // Check if attendance already exists
     const existing = await prisma.attendance.findUnique({
@@ -147,6 +162,19 @@ export const getAttendance = async (
         throw new AppError('Student not found', 404);
       }
       where.studentId = me.id;
+    }
+    // Parents can only see their children's attendance
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleStudentIds = await getParentAccessibleStudents(parent.id);
+        where.studentId = { in: accessibleStudentIds };
+      } else {
+        where.studentId = { in: [] }; // No access
+      }
     } else if (studentId) {
       where.studentId = studentId as string;
     }
@@ -162,6 +190,7 @@ export const getAttendance = async (
       };
     }
 
+    const MAX_ATTENDANCE_LIST = 5000;
     const attendances = await prisma.attendance.findMany({
       where,
       include: {
@@ -169,8 +198,17 @@ export const getAttendance = async (
         class: true,
       },
       orderBy: { date: 'desc' },
+      take: MAX_ATTENDANCE_LIST,
     });
 
+    res.setHeader('X-List-Limit', MAX_ATTENDANCE_LIST.toString());
+    if (attendances.length === MAX_ATTENDANCE_LIST) {
+      const total = await prisma.attendance.count({ where });
+      if (total > MAX_ATTENDANCE_LIST) {
+        res.setHeader('X-List-Truncated', 'true');
+        res.setHeader('X-Total-Count', total.toString());
+      }
+    }
     res.json(attendances);
   } catch (error) {
     next(error);
@@ -215,6 +253,19 @@ export const getAttendanceStats = async (
         throw new AppError('Student not found', 404);
       }
       where.studentId = me.id;
+    }
+    // Parents can only see their children's stats
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleStudentIds = await getParentAccessibleStudents(parent.id);
+        where.studentId = { in: accessibleStudentIds };
+      } else {
+        where.studentId = { in: [] }; // No access
+      }
     } else if (studentId) {
       where.studentId = studentId as string;
     }
@@ -223,22 +274,27 @@ export const getAttendanceStats = async (
       where.classId = classId as string;
     }
 
-    const attendances = await prisma.attendance.findMany({
+    // Aggregate in DB for 5k scale (avoid loading all rows)
+    const grouped = await prisma.attendance.groupBy({
+      by: ['status'],
       where,
+      _count: { status: true },
     });
 
+    const total = grouped.reduce((sum, g) => sum + g._count.status, 0);
+    const present = grouped.find((g) => g.status === 'PRESENT')?._count.status ?? 0;
+    const absent = grouped.find((g) => g.status === 'ABSENT')?._count.status ?? 0;
+    const late = grouped.find((g) => g.status === 'LATE')?._count.status ?? 0;
+    const excused = grouped.find((g) => g.status === 'EXCUSED')?._count.status ?? 0;
+    const presentOrLate = present + late;
+
     const stats = {
-      total: attendances.length,
-      present: attendances.filter((a) => a.status === 'PRESENT').length,
-      absent: attendances.filter((a) => a.status === 'ABSENT').length,
-      late: attendances.filter((a) => a.status === 'LATE').length,
-      excused: attendances.filter((a) => a.status === 'EXCUSED').length,
-      percentage:
-        attendances.length > 0
-          ? ((attendances.filter((a) => a.status === 'PRESENT' || a.status === 'LATE').length /
-              attendances.length) *
-              100).toFixed(2)
-          : 0,
+      total,
+      present,
+      absent,
+      late,
+      excused,
+      percentage: total > 0 ? ((presentOrLate / total) * 100).toFixed(2) : '0',
     };
 
     res.json(stats);

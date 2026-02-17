@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
 import { Calendar as CalendarIcon, Plus, X, Trash2 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { usePermissions } from '../hooks/usePermissions';
 
 interface Holiday {
   id: string;
@@ -15,7 +16,7 @@ interface Holiday {
 
 export default function Holidays() {
   const { user } = useAuthStore();
-  const isAdmin = user?.role === 'ADMIN';
+  const { canManageHolidays } = usePermissions();
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [year, setYear] = useState(today.getFullYear());
@@ -95,7 +96,7 @@ export default function Holidays() {
             View school holidays, exam days, and important events
           </p>
         </div>
-        {isAdmin && (
+        {canManageHolidays() && (
           <button
             onClick={() => setShowAddModal(true)}
             className="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
@@ -280,7 +281,7 @@ export default function Holidays() {
                       ? 'Exam / Event'
                       : 'Other'}
                   </span>
-                  {isAdmin && (
+                  {canManageHolidays() && (
                     <button
                       onClick={() => {
                         if (confirm('Are you sure you want to delete this holiday?')) {

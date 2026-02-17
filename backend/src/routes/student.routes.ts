@@ -12,9 +12,10 @@ export const studentRoutes = Router();
 
 studentRoutes.use(authenticate);
 
-studentRoutes.post('/', authorize('ADMIN', 'TEACHER'), createStudent);
+// Only SCHOOL_ADMIN and HR_ADMIN can create/edit students
+studentRoutes.post('/', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN'), createStudent);
 studentRoutes.get('/', getStudents);
 studentRoutes.get('/:id', getStudent);
-studentRoutes.patch('/:id', authorize('ADMIN', 'TEACHER'), updateStudent);
-studentRoutes.delete('/:id', authorize('ADMIN'), deleteStudent);
+studentRoutes.patch('/:id', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN'), updateStudent);
+studentRoutes.delete('/:id', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN'), deleteStudent);
 

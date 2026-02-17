@@ -10,7 +10,13 @@ const createAnnouncementSchema = z.object({
   targetAudience: z.array(z.enum(['ALL', 'PARENTS', 'TEACHERS', 'STUDENTS', 'SPECIFIC_CLASS'])),
   attachments: z.array(z.string()).optional(),
   isImportant: z.boolean().optional(),
-  expiresAt: z.string().transform((str) => new Date(str)).optional(),
+  expiresAt: z
+    .union([z.string(), z.null(), z.undefined()])
+    .transform((val) => {
+      if (!val || val === '' || val === null) return null;
+      return new Date(val);
+    })
+    .optional(),
 });
 
 export const createAnnouncement = async (
@@ -25,10 +31,14 @@ export const createAnnouncement = async (
 
     const announcement = await prisma.announcement.create({
       data: {
-        ...data,
+        title: data.title,
+        content: data.content,
+        targetAudience: data.targetAudience,
+        attachments: data.attachments || [],
+        isImportant: data.isImportant || false,
+        expiresAt: data.expiresAt || null,
         schoolId,
         createdBy,
-        attachments: data.attachments || [],
       },
     });
 
@@ -64,21 +74,23 @@ export const getAnnouncements = async (
     // Filter by user role
     if (req.user!.role === 'PARENT') {
       where.targetAudience = {
-        hasAny: ['ALL', 'PARENTS'],
+        hasSome: ['ALL', 'PARENTS'],
       };
     } else if (req.user!.role === 'TEACHER') {
       where.targetAudience = {
-        hasAny: ['ALL', 'TEACHERS'],
+        hasSome: ['ALL', 'TEACHERS'],
       };
     } else if (req.user!.role === 'STUDENT') {
       where.targetAudience = {
-        hasAny: ['ALL', 'STUDENTS'],
+        hasSome: ['ALL', 'STUDENTS'],
       };
     }
 
+    const MAX_ANNOUNCEMENTS = 500;
     const announcements = await prisma.announcement.findMany({
       where,
       orderBy: { createdAt: 'desc' },
+      take: MAX_ANNOUNCEMENTS,
     });
 
     res.json(announcements);

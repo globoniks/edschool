@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { getTeacherAccessibleSubjects, getHODAccessibleSubjects, getParentAccessibleStudents, getParentAccessibleClasses, canParentAccessStudent } from '../utils/permissions.js';
 
 const createExamSchema = z.object({
   name: z.string(),
@@ -63,7 +64,35 @@ export const getExams = async (
 
     const where: any = { schoolId, isActive: true };
 
-    if (classId) {
+    // Parents can only see exams for their children's classes
+    if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleClassIds = await getParentAccessibleClasses(parent.id);
+        if (accessibleClassIds.length === 0) {
+          // No children, return empty array
+          return res.json([]);
+        }
+        // If classId is specified, verify parent has access to it
+        if (classId) {
+          if (!accessibleClassIds.includes(classId as string)) {
+            return res.json([]); // Return empty instead of error
+          }
+          where.classId = classId as string;
+        } else {
+          // Filter to only show exams for classes where parent has children
+          where.OR = [
+            { classId: { in: accessibleClassIds } },
+            { classId: null }, // School-wide exams (if any)
+          ];
+        }
+      } else {
+        return res.json([]); // No access
+      }
+    } else if (classId) {
       where.classId = classId as string;
     }
 
@@ -92,6 +121,27 @@ export const createExamMark = async (
 ) => {
   try {
     const data = createExamMarkSchema.parse(req.body);
+
+    // TEACHER can only enter marks for assigned subjects
+    if (req.user!.role === 'TEACHER') {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (teacher) {
+        const accessibleSubjectIds = await getTeacherAccessibleSubjects(teacher.id);
+        if (!accessibleSubjectIds.includes(data.subjectId)) {
+          throw new AppError('Teacher does not have access to this subject', 403);
+        }
+      }
+    }
+    // HOD can only enter marks for their department subjects
+    else if (req.user!.role === 'HOD') {
+      const accessibleSubjectIds = await getHODAccessibleSubjects(req.user!.id);
+      if (!accessibleSubjectIds.includes(data.subjectId)) {
+        throw new AppError('HOD does not have access to this subject', 403);
+      }
+    }
 
     // Check if mark already exists
     const existing = await prisma.examMark.findUnique({
@@ -152,7 +202,39 @@ export const getExamMarks = async (
         throw new AppError('Student not found', 404);
       }
       where.studentId = me.id;
-    } else if (studentId) {
+    }
+    // Parents can only see their children's marks
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleStudentIds = await getParentAccessibleStudents(parent.id);
+        where.studentId = { in: accessibleStudentIds };
+      } else {
+        where.studentId = { in: [] }; // No access
+      }
+    }
+    // Teachers can only see marks for their assigned subjects
+    else if (req.user!.role === 'TEACHER') {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (teacher) {
+        const accessibleSubjectIds = await getTeacherAccessibleSubjects(teacher.id);
+        where.subjectId = { in: accessibleSubjectIds };
+      } else {
+        where.subjectId = { in: [] }; // No access
+      }
+    }
+    // HOD can only see marks for their department subjects
+    else if (req.user!.role === 'HOD') {
+      const accessibleSubjectIds = await getHODAccessibleSubjects(req.user!.id);
+      where.subjectId = { in: accessibleSubjectIds };
+    }
+    else if (studentId) {
       where.studentId = studentId as string;
     }
 
@@ -199,6 +281,20 @@ export const getReportCard = async (
         select: { id: true },
       });
       if (!me || me.id !== studentId) {
+        throw new AppError('Forbidden', 403);
+      }
+    }
+    // Parents can only access their children's report cards
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (!parent) {
+        throw new AppError('Parent not found', 404);
+      }
+      const hasAccess = await canParentAccessStudent(parent.id, studentId);
+      if (!hasAccess) {
         throw new AppError('Forbidden', 403);
       }
     }

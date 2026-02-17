@@ -1,15 +1,23 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, BookOpen } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { usePermissions } from '../hooks/usePermissions';
+import { useToast } from '../components/ToastProvider';
+import LoadingSpinner from '../components/LoadingSpinner';
+import FileUpload from '../components/FileUpload';
+import { FormField, Input, Select, Textarea } from '../components/FormField';
+import EmptyState from '../components/EmptyState';
 
 export default function Homework() {
   const { user } = useAuthStore();
+  const { canCreateHomework } = usePermissions();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedHomework, setSelectedHomework] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const isAdminOrTeacher = user?.role === 'ADMIN' || user?.role === 'TEACHER';
+  const { showSuccess, showError } = useToast();
+  const canViewSubmissions = user?.role === 'TEACHER' || ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD'].includes(user?.role || '');
 
   const [formData, setFormData] = useState({
     classId: '',
@@ -17,6 +25,7 @@ export default function Homework() {
     title: '',
     description: '',
     dueDate: '',
+    attachments: [] as string[],
   });
 
   const { data: homeworks, isLoading } = useQuery({
@@ -37,7 +46,7 @@ export default function Homework() {
   const { data: homeworkDetails } = useQuery({
     queryKey: ['homework-submissions', selectedHomework],
     queryFn: () => api.get(`/homework/${selectedHomework}/submissions`).then((res) => res.data),
-    enabled: !!selectedHomework && isAdminOrTeacher,
+    enabled: !!selectedHomework && canViewSubmissions,
   });
 
   const createHomeworkMutation = useMutation({
@@ -51,18 +60,32 @@ export default function Homework() {
         title: '',
         description: '',
         dueDate: '',
+        attachments: [],
       });
+      showSuccess('Homework created successfully');
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Failed to create homework');
+      showError(error.response?.data?.message || 'Failed to create homework');
     },
   });
+
+  const handleFileUpload = async (files: File[]): Promise<string[]> => {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+    const response = await api.post('/upload/multiple', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.files.map((f: any) => f.url);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createHomeworkMutation.mutate({
       ...formData,
       subjectId: formData.subjectId || undefined,
+      attachments: formData.attachments,
     });
   };
 
@@ -72,12 +95,12 @@ export default function Homework() {
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Homework & Assignments</h1>
           <p className="text-sm sm:text-base text-gray-600 mt-2">
-            {isAdminOrTeacher
+            {canCreateHomework()
               ? 'Manage homework and student submissions'
               : 'View homework assigned to you'}
           </p>
         </div>
-        {isAdminOrTeacher && (
+        {canCreateHomework() && (
           <button
             onClick={() => setIsCreateModalOpen(true)}
             className="btn btn-primary flex items-center justify-center w-full sm:w-auto"
@@ -89,7 +112,11 @@ export default function Homework() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12">Loading...</div>
+        <div className="card">
+          <div className="flex items-center justify-center py-12">
+            <LoadingSpinner size="lg" />
+          </div>
+        </div>
       ) : (
         <div className="card">
           {homeworks && homeworks.length > 0 ? (
@@ -109,7 +136,7 @@ export default function Homework() {
                       {homework.description && (
                         <p className="text-sm text-gray-700 mt-2">{homework.description}</p>
                       )}
-                      {isAdminOrTeacher && (
+                      {canViewSubmissions && (
                         <p className="text-xs text-gray-500 mt-2">
                           Submissions: {homework._count?.submissions || 0}
                         </p>
@@ -125,7 +152,7 @@ export default function Homework() {
                       >
                         {homework.status}
                       </span>
-                      {isAdminOrTeacher && (
+                      {canViewSubmissions && (
                         <button
                           onClick={() => setSelectedHomework(homework.id)}
                           className="btn btn-secondary text-sm"
@@ -139,7 +166,11 @@ export default function Homework() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-center py-12">No homework assignments found</p>
+            <EmptyState
+              icon={<BookOpen className="w-16 h-16 text-gray-400" />}
+              title="No homework assignments"
+              description="No homework has been assigned yet"
+            />
           )}
         </div>
       )}
@@ -159,23 +190,19 @@ export default function Homework() {
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-                <input
+              <FormField label="Title" required>
+                <Input
                   type="text"
                   required
-                  className="input"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g., Algebra Practice"
                 />
-              </div>
+              </FormField>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Class *</label>
-                <select
+              <FormField label="Class" required>
+                <Select
                   required
-                  className="input"
                   value={formData.classId}
                   onChange={(e) => setFormData({ ...formData, classId: e.target.value })}
                 >
@@ -185,13 +212,11 @@ export default function Homework() {
                       {cls.name} {cls.section ? `- ${cls.section}` : ''}
                     </option>
                   ))}
-                </select>
-              </div>
+                </Select>
+              </FormField>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-                <select
-                  className="input"
+              <FormField label="Subject">
+                <Select
                   value={formData.subjectId}
                   onChange={(e) => setFormData({ ...formData, subjectId: e.target.value })}
                 >
@@ -201,34 +226,40 @@ export default function Homework() {
                       {subject.name}
                     </option>
                   ))}
-                </select>
-              </div>
+                </Select>
+              </FormField>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Due Date *
-                </label>
-                <input
+              <FormField label="Due Date" required>
+                <Input
                   type="date"
                   required
-                  className="input"
                   value={formData.dueDate}
                   onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                 />
-              </div>
+              </FormField>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  className="input"
+              <FormField label="Description">
+                <Textarea
                   rows={4}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Enter homework description..."
                 />
-              </div>
+              </FormField>
+
+              <FormField label="Attachments" hint="Upload files related to this homework">
+                <FileUpload
+                  multiple
+                  onUpload={handleFileUpload}
+                  onRemove={(url) => {
+                    setFormData({
+                      ...formData,
+                      attachments: formData.attachments.filter((a) => a !== url),
+                    });
+                  }}
+                  existingFiles={formData.attachments}
+                />
+              </FormField>
 
               <div className="flex justify-end gap-3 pt-4">
                 <button

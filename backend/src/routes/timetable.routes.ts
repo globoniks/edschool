@@ -11,8 +11,9 @@ export const timetableRoutes = Router();
 
 timetableRoutes.use(authenticate);
 
-timetableRoutes.post('/', authorize('ADMIN', 'TEACHER'), createTimetable);
+// Only ACADEMIC_ADMIN and SCHOOL_ADMIN can manage timetables
+timetableRoutes.post('/', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'), createTimetable);
 timetableRoutes.get('/', getTimetables);
-timetableRoutes.patch('/:id', authorize('ADMIN', 'TEACHER'), updateTimetable);
-timetableRoutes.delete('/:id', authorize('ADMIN', 'TEACHER'), deleteTimetable);
+timetableRoutes.patch('/:id', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'), updateTimetable);
+timetableRoutes.delete('/:id', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'), deleteTimetable);
 

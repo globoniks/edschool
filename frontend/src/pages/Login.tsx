@@ -3,26 +3,48 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import api from '../lib/api';
 import { GraduationCap } from 'lucide-react';
+import { useToast } from '../components/ToastProvider';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { FormField, Input } from '../components/FormField';
 
 export default function Login() {
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
+  const { showError } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setFormErrors({});
+    
+    // Basic validation
+    const errors: { email?: string; password?: string } = {};
+    if (!email) errors.email = 'Email is required';
+    if (!password) errors.password = 'Password is required';
+    
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
     setLoading(true);
 
     try {
       const response = await api.post('/auth/login', { email, password });
       setAuth(response.data.token, response.data.user);
-      navigate('/app/dashboard');
+      // Redirect based on user role
+      if (response.data.user?.role === 'PARENT') {
+        navigate('/app/parent-portal');
+      } else if (response.data.user?.role === 'TEACHER') {
+        navigate('/app/teacher-dashboard');
+      } else {
+        navigate('/app/dashboard');
+      }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed');
+      showError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -41,47 +63,42 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
+            <FormField label="Email" required error={formErrors.email}>
+              <Input
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (formErrors.email) setFormErrors({ ...formErrors, email: undefined });
+                }}
                 required
-                className="input"
                 placeholder="Enter your email"
+                error={!!formErrors.email}
               />
-            </div>
+            </FormField>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <input
+            <FormField label="Password" required error={formErrors.password}>
+              <Input
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (formErrors.password) setFormErrors({ ...formErrors, password: undefined });
+                }}
                 required
-                className="input"
                 placeholder="Enter your password"
+                error={!!formErrors.password}
               />
-            </div>
+            </FormField>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn btn-primary py-3 text-lg"
+              className="w-full btn btn-primary py-3 text-lg flex items-center justify-center gap-2"
             >
+              {loading && <LoadingSpinner size="sm" />}
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>

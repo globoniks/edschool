@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { getParentAccessibleClasses } from '../utils/permissions.js';
 
 const createTimetableSchema = z.object({
   classId: z.string(),
@@ -53,7 +54,32 @@ export const getTimetables = async (
 
     const where: any = { schoolId };
 
-    if (classId) {
+    // Parents can only see timetables for their children's classes
+    if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleClassIds = await getParentAccessibleClasses(parent.id);
+        if (accessibleClassIds.length === 0) {
+          // No children, return empty array
+          return res.json([]);
+        }
+        // If classId is specified, verify parent has access to it
+        if (classId) {
+          if (!accessibleClassIds.includes(classId as string)) {
+            return res.json([]); // Return empty instead of error
+          }
+          where.classId = classId as string;
+        } else {
+          // Filter to only show timetables for classes where parent has children
+          where.classId = { in: accessibleClassIds };
+        }
+      } else {
+        return res.json([]); // No access
+      }
+    } else if (classId) {
       where.classId = classId as string;
     }
 

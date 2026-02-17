@@ -12,9 +12,11 @@ export const attendanceRoutes = Router();
 
 attendanceRoutes.use(authenticate);
 
-attendanceRoutes.post('/', authorize('ADMIN', 'TEACHER'), markAttendance);
-attendanceRoutes.post('/bulk', authorize('ADMIN', 'TEACHER'), markBulkAttendance);
+// TEACHER and school admins can mark student attendance
+attendanceRoutes.post('/', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER'), markAttendance);
+attendanceRoutes.post('/bulk', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER'), markBulkAttendance);
 attendanceRoutes.get('/', getAttendance);
 attendanceRoutes.get('/stats', getAttendanceStats);
-attendanceRoutes.post('/teacher', authorize('ADMIN'), markTeacherAttendance);
+// Only SCHOOL_ADMIN can mark teacher attendance
+attendanceRoutes.post('/teacher', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN'), markTeacherAttendance);
 

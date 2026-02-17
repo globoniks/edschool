@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { getTeacherAccessibleClasses, getHODAccessibleSubjects, getParentAccessibleStudents } from '../utils/permissions.js';
 
 const createHomeworkSchema = z.object({
   classId: z.string(),
@@ -30,8 +31,20 @@ export const createHomework = async (
       where: { userId: req.user!.id },
     }))?.id : undefined;
 
-    if (!teacherId && req.user!.role !== 'ADMIN') {
+    if (!teacherId) {
       throw new AppError('Teacher not found', 404);
+    }
+
+    // Verify teacher has access to this class
+    const hasAccess = await prisma.classSubject.findFirst({
+      where: {
+        classId: data.classId,
+        teacherId,
+      },
+    });
+
+    if (!hasAccess) {
+      throw new AppError('Teacher does not have access to this class', 403);
     }
 
     const homework = await prisma.homework.create({
@@ -69,6 +82,51 @@ export const getHomeworks = async (
 
     const where: any = { schoolId };
 
+    // Teachers can only see homework for their assigned classes
+    if (req.user!.role === 'TEACHER') {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (teacher) {
+        const accessibleClassIds = await getTeacherAccessibleClasses(teacher.id);
+        where.classId = { in: accessibleClassIds };
+        where.teacherId = teacher.id; // Only their own homework
+      } else {
+        where.classId = { in: [] }; // No access
+      }
+    }
+    // HOD can see homework for their department subjects
+    else if (req.user!.role === 'HOD') {
+      const accessibleSubjectIds = await getHODAccessibleSubjects(req.user!.id);
+      // Get classes that have these subjects
+      const classSubjects = await prisma.classSubject.findMany({
+        where: { subjectId: { in: accessibleSubjectIds } },
+        select: { classId: true },
+        distinct: ['classId'],
+      });
+      where.classId = { in: classSubjects.map((cs) => cs.classId) };
+    }
+    // Parents can only see homework for their children's classes
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleStudentIds = await getParentAccessibleStudents(parent.id);
+        const students = await prisma.student.findMany({
+          where: { id: { in: accessibleStudentIds } },
+          select: { classId: true },
+          distinct: ['classId'],
+        });
+        const classIds = students.map((s) => s.classId).filter((id): id is string => !!id);
+        where.classId = { in: classIds };
+      } else {
+        where.classId = { in: [] }; // No access
+      }
+    }
+
     if (classId) {
       where.classId = classId as string;
     }
@@ -81,6 +139,7 @@ export const getHomeworks = async (
       where.status = status as string;
     }
 
+    const MAX_HOMEWORK_LIST = 500;
     const homeworks = await prisma.homework.findMany({
       where,
       include: {
@@ -93,6 +152,7 @@ export const getHomeworks = async (
         },
       },
       orderBy: { dueDate: 'desc' },
+      take: MAX_HOMEWORK_LIST,
     });
 
     // If studentId is provided, include submission status

@@ -47,6 +47,26 @@ export const authenticate = async (
       schoolId: user.schoolId,
     };
 
+    // If user is a parent, check if they have children linked
+    if (user.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: user.id },
+        include: {
+          students: {
+            select: { id: true },
+          },
+        },
+      });
+
+      if (!parent) {
+        throw new AppError('Parent profile not found', 404);
+      }
+
+      if (!parent.students || parent.students.length === 0) {
+        throw new AppError('Access denied: No children linked to your account. Please contact the school administrator.', 403);
+      }
+    }
+
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
@@ -69,5 +89,70 @@ export const authorize = (...roles: string[]) => {
 
     next();
   };
+};
+
+/**
+ * Check if user has any of the specified permissions
+ */
+export const hasPermission = (req: AuthRequest, ...allowedRoles: string[]): boolean => {
+  if (!req.user) return false;
+  return allowedRoles.includes(req.user.role);
+};
+
+/**
+ * Middleware to check if user can access multi-school (SUPER_ADMIN only)
+ */
+export const requireSuperAdmin = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.user || req.user.role !== 'SUPER_ADMIN') {
+    return next(new AppError('Super admin access required', 403));
+  }
+  next();
+};
+
+/**
+ * Middleware to check if a parent has children linked to their account
+ * Parents without children should not have access to the system
+ */
+export const requireParentWithChildren = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) {
+      return next(new AppError('Authentication required', 401));
+    }
+
+    if (req.user.role !== 'PARENT') {
+      // Not a parent, skip this check
+      return next();
+    }
+
+    // Check if parent exists and has children
+    const parent = await prisma.parent.findFirst({
+      where: { userId: req.user.id },
+      include: {
+        students: {
+          select: { id: true },
+        },
+      },
+    });
+
+    if (!parent) {
+      return next(new AppError('Parent profile not found', 404));
+    }
+
+    if (!parent.students || parent.students.length === 0) {
+      return next(new AppError('Access denied: No children linked to your account. Please contact the school administrator.', 403));
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 };
 

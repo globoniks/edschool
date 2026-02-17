@@ -3,11 +3,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
 import { Bell, Plus, X } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { usePermissions } from '../hooks/usePermissions';
+import { useToast } from '../components/ToastProvider';
+import LoadingSpinner from '../components/LoadingSpinner';
+import EmptyState from '../components/EmptyState';
 
 export default function Announcements() {
   const { user } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
+  const { showSuccess, showError } = useToast();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -34,9 +39,10 @@ export default function Announcements() {
         isImportant: false,
         expiresAt: '',
       });
+      showSuccess('Announcement created successfully');
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Failed to create announcement');
+      showError(error.response?.data?.message || 'Failed to create announcement');
     },
   });
 
@@ -61,7 +67,7 @@ export default function Announcements() {
     }
   };
 
-  const isAdminOrTeacher = user?.role === 'ADMIN' || user?.role === 'TEACHER';
+  const { canCreateAnnouncements } = usePermissions();
 
   return (
     <div>
@@ -70,7 +76,7 @@ export default function Announcements() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Announcements</h1>
           <p className="text-sm sm:text-base text-gray-600 mt-2">School-wide announcements and updates</p>
         </div>
-        {isAdminOrTeacher && (
+        {canCreateAnnouncements() && (
           <button
             onClick={() => setIsModalOpen(true)}
             className="btn btn-primary flex items-center justify-center w-full sm:w-auto"

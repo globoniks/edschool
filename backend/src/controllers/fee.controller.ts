@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { getParentAccessibleStudents, canParentAccessStudent } from '../utils/permissions.js';
 
 const createFeeStructureSchema = z.object({
   name: z.string(),
@@ -181,8 +182,27 @@ export const getPayments = async (
         throw new AppError('Student not found', 404);
       }
       where.studentId = me.id;
+    }
+    // Parents can only see their children's payments
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleStudentIds = await getParentAccessibleStudents(parent.id);
+        where.studentId = { in: accessibleStudentIds };
+      } else {
+        where.studentId = { in: [] }; // No access
+      }
     } else if (studentId) {
       where.studentId = studentId as string;
+    }
+
+    // Admin/school roles: restrict to current school (students in this school only)
+    const schoolScopedRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'FINANCE_ADMIN', 'ACADEMIC_ADMIN', 'HR_ADMIN'];
+    if (schoolScopedRoles.includes(req.user!.role as string) && req.user!.schoolId) {
+      where.student = { schoolId: req.user!.schoolId };
     }
 
     if (status) {
@@ -196,6 +216,7 @@ export const getPayments = async (
       };
     }
 
+    const MAX_PAYMENTS_LIST = 5000;
     const payments = await prisma.feePayment.findMany({
       where,
       include: {
@@ -203,6 +224,7 @@ export const getPayments = async (
         feeStructure: true,
       },
       orderBy: { createdAt: 'desc' },
+      take: MAX_PAYMENTS_LIST,
     });
 
     res.json(payments);
@@ -218,6 +240,31 @@ export const getFeeDues = async (
 ) => {
   try {
     const { studentId } = req.params;
+
+    // Students can only access their own fee dues
+    if (req.user!.role === 'STUDENT') {
+      const me = await prisma.student.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (!me || me.id !== studentId) {
+        throw new AppError('Forbidden', 403);
+      }
+    }
+    // Parents can only access their children's fee dues
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (!parent) {
+        throw new AppError('Parent not found', 404);
+      }
+      const hasAccess = await canParentAccessStudent(parent.id, studentId);
+      if (!hasAccess) {
+        throw new AppError('Forbidden', 403);
+      }
+    }
 
     const payments = await prisma.feePayment.findMany({
       where: {

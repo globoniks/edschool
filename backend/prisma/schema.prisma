@@ -28,12 +28,14 @@ model School {
   subjects      Subject[]
   students      Student[]
   teachers      Teacher[]
+  hods          HOD[]
   fees          FeeStructure[]
   exams         Exam[]
   announcements Announcement[]
   timetables    Timetable[]
   homeworks     Homework[]
   holidays      Holiday[]
+  classMoments  ClassMoment[]
 
   @@index([code])
 }
@@ -51,18 +53,25 @@ model User {
   updatedAt DateTime  @updatedAt
 
   // Relations
-  school  School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  profile UserProfile?
-  teacher Teacher?
-  parent  Parent?
-  student Student?
+  school      School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  profile     UserProfile?
+  teacher     Teacher?
+  parent      Parent?
+  student     Student?
+  hod         HOD?
+  alertReads  AlertRead[]
 
   @@index([email])
   @@index([schoolId])
 }
 
 enum UserRole {
-  ADMIN
+  SUPER_ADMIN
+  SCHOOL_ADMIN
+  ACADEMIC_ADMIN
+  FINANCE_ADMIN
+  HR_ADMIN
+  HOD
   TEACHER
   PARENT
   STUDENT
@@ -94,12 +103,13 @@ model Class {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  school      School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  students    Student[]
-  subjects    ClassSubject[]
-  timetables  Timetable[]
-  homeworks   Homework[]
-  attendances Attendance[]
+  school       School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  students     Student[]
+  subjects     ClassSubject[]
+  timetables   Timetable[]
+  homeworks    Homework[]
+  attendances  Attendance[]
+  classMoments ClassMoment[]
 
   @@unique([schoolId, name, section, academicYear])
   @@index([schoolId])
@@ -119,6 +129,7 @@ model Subject {
   classSubjects ClassSubject[]
   examMarks     ExamMark[]
   timetables    Timetable[]
+  hods          HOD[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -239,9 +250,29 @@ model Teacher {
   timetables        Timetable[]
   homeworks         Homework[]
   teacherAttendance TeacherAttendance[]
+  classMoments      ClassMoment[]
 
   @@index([schoolId])
   @@index([employeeId])
+}
+
+// HOD (Head of Department) management
+model HOD {
+  id        String   @id @default(cuid())
+  schoolId  String
+  userId    String   @unique
+  subjectId String   // Department/Subject they head
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  school  School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, subjectId])
+  @@index([schoolId])
+  @@index([subjectId])
+  @@index([userId])
 }
 
 // Attendance management
@@ -540,6 +571,26 @@ enum AnnouncementTarget {
   SPECIFIC_CLASS
 }
 
+// On-the-spot photo shared by teacher to a whole class
+model ClassMoment {
+  id        String   @id @default(cuid())
+  schoolId  String
+  classId   String
+  teacherId String
+  imageUrl  String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  school  School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId])
+  @@index([classId])
+  @@index([teacherId])
+  @@index([createdAt])
+}
+
 // Communication: Messages
 model Message {
   id          String   @id @default(cuid())
@@ -555,4 +606,17 @@ model Message {
   @@index([senderId])
   @@index([receiverId])
   @@index([isRead])
+}
+
+// Parent alert read state (alerts are generated on-the-fly; this stores which were read)
+model AlertRead {
+  id      String   @id @default(cuid())
+  userId  String
+  alertId String
+  readAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, alertId])
+  @@index([userId])
 }

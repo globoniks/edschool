@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { getParentAccessibleStudents, getTeacherAccessibleClasses } from '../utils/permissions.js';
 
 const createStudentSchema = z.object({
   admissionNumber: z.string(),
@@ -78,7 +79,11 @@ export const getStudents = async (
 ) => {
   try {
     const schoolId = req.user!.schoolId;
-    const { classId, search, page = '1', limit = '20' } = req.query;
+    const { classId, search, gender, status, page = '1', limit = '20' } = req.query;
+
+    const MAX_LIST_LIMIT = 6000; // safe cap for 5k-student schools
+    const limitNum = Math.min(Number(limit) || 20, MAX_LIST_LIMIT);
+    const pageNum = Math.max(1, Number(page) || 1);
 
     const where: any = { schoolId };
 
@@ -93,9 +98,47 @@ export const getStudents = async (
       }
       where.id = me.id;
     }
+    // Parents can only see their own children
+    else if (req.user!.role === 'PARENT') {
+      const parent = await prisma.parent.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (parent) {
+        const accessibleStudentIds = await getParentAccessibleStudents(parent.id);
+        where.id = { in: accessibleStudentIds };
+      } else {
+        where.id = { in: [] }; // No access
+      }
+    }
+    // Teachers can only see students in their assigned classes
+    else if (req.user!.role === 'TEACHER') {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: req.user!.id },
+        select: { id: true },
+      });
+      if (teacher) {
+        const accessibleClassIds = await getTeacherAccessibleClasses(teacher.id);
+        where.classId = { in: accessibleClassIds };
+      } else {
+        where.classId = { in: [] }; // No access
+      }
+    }
 
     if (classId) {
       where.classId = classId as string;
+    }
+
+    if (gender) {
+      where.gender = gender as string;
+    }
+
+    if (status) {
+      if (status === 'active') {
+        where.isActive = true;
+      } else if (status === 'inactive') {
+        where.isActive = false;
+      }
     }
 
     if (search) {
@@ -117,8 +160,8 @@ export const getStudents = async (
             },
           },
         },
-        skip: (Number(page) - 1) * Number(limit),
-        take: Number(limit),
+        skip: (pageNum - 1) * limitNum,
+        take: limitNum,
         orderBy: { createdAt: 'desc' },
       }),
       prisma.student.count({ where }),
@@ -127,10 +170,10 @@ export const getStudents = async (
     res.json({
       students,
       pagination: {
-        page: Number(page),
-        limit: Number(limit),
+        page: pageNum,
+        limit: limitNum,
         total,
-        pages: Math.ceil(total / Number(limit)),
+        pages: Math.ceil(total / limitNum),
       },
     });
   } catch (error) {

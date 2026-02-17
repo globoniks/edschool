@@ -1,0 +1,325 @@
+/**
+ * EdSchool – Mobile-first responsive styles
+ * Breakpoints: 640px (sm), 768px (md), 1024px (lg), 1280px (xl)
+ */
+
+/* ============================================
+   GLOBAL: overflow, box-sizing, root
+   ============================================ */
+
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+/* Safe area for notched devices */
+.safe-area-inset-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Fluid typography: scale between 16px (320px viewport) and base at 1024px+ */
+:root {
+  --fluid-min-viewport: 20rem;   /* 320px */
+  --fluid-max-viewport: 80rem;   /* 1280px */
+  --fluid-text-base: 1rem;       /* 16px */
+  --fluid-text-sm: 0.875rem;
+  --fluid-text-lg: 1.125rem;
+  --fluid-text-xl: 1.25rem;
+  --fluid-text-2xl: 1.5rem;
+  --fluid-text-3xl: 1.875rem;
+  --fluid-text-4xl: 2.25rem;
+}
+
+/* Mobile-first: ensure minimum 16px for body to avoid zoom on iOS */
+@media (max-width: 639px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* ============================================
+   IMAGES & MEDIA
+   ============================================ */
+
+img,
+video,
+embed,
+iframe,
+object {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+img {
+  display: block;
+}
+
+/* Preserve aspect ratio for responsive containers */
+.aspect-video,
+.aspect-square {
+  overflow: hidden;
+}
+
+.aspect-video img,
+.aspect-square img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   TABLES: scrollable on small screens
+   ============================================ */
+
+.table-responsive,
+.table-wrapper,
+[class*="overflow-auto"] table {
+  /* Table stays full width; parent scrolls */
+}
+
+.table-responsive,
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .table-responsive,
+  .table-wrapper {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Optional: card-style table rows on very small screens */
+@media (max-width: 639px) {
+  .table-mobile-cards table,
+  .table-mobile-cards thead {
+    display: block;
+  }
+  .table-mobile-cards thead {
+    position: absolute;
+    left: -9999px;
+  }
+  .table-mobile-cards tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-gray-200, #e5e7eb);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    background: white;
+  }
+  .table-mobile-cards td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.5rem 0;
+    border: none;
+  }
+  .table-mobile-cards td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-gray-600, #4b5563);
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+}
+
+/* ============================================
+   FORMS & INPUTS: touch-friendly, readable
+   ============================================ */
+
+@media (max-width: 768px) {
+  .input,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="date"],
+  select,
+  .select,
+  textarea,
+  .textarea {
+    min-height: 2.75rem;   /* 44px */
+    font-size: 1rem;      /* 16px – prevents zoom on iOS */
+    padding: 0.5rem 0.75rem;
+  }
+
+  textarea,
+  .textarea {
+    min-height: 6rem;
+  }
+}
+
+/* ============================================
+   BUTTONS & TOUCH TARGETS (min 44x44px)
+   ============================================ */
+
+button,
+a[role="button"],
+.btn,
+[type="submit"],
+[type="button"],
+input[type="checkbox"],
+input[type="radio"],
+select {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+@media (max-width: 768px) {
+  /* Ensure icon-only buttons and nav links meet 44px */
+  .touch-target,
+  .nav-link,
+  [aria-label][class*="p-2"] {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-icon,
+  button.p-2 {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0.625rem;
+  }
+}
+
+/* ============================================
+   LAYOUT: containers, spacing per breakpoint
+   ============================================ */
+
+.container-responsive {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: 1280px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-responsive {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* ============================================
+   GRID: stack on small, columns on larger
+   ============================================ */
+
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-responsive-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-responsive-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-responsive-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-responsive-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   TYPOGRAPHY: fluid scaling
+   ============================================ */
+
+@media (max-width: 639px) {
+  h1 {
+    font-size: clamp(1.375rem, 5vw, 2rem);
+    line-height: 1.2;
+  }
+  h2 {
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+  }
+  h3 {
+    font-size: clamp(1.125rem, 3.5vw, 1.5rem);
+  }
+}
+
+/* ============================================
+   NAVIGATION: sidebar width on small screens
+   ============================================ */
+
+@media (max-width: 1023px) {
+  .sidebar-drawer {
+    width: min(20rem, 85vw);
+    max-width: 20rem;
+  }
+}
+
+/* ============================================
+   PAGINATION: wrap on small screens
+   ============================================ */
+
+.pagination-responsive {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.pagination-responsive button {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.5rem 0.75rem;
+}

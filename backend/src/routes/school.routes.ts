@@ -9,8 +9,10 @@ import { authenticate, authorize } from '../middleware/auth.middleware.js';
 
 export const schoolRoutes = Router();
 
-schoolRoutes.post('/', authenticate, authorize('ADMIN'), createSchool);
+// Only SUPER_ADMIN can create schools
+schoolRoutes.post('/', authenticate, authorize('SUPER_ADMIN'), createSchool);
 schoolRoutes.get('/', authenticate, getSchools);
 schoolRoutes.get('/:id', authenticate, getSchool);
-schoolRoutes.patch('/:id', authenticate, authorize('ADMIN'), updateSchool);
+// SUPER_ADMIN and SCHOOL_ADMIN can update their school
+schoolRoutes.patch('/:id', authenticate, authorize('SUPER_ADMIN', 'SCHOOL_ADMIN'), updateSchool);
 

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -25,20 +25,43 @@ async function main() {
   // Hash password for all users
   const hashedPassword = await bcrypt.hash('password123', 10);
 
-  // Create Admin user
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@school.com' },
+  // Create SUPER_ADMIN user
+  const superAdminUser = await prisma.user.upsert({
+    where: { email: 'superadmin@school.com' },
     update: {},
     create: {
-      email: 'admin@school.com',
+      email: 'superadmin@school.com',
       password: hashedPassword,
-      role: 'ADMIN',
+      role: 'SUPER_ADMIN',
       schoolId: school.id,
       isActive: true,
       profile: {
         create: {
-          firstName: 'Admin',
-          lastName: 'User',
+          firstName: 'Super',
+          lastName: 'Admin',
+          phone: '+1234567890',
+        },
+      },
+    },
+    include: { profile: true },
+  });
+
+  console.log('✅ Super Admin user created:', superAdminUser.email);
+
+  // Create SCHOOL_ADMIN user
+  const schoolAdminUser = await prisma.user.upsert({
+    where: { email: 'schooladmin@school.com' },
+    update: {},
+    create: {
+      email: 'schooladmin@school.com',
+      password: hashedPassword,
+      role: 'SCHOOL_ADMIN',
+      schoolId: school.id,
+      isActive: true,
+      profile: {
+        create: {
+          firstName: 'School',
+          lastName: 'Admin',
           phone: '+1234567891',
         },
       },
@@ -46,7 +69,76 @@ async function main() {
     include: { profile: true },
   });
 
-  console.log('✅ Admin user created:', adminUser.email);
+  console.log('✅ School Admin user created:', schoolAdminUser.email);
+
+  // Create ACADEMIC_ADMIN user
+  const academicAdminUser = await prisma.user.upsert({
+    where: { email: 'academic@school.com' },
+    update: {},
+    create: {
+      email: 'academic@school.com',
+      password: hashedPassword,
+      role: 'ACADEMIC_ADMIN',
+      schoolId: school.id,
+      isActive: true,
+      profile: {
+        create: {
+          firstName: 'Academic',
+          lastName: 'Admin',
+          phone: '+1234567892',
+        },
+      },
+    },
+    include: { profile: true },
+  });
+
+  console.log('✅ Academic Admin user created:', academicAdminUser.email);
+
+  // Create FINANCE_ADMIN user
+  const financeAdminUser = await prisma.user.upsert({
+    where: { email: 'finance@school.com' },
+    update: {},
+    create: {
+      email: 'finance@school.com',
+      password: hashedPassword,
+      role: 'FINANCE_ADMIN',
+      schoolId: school.id,
+      isActive: true,
+      profile: {
+        create: {
+          firstName: 'Finance',
+          lastName: 'Admin',
+          phone: '+1234567893',
+        },
+      },
+    },
+    include: { profile: true },
+  });
+
+  console.log('✅ Finance Admin user created:', financeAdminUser.email);
+
+  // Create HR_ADMIN user
+  const hrAdminUser = await prisma.user.upsert({
+    where: { email: 'hr@school.com' },
+    update: {},
+    create: {
+      email: 'hr@school.com',
+      password: hashedPassword,
+      role: 'HR_ADMIN',
+      schoolId: school.id,
+      isActive: true,
+      profile: {
+        create: {
+          firstName: 'HR',
+          lastName: 'Admin',
+          phone: '+1234567894',
+        },
+      },
+    },
+    include: { profile: true },
+  });
+
+  console.log('✅ HR Admin user created:', hrAdminUser.email);
 
   // Create Teacher user
   const teacherUser = await prisma.user.upsert({
@@ -216,6 +308,45 @@ async function main() {
 
   console.log('✅ Subjects created');
 
+  // Create HOD user (Head of Mathematics Department)
+  const hodUser = await prisma.user.upsert({
+    where: { email: 'hod@school.com' },
+    update: {},
+    create: {
+      email: 'hod@school.com',
+      password: hashedPassword,
+      role: 'HOD',
+      schoolId: school.id,
+      isActive: true,
+      profile: {
+        create: {
+          firstName: 'Head',
+          lastName: 'Department',
+          phone: '+1234567895',
+        },
+      },
+    },
+    include: { profile: true },
+  });
+
+  // Create HOD assignment for Mathematics
+  await prisma.hOD.upsert({
+    where: {
+      schoolId_subjectId: {
+        schoolId: school.id,
+        subjectId: math.id,
+      },
+    },
+    update: {},
+    create: {
+      schoolId: school.id,
+      userId: hodUser.id,
+      subjectId: math.id,
+    },
+  });
+
+  console.log('✅ HOD user created:', hodUser.email);
+
   // Assign subjects to classes
   await prisma.classSubject.upsert({
     where: {
@@ -290,8 +421,10 @@ async function main() {
     },
   });
 
-  const student2 = await prisma.student.create({
-    data: {
+  const student2 = await prisma.student.upsert({
+    where: { admissionNumber: 'ADM002' },
+    update: {},
+    create: {
       schoolId: school.id,
       admissionNumber: 'ADM002',
       firstName: 'Bob',
@@ -331,7 +464,7 @@ async function main() {
     {
       email: 'admin2@school.com',
       password: 'admin123',
-      role: 'ADMIN' as const,
+      role: 'SCHOOL_ADMIN' as const,
       firstName: 'Sarah',
       lastName: 'Administrator',
       phone: '+1234567895',
@@ -702,7 +835,7 @@ async function main() {
       content: 'We welcome all students and parents to the new academic year 2024-2025. Best wishes for a successful year ahead!',
       targetAudience: ['ALL'],
       isImportant: true,
-      createdBy: adminUser.id,
+      createdBy: schoolAdminUser.id,
     },
   });
 
@@ -713,7 +846,7 @@ async function main() {
       content: 'Parent-Teacher meeting scheduled for December 15, 2024. Please attend.',
       targetAudience: ['PARENTS'],
       isImportant: true,
-      createdBy: adminUser.id,
+      createdBy: schoolAdminUser.id,
     },
   });
 
