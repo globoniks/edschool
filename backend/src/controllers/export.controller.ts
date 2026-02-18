@@ -8,7 +8,7 @@ import { getParentAccessibleStudents, getTeacherAccessibleClasses } from '../uti
 const convertToCSV = (data: any[], headers: string[]): string => {
   const rows = data.map((row) =>
     headers.map((header) => {
-      const value = row[header] || '';
+      const value = row[header] ?? '';
       // Escape commas and quotes in CSV
       if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
         return `"${value.replace(/"/g, '""')}"`;
@@ -18,6 +18,10 @@ const convertToCSV = (data: any[], headers: string[]): string => {
   );
   return [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
 };
+
+const MAX_EXPORT_STUDENTS = 5000;
+const MAX_EXPORT_TEACHERS = 2000;
+const MAX_EXPORT_FEE_PAYMENTS = 5000;
 
 export const exportStudents = async (
   req: AuthRequest,
@@ -272,8 +276,8 @@ export const exportExams = async (
         'Admission Number': mark.student.admissionNumber,
         'Subject': mark.subject.name,
         'Marks Obtained': mark.marksObtained,
-        'Total Marks': mark.totalMarks,
-        'Percentage': `${((mark.marksObtained / mark.totalMarks) * 100).toFixed(2)}%`,
+        'Total Marks': mark.maxMarks,
+        'Percentage': `${(mark.maxMarks > 0 ? (mark.marksObtained / mark.maxMarks) * 100 : 0).toFixed(2)}%`,
         'Grade': mark.grade || 'N/A',
       }));
 
@@ -334,7 +338,7 @@ export const exportFees = async (
     }
 
     if (format === 'csv') {
-      const csvData = payments.map((p) => ({
+      const csvData: Array<Record<string, string | number>> = payments.map((p) => ({
         'Student Name': `${p.student.firstName} ${p.student.lastName}`,
         'Admission Number': p.student.admissionNumber,
         'Fee Type': p.feeStructure.type,
@@ -342,9 +346,9 @@ export const exportFees = async (
         'Discount': p.discount || 0,
         'Scholarship': p.scholarship || 0,
         'Total Paid': p.amount - (p.discount || 0) - (p.scholarship || 0),
-        'Payment Method': p.paymentMethod,
+        'Payment Method': p.paymentMethod ?? 'N/A',
         'Transaction ID': p.transactionId || 'N/A',
-        'Payment Date': p.paymentDate.toISOString().split('T')[0],
+        'Payment Date': p.paymentDate ? p.paymentDate.toISOString().split('T')[0] : 'N/A',
       }));
 
       const paymentHeaders = [

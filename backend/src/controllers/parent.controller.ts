@@ -386,6 +386,7 @@ export const getParentHomework = async (
           include: {
             student: {
               include: {
+                class: true,
                 homeworkSubmissions: {
                   include: {
                     homework: {
