@@ -282,6 +282,50 @@ pm2 restart edschool-backend
 
 ---
 
+## 📌 After pushing latest update (run these in order)
+
+Run these on the VPS **every time** you deploy a new version (e.g. after `git pull`):
+
+```bash
+cd /var/www/edschool
+
+# 1. Install dependencies (if package.json or lockfile changed)
+npm install
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
+
+# 2. Backend: Prisma (schema + migrations + seed)
+cd backend
+npx prisma generate
+npx prisma migrate deploy
+npx prisma db seed
+cd ..
+
+# 3. Build backend and frontend
+cd backend && npm run build && cd ..
+cd frontend && npm run build && cd ..
+
+# 4. Restart the backend
+pm2 restart edschool-backend
+```
+
+**One-liner** (copy-paste once, runs everything in order):
+
+```bash
+cd /var/www/edschool && \
+npm install && cd backend && npm install && cd ../frontend && npm install && cd .. && \
+cd backend && npx prisma generate && npx prisma migrate deploy && npx prisma db seed && cd .. && \
+cd backend && npm run build && cd ../frontend && npm run build && cd .. && \
+pm2 restart edschool-backend
+```
+
+- **Login after deploy:** `schooladmin@school.com` / `password123` (and other seed users).
+- **Migrations must be in the repo:** The folder `backend/prisma/migrations/` is no longer in `.gitignore`. Commit and push it so the VPS gets migrations and `migrate deploy` can run. If you already had migrations ignored, do a one-time: `git add backend/prisma/migrations/ && git commit -m "Track prisma migrations for deploy" && git push`.
+- If **migrate deploy** says "no pending migrations", that’s fine — then run **seed**.
+- If **seed** still fails with enum error (e.g. migrations weren’t on the server yet), use the one-time SQL fix in the Troubleshooting section below, then run **seed** again.
+
+---
+
 ## 🐛 Troubleshooting
 
 ### Backend not starting?
@@ -309,13 +353,21 @@ pm2 list  # Check if process is running
 ```
 
 ### "invalid input value for enum UserRole: SUPER_ADMIN" when running seed?
-- The database enum is out of date (e.g. still only `ADMIN`, `TEACHER`, `PARENT`, `STUDENT`). Pending migrations that add `SUPER_ADMIN`, `TRANSPORT_MANAGER`, etc. have not been applied.
-- **Fix:** Apply all migrations, then run the seed:
+- The database enum is out of date (e.g. only `ADMIN`, `TEACHER`, `PARENT`, `STUDENT`). That usually happens because **migrations were not on the VPS** (they used to be in `.gitignore`; that’s now fixed so migrations are committed).
+- **Option A – Use migrations (after next deploy):** Ensure `backend/prisma/migrations/` is in the repo (no longer ignored). On VPS after `git pull` run:
   ```bash
   cd /var/www/edschool/backend
   npx prisma migrate deploy
   npx prisma db seed
   ```
+- **Option B – One-time SQL fix (right now):** Run the fix script against your DB, then run the seed:
+  ```bash
+  cd /var/www/edschool/backend
+  psql "$DATABASE_URL" -f prisma/fix-user-role-enum.sql
+  # Or if DATABASE_URL is in .env: psql "postgresql://edschool_user:YOUR_PASSWORD@localhost:5432/edschool_db?schema=public" -f prisma/fix-user-role-enum.sql
+  npx prisma db seed
+  ```
+  (Use your real DB URL/password. The script is `backend/prisma/fix-user-role-enum.sql`.)
 
 ### schooladmin@school.com (or any test user) "Invalid credentials" or not working?
 - **Seed was not run on the VPS.** The deployment only runs migrations; test users are created by the seed.

@@ -37,8 +37,8 @@ logs/
 *.sln
 *.sw?
 
-# Prisma
-backend/prisma/migrations/
+# Prisma (keep migrations in repo so VPS can run migrate deploy)
+# backend/prisma/migrations/  — do NOT ignore; needed for deploy
 
 # Uploads
 backend/uploads/
