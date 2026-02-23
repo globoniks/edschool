@@ -1,6 +1,8 @@
 -- One-time fix: update UserRole enum to include all roles (run if seed fails with "invalid input value for enum UserRole: SUPER_ADMIN").
--- Run from backend dir: psql $DATABASE_URL -f prisma/fix-user-role-enum.sql
--- Or: psql -U edschool_user -d edschool_db -h localhost -f prisma/fix-user-role-enum.sql
+-- Run from backend dir. psql does NOT accept ?schema=public in the URL, so use one of:
+--   psql -h localhost -p 5432 -U edschool_user -d edschool_db -f prisma/fix-user-role-enum.sql
+--   psql "postgresql://edschool_user:PASSWORD@localhost:5432/edschool_db" -f prisma/fix-user-role-enum.sql
+-- (Do not include ?schema=public in the URL.)
 
 BEGIN;
 CREATE TYPE "UserRole_new" AS ENUM (
@@ -10,7 +12,6 @@ CREATE TYPE "UserRole_new" AS ENUM (
   'FINANCE_ADMIN',
   'HR_ADMIN',
   'TRANSPORT_MANAGER',
-  'HOD',
   'TEACHER',
   'PARENT',
   'STUDENT'

@@ -3,7 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
-import { getTeacherAccessibleClasses, getHODAccessibleSubjects, getParentAccessibleStudents } from '../utils/permissions.js';
+import { getTeacherAccessibleClasses, getParentAccessibleStudents } from '../utils/permissions.js';
 
 const createHomeworkSchema = z.object({
   classId: z.string(),
@@ -95,17 +95,6 @@ export const getHomeworks = async (
       } else {
         where.classId = { in: [] }; // No access
       }
-    }
-    // HOD can see homework for their department subjects
-    else if (req.user!.role === 'HOD') {
-      const accessibleSubjectIds = await getHODAccessibleSubjects(req.user!.id);
-      // Get classes that have these subjects
-      const classSubjects = await prisma.classSubject.findMany({
-        where: { subjectId: { in: accessibleSubjectIds } },
-        select: { classId: true },
-        distinct: ['classId'],
-      });
-      where.classId = { in: classSubjects.map((cs) => cs.classId) };
     }
     // Parents can only see homework for their children's classes
     else if (req.user!.role === 'PARENT') {

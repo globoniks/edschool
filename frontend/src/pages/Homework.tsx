@@ -17,7 +17,7 @@ export default function Homework() {
   const [selectedHomework, setSelectedHomework] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useToast();
-  const canViewSubmissions = user?.role === 'TEACHER' || ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD'].includes(user?.role || '');
+  const canViewSubmissions = user?.role === 'TEACHER' || ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'].includes(user?.role || '');
 
   const [formData, setFormData] = useState({
     classId: '',

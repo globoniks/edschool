@@ -63,7 +63,6 @@ function getTabsForRole(role: string | undefined): TabConfig[] {
     case 'ACADEMIC_ADMIN':
     case 'FINANCE_ADMIN':
     case 'HR_ADMIN':
-    case 'HOD':
       return ADMIN_TABS;
     default:
       return [];

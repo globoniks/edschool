@@ -8,7 +8,6 @@ export type UserRole =
   | 'FINANCE_ADMIN'
   | 'HR_ADMIN'
   | 'TRANSPORT_MANAGER'
-  | 'HOD'
   | 'TEACHER'
   | 'PARENT'
   | 'STUDENT';
@@ -142,19 +141,6 @@ const roleConfigs: Record<string, RoleUIConfig> = {
     dashboardLayout: 'data-dense',
     showMetrics: true,
     showCharts: false,
-    showQuickActions: true,
-    showAlerts: false,
-    showFinance: false,
-    showProgress: false,
-  },
-  HOD: {
-    focus: 'data',
-    primaryColor: 'teal-600',
-    accentColor: 'teal-500',
-    priorityFeatures: ['academics', 'exams', 'attendance', 'reports'],
-    dashboardLayout: 'data-dense',
-    showMetrics: true,
-    showCharts: true,
     showQuickActions: true,
     showAlerts: false,
     showFinance: false,

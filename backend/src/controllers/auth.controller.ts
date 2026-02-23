@@ -14,7 +14,7 @@ const registerSchema = z.object({
     'ACADEMIC_ADMIN',
     'FINANCE_ADMIN',
     'HR_ADMIN',
-    'HOD',
+    'TRANSPORT_MANAGER',
     'TEACHER',
     'PARENT',
     'STUDENT',

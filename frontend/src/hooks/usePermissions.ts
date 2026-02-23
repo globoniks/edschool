@@ -6,7 +6,7 @@ type UserRole =
   | 'ACADEMIC_ADMIN'
   | 'FINANCE_ADMIN'
   | 'HR_ADMIN'
-  | 'HOD'
+  | 'TRANSPORT_MANAGER'
   | 'TEACHER'
   | 'PARENT'
   | 'STUDENT';
@@ -54,7 +54,6 @@ export function usePermissions() {
       'SUPER_ADMIN',
       'SCHOOL_ADMIN',
       'ACADEMIC_ADMIN',
-      'HOD',
       'TEACHER',
     ].includes(role);
   };

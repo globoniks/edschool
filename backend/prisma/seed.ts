@@ -331,45 +331,6 @@ async function main() {
 
   console.log('✅ Subjects created');
 
-  // Create HOD user (Head of Mathematics Department)
-  const hodUser = await prisma.user.upsert({
-    where: { email: 'hod@school.com' },
-    update: {},
-    create: {
-      email: 'hod@school.com',
-      password: hashedPassword,
-      role: 'HOD',
-      schoolId: school.id,
-      isActive: true,
-      profile: {
-        create: {
-          firstName: 'Head',
-          lastName: 'Department',
-          phone: '+1234567895',
-        },
-      },
-    },
-    include: { profile: true },
-  });
-
-  // Create HOD assignment for Mathematics
-  await prisma.hOD.upsert({
-    where: {
-      schoolId_subjectId: {
-        schoolId: school.id,
-        subjectId: math.id,
-      },
-    },
-    update: {},
-    create: {
-      schoolId: school.id,
-      userId: hodUser.id,
-      subjectId: math.id,
-    },
-  });
-
-  console.log('✅ HOD user created:', hodUser.email);
-
   // Assign subjects to classes
   await prisma.classSubject.upsert({
     where: {

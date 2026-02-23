@@ -352,6 +352,15 @@ netstat -tulpn | grep 3001
 pm2 list  # Check if process is running
 ```
 
+### Seed fails: "The table `public.HOD` does not exist" (or other missing table)?
+- The migrations were baselined (marked as applied) but their SQL was never run, so tables like HOD, Holiday, ClassMoment, AlertRead, Bus, Route, StudentTransport are missing.
+- **Fix:** Run the script that creates all missing tables (safe to run even if some already exist):
+  ```bash
+  cd /var/www/edschool/backend
+  psql "postgresql://edschool_user:YOUR_PASSWORD@localhost:5432/edschool_db" -f prisma/create-missing-tables.sql
+  ```
+  Then run: `npx prisma db seed`
+
 ### "invalid input value for enum UserRole: SUPER_ADMIN" when running seed?
 - The database enum is out of date (e.g. only `ADMIN`, `TEACHER`, `PARENT`, `STUDENT`). That usually happens because **migrations were not on the VPS** (they used to be in `.gitignore`; that’s now fixed so migrations are committed).
 - **Option A – Use migrations (after next deploy):** Ensure `backend/prisma/migrations/` is in the repo (no longer ignored). On VPS after `git pull` run:
@@ -360,14 +369,40 @@ pm2 list  # Check if process is running
   npx prisma migrate deploy
   npx prisma db seed
   ```
-- **Option B – One-time SQL fix (right now):** Run the fix script against your DB, then run the seed:
+- **Option B – One-time SQL fix (right now):** Run the fix script against your DB, then run the seed. **Do not use `?schema=public`** — `psql` does not accept that and will error.
   ```bash
   cd /var/www/edschool/backend
-  psql "$DATABASE_URL" -f prisma/fix-user-role-enum.sql
-  # Or if DATABASE_URL is in .env: psql "postgresql://edschool_user:YOUR_PASSWORD@localhost:5432/edschool_db?schema=public" -f prisma/fix-user-role-enum.sql
+  # Option 1: URL without query string (replace YOUR_PASSWORD with real password)
+  psql "postgresql://edschool_user:YOUR_PASSWORD@localhost:5432/edschool_db" -f prisma/fix-user-role-enum.sql
+  # Option 2: Separate args (psql will prompt for password)
+  psql -h localhost -p 5432 -U edschool_user -d edschool_db -f prisma/fix-user-role-enum.sql
   npx prisma db seed
   ```
-  (Use your real DB URL/password. The script is `backend/prisma/fix-user-role-enum.sql`.)
+  (Use your real DB user/password from backend `.env`. The script is `backend/prisma/fix-user-role-enum.sql`.)
+
+### Migration failed: "type UserRole already exists" (P3018)
+- The database already has the schema (e.g. you ran the enum fix script or an earlier deploy), but Prisma is trying to apply the first migration again and it fails because the types/tables already exist.
+- **Fix: baseline the database** — tell Prisma that all migrations are already applied. Run these from the **backend** directory, one by one:
+
+```bash
+cd /var/www/edschool/backend
+
+npx prisma migrate resolve --applied "20251129123242_edsch"
+npx prisma migrate resolve --applied "20251202175542_add_holiday_relation"
+npx prisma migrate resolve --applied "20260123120000_add_class_moment"
+npx prisma migrate resolve --applied "20260202072602_db2"
+npx prisma migrate resolve --applied "20260216082859_add_alert_read"
+npx prisma migrate resolve --applied "20260220130000_add_transport_manager_and_transport"
+```
+
+- Then **create the missing tables** (baselining didn’t run the migration SQL, so HOD, Holiday, ClassMoment, AlertRead, Bus, Route, StudentTransport are missing). Run once:
+  ```bash
+  cd /var/www/edschool/backend
+  psql "postgresql://edschool_user:YOUR_PASSWORD@localhost:5432/edschool_db" -f prisma/create-missing-tables.sql
+  ```
+  (No `?schema=public` in the URL.)
+- Then run the seed: `npx prisma db seed`
+- From now on, `prisma migrate deploy` will only run **new** migrations (if you add any later). Existing schema is left as-is.
 
 ### schooladmin@school.com (or any test user) "Invalid credentials" or not working?
 - **Seed was not run on the VPS.** The deployment only runs migrations; test users are created by the seed.

@@ -3,7 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
-import { getTeacherAccessibleSubjects, getHODAccessibleSubjects, getParentAccessibleStudents, getParentAccessibleClasses, canParentAccessStudent } from '../utils/permissions.js';
+import { getTeacherAccessibleSubjects, getParentAccessibleStudents, getParentAccessibleClasses, canParentAccessStudent } from '../utils/permissions.js';
 
 const createExamSchema = z.object({
   name: z.string(),
@@ -135,13 +135,6 @@ export const createExamMark = async (
         }
       }
     }
-    // HOD can only enter marks for their department subjects
-    else if (req.user!.role === 'HOD') {
-      const accessibleSubjectIds = await getHODAccessibleSubjects(req.user!.id);
-      if (!accessibleSubjectIds.includes(data.subjectId)) {
-        throw new AppError('HOD does not have access to this subject', 403);
-      }
-    }
 
     // Check if mark already exists
     const existing = await prisma.examMark.findUnique({
@@ -228,11 +221,6 @@ export const getExamMarks = async (
       } else {
         where.subjectId = { in: [] }; // No access
       }
-    }
-    // HOD can only see marks for their department subjects
-    else if (req.user!.role === 'HOD') {
-      const accessibleSubjectIds = await getHODAccessibleSubjects(req.user!.id);
-      where.subjectId = { in: accessibleSubjectIds };
     }
     else if (studentId) {
       where.studentId = studentId as string;

@@ -16,7 +16,7 @@ examRoutes.use(authenticate);
 examRoutes.post('/', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'), createExam);
 examRoutes.get('/', getExams);
 // ACADEMIC_ADMIN, HOD, and TEACHER can enter marks
-examRoutes.post('/marks', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER'), createExamMark);
+examRoutes.post('/marks', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER'), createExamMark);
 examRoutes.get('/marks', getExamMarks);
 examRoutes.get('/report-card/:studentId/:examId', getReportCard);
 

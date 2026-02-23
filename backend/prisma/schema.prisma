@@ -28,7 +28,6 @@ model School {
   subjects      Subject[]
   students      Student[]
   teachers      Teacher[]
-  hods          HOD[]
   fees          FeeStructure[]
   exams         Exam[]
   announcements Announcement[]
@@ -60,7 +59,6 @@ model User {
   teacher     Teacher?
   parent      Parent?
   student     Student?
-  hod         HOD?
   alertReads  AlertRead[]
 
   @@index([email])
@@ -74,7 +72,6 @@ enum UserRole {
   FINANCE_ADMIN
   HR_ADMIN
   TRANSPORT_MANAGER
-  HOD
   TEACHER
   PARENT
   STUDENT
@@ -132,7 +129,6 @@ model Subject {
   classSubjects ClassSubject[]
   examMarks     ExamMark[]
   timetables    Timetable[]
-  hods          HOD[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -258,25 +254,6 @@ model Teacher {
 
   @@index([schoolId])
   @@index([employeeId])
-}
-
-// HOD (Head of Department) management
-model HOD {
-  id        String   @id @default(cuid())
-  schoolId  String
-  userId    String   @unique
-  subjectId String   // Department/Subject they head
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  school  School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-
-  @@unique([schoolId, subjectId])
-  @@index([schoolId])
-  @@index([subjectId])
-  @@index([userId])
 }
 
 // Attendance management

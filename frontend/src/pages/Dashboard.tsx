@@ -35,7 +35,6 @@ export default function Dashboard() {
   const isAdmin = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN'].includes(user?.role || '');
   const isParent = user?.role === 'PARENT';
   const isStudent = user?.role === 'STUDENT';
-  const isHOD = user?.role === 'HOD';
 
   // Fetch parent dashboard data for parents
   const { data: parentDashboard } = useQuery({
@@ -678,7 +677,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-      {/* Non-Admin Dashboard (existing logic for HOD, Student) */}
+      {/* Non-Admin Dashboard (e.g. Student) */}
       {!isAdmin && (
         <div className="text-center py-12">
           <p className="text-gray-500">Dashboard content for your role is being prepared.</p>

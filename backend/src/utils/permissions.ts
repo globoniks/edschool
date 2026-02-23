@@ -105,33 +105,6 @@ export async function getParentAccessibleClasses(parentId: string): Promise<stri
 }
 
 /**
- * Check if HOD has access to a specific subject/department
- */
-export async function canHODAccessSubject(
-  userId: string,
-  subjectId: string
-): Promise<boolean> {
-  const hod = await prisma.hOD.findFirst({
-    where: {
-      userId,
-      subjectId,
-    },
-  });
-  return !!hod;
-}
-
-/**
- * Get all subject IDs that an HOD has access to
- */
-export async function getHODAccessibleSubjects(userId: string): Promise<string[]> {
-  const hods = await prisma.hOD.findMany({
-    where: { userId },
-    select: { subjectId: true },
-  });
-  return hods.map((hod) => hod.subjectId);
-}
-
-/**
  * Check if user has admin-level permissions
  */
 export function isAdminRole(role: UserRole): boolean {
@@ -190,6 +163,6 @@ export function canCreateExams(role: UserRole): boolean {
  * Check if user can enter exam marks
  */
 export function canEnterExamMarks(role: UserRole): boolean {
-  return ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER'].includes(role);
+  return ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER'].includes(role);
 }
 

@@ -26,21 +26,21 @@ import BottomNavigation from './BottomNavigation';
 import { clsx } from 'clsx';
 
 const navigation = [
-  { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
+  { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Parent Portal', href: '/app/parent-portal', icon: UserCircle, roles: ['PARENT'] },
-  { name: 'Holidays', href: '/app/holidays', icon: Calendar, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
+  { name: 'Holidays', href: '/app/holidays', icon: Calendar, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Students', href: '/app/students', icon: Users, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN', 'TEACHER'] },
   { name: 'Teachers', href: '/app/teachers', icon: GraduationCap, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN'] },
   { name: 'Transport', href: '/app/transport', icon: Bus, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'TRANSPORT_MANAGER'] },
-  { name: 'Attendance', href: '/app/attendance', icon: Calendar, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
+  { name: 'Attendance', href: '/app/attendance', icon: Calendar, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Fees', href: '/app/fees', icon: DollarSign, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'FINANCE_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
-  { name: 'Exams', href: '/app/exams', icon: FileText, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
-  { name: 'Timetable', href: '/app/timetable', icon: Clock, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
-  { name: 'Homework', href: '/app/homework', icon: BookOpen, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
+  { name: 'Exams', href: '/app/exams', icon: FileText, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
+  { name: 'Timetable', href: '/app/timetable', icon: Clock, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
+  { name: 'Homework', href: '/app/homework', icon: BookOpen, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Announcements', href: '/app/announcements', icon: Bell, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Class photos', href: '/app/class-moments', icon: Camera, roles: ['TEACHER', 'PARENT', 'STUDENT'] },
-  { name: 'Messages', href: '/app/messages', icon: MessageSquare, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
-  { name: 'Academic', href: '/app/academic', icon: BookMarked, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER'] },
+  { name: 'Messages', href: '/app/messages', icon: MessageSquare, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
+  { name: 'Academic', href: '/app/academic', icon: BookMarked, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER'] },
 ];
 
 function getProfileHref(role: string | undefined): string {
@@ -86,7 +86,7 @@ export default function Layout() {
   useEffect(() => setUserMenuOpen(false), [location.pathname]);
 
   // Normalize role for nav: backend uses SUPER_ADMIN, SCHOOL_ADMIN, etc.; handle legacy or display variants
-  const knownRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TRANSPORT_MANAGER', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'];
+  const knownRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TRANSPORT_MANAGER', 'TEACHER', 'PARENT', 'STUDENT'];
   const navRole = (() => {
     const r = user?.role;
     if (!r) return r;
@@ -108,7 +108,7 @@ export default function Layout() {
     (item) => !navRole || item.roles.includes(navRole)
   );
   // Fallback: if no items match (e.g. unknown or legacy role), show admin-capable links so sidebar isn't blank
-  const adminRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TRANSPORT_MANAGER', 'HOD'];
+  const adminRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TRANSPORT_MANAGER'];
   const navItems =
     filteredNav.length > 0
       ? filteredNav
