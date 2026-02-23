@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../lib/api';
 import { TrendingUp, FileText, Download } from 'lucide-react';
+import { clsx } from 'clsx';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import EmptyState from '../../components/EmptyState';
 import { useToast } from '../../components/ToastProvider';
@@ -12,6 +13,7 @@ export default function ParentAcademicPerformance() {
   const { user } = useAuthStore();
   const { showSuccess, showError } = useToast();
   const [downloading, setDownloading] = useState(false);
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['parent-dashboard'],
@@ -19,7 +21,10 @@ export default function ParentAcademicPerformance() {
     enabled: user?.role === 'PARENT',
   });
 
-  const activeChild = dashboardData?.children?.[0];
+  const children = dashboardData?.children || [];
+  const activeChild = selectedChildId
+    ? children.find((c: any) => c.studentId === selectedChildId)
+    : children[0];
   const studentId = activeChild?.studentId;
 
   const { data: examMarks } = useQuery({
@@ -94,7 +99,7 @@ export default function ParentAcademicPerformance() {
 
   return (
     <div className="pb-20 md:pb-0">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Academic Performance</h1>
           <p className="text-sm text-gray-600 mt-1">Track your child's academic progress</p>
@@ -108,6 +113,27 @@ export default function ParentAcademicPerformance() {
           {downloading ? 'Downloading…' : 'Download Report'}
         </button>
       </div>
+
+      {/* Child selector */}
+      {children.length > 1 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {children.map((child: any) => (
+            <button
+              key={child.studentId}
+              type="button"
+              onClick={() => setSelectedChildId(child.studentId)}
+              className={clsx(
+                'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+                (selectedChildId === child.studentId || (!selectedChildId && child === children[0]))
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              )}
+            >
+              {child.firstName} {child.lastName}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Performance Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">

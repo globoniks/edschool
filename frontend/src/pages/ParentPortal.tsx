@@ -23,10 +23,8 @@ import {
 } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { SkeletonCard } from '../components/Skeleton';
-import StudentProfileCard from '../components/StudentProfileCard';
 import MetricCard from '../components/MetricCard';
 import FeatureCard from '../components/FeatureCard';
-import QuickActionCard from '../components/QuickActionCard';
 import EmptyState from '../components/EmptyState';
 import RoleBasedLayout, { RoleSection } from '../components/RoleBasedLayout';
 
@@ -36,7 +34,7 @@ export default function ParentPortal() {
   const { config, showFinance, showAlerts } = useRoleUI();
   const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
-  const { data: dashboardData, isLoading } = useQuery({
+  const { data: dashboardData, isLoading, isError, refetch } = useQuery({
     queryKey: ['parent-dashboard'],
     queryFn: () => api.get('/parents/dashboard').then((res) => res.data),
     enabled: user?.role === 'PARENT',
@@ -83,12 +81,22 @@ export default function ParentPortal() {
     );
   }
 
-  if (!dashboardData) {
+  if (!dashboardData && !isLoading) {
     return (
       <RoleBasedLayout className="pb-20 md:pb-0">
         <EmptyState
-          title="No data available"
+          variant={isError ? 'error' : 'default'}
+          title={isError ? 'Something went wrong' : 'No data available'}
           description="Unable to load dashboard data. Please try again later."
+          action={
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="btn btn-primary mt-4"
+            >
+              Try again
+            </button>
+          }
         />
       </RoleBasedLayout>
     );
@@ -130,50 +138,36 @@ export default function ParentPortal() {
 
   return (
     <RoleBasedLayout className="pb-20 md:pb-0">
-      {/* Header */}
-      <div className="mb-4 md:mb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-          Welcome, {parent?.firstName || 'Parent'}!
-        </h1>
-        <p className="text-sm text-gray-600 mt-1">Here's what's happening with your child</p>
-      </div>
-
-      {/* Student Profile Card */}
-      {activeChild && (
-        <StudentProfileCard
-          name={`${activeChild.firstName} ${activeChild.lastName}`}
-          class={activeChild.class ? `${activeChild.class.name}${activeChild.class.section ? ` ${activeChild.class.section}` : ''}` : 'N/A'}
-          admissionNumber={activeChild.admissionNumber}
-          photo={activeChild.photo}
-          showSelector={children.length > 1}
-          onChildSelect={() => {
-            const childIds = children.map((c: any) => c.studentId);
-            const currentIndex = childIds.indexOf(selectedChildId || childIds[0]);
-            const nextIndex = (currentIndex + 1) % childIds.length;
-            setSelectedChildId(childIds[nextIndex]);
-          }}
-        >
-          {children.length > 1 && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="flex flex-wrap gap-2">
-                {children.map((child: any) => (
-                  <button
-                    key={child.studentId}
-                    onClick={() => setSelectedChildId(child.studentId)}
-                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                      (selectedChildId === child.studentId || (!selectedChildId && child === children[0]))
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {child.firstName} {child.lastName}
-                  </button>
-                ))}
-              </div>
+      {/* Header with compact child toggle */}
+      <div className="mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+            Welcome, {parent?.firstName || 'Parent'}!
+          </h1>
+          <p className="text-sm text-gray-600 mt-1">Here's what's happening with your child</p>
+        </div>
+        {activeChild && children.length > 1 && (
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-sm text-gray-600 hidden sm:inline">Child:</span>
+            <div className="flex rounded-lg border border-gray-300 bg-white p-0.5 shadow-sm">
+              {children.map((child: any) => (
+                <button
+                  key={child.studentId}
+                  type="button"
+                  onClick={() => setSelectedChildId(child.studentId)}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    (selectedChildId === child.studentId || (!selectedChildId && child === children[0]))
+                      ? 'bg-primary-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {child.firstName} {child.lastName}
+                </button>
+              ))}
             </div>
-          )}
-        </StudentProfileCard>
-      )}
+          </div>
+        )}
+      </div>
 
       {/* HIGH PRIORITY: Finance & Alerts Section (Parent Focus) */}
       <RoleSection priority="high" className="mb-6">
@@ -270,44 +264,6 @@ export default function ParentPortal() {
         </RoleSection>
       )}
 
-      {/* Alerts Section (Parent Focus) */}
-      {showAlerts && unreadAlerts > 0 && (
-        <RoleSection priority="high" className="mb-6">
-          <div className="card bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-yellow-600" />
-                  Important Alerts
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  {unreadAlerts} unread alert{unreadAlerts !== 1 ? 's' : ''} require your attention
-                </p>
-              </div>
-              <button
-                onClick={() => navigate('/app/parent/alerts')}
-                className="btn btn-warning"
-              >
-                View All
-              </button>
-            </div>
-            {alerts && alerts.length > 0 && (
-              <div className="space-y-2">
-                {alerts.filter((a: any) => !a.read).slice(0, 3).map((alert: any) => (
-                  <div key={alert.id} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-yellow-200">
-                    <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{alert.title}</p>
-                      <p className="text-sm text-gray-600 line-clamp-2">{alert.message}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </RoleSection>
-      )}
-
       {/* Standard Metrics */}
       <RoleSection priority="normal" className="mb-6">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
@@ -331,104 +287,73 @@ export default function ParentPortal() {
         </div>
       </RoleSection>
 
-      {/* Academic & Tracking */}
+      {/* Academic & Tracking – icon + title tiles, mobile-friendly */}
       <RoleSection priority="normal" className="mb-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
           <FeatureCard
             title="Academic Performance"
-            description={`${activeChild?.exams?.recent?.length || 0} recent results`}
             icon={TrendingUp}
             color="green"
             href="/app/parent/academic-performance"
+            compact
           />
           <FeatureCard
             title="Syllabus Tracking"
-            description="Track completion progress"
             icon={School}
             color="blue"
             href="/app/parent/syllabus"
+            compact
           />
           <FeatureCard
             title="School Bus"
-            description="Track bus location"
             icon={Bus}
             color="yellow"
             href="/app/parent/bus"
+            compact
           />
           <FeatureCard
             title="Subject Videos"
-            description="Class-wise learning videos"
             icon={Video}
             color="purple"
             href="/app/parent/videos"
+            compact
           />
         </div>
       </RoleSection>
 
-      {/* Additional Features */}
+      {/* Additional Features – icon + title tiles */}
       <RoleSection priority="low" className="mb-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
           <FeatureCard
             title="Event Gallery"
-            description="School events & photos"
             icon={ImageIcon}
             color="green"
             href="/app/parent/gallery"
+            compact
           />
           <FeatureCard
             title="Holidays"
-            description={nextHoliday ? `Next: ${new Date(nextHoliday.date).toLocaleDateString()}` : 'View calendar'}
             icon={Calendar}
             color="blue"
             href="/app/parent/holidays"
+            compact
           />
           <FeatureCard
             title="Timetable"
-            description="Weekly schedule"
             icon={Clock}
             color="yellow"
             href="/app/parent/timetable"
+            compact
           />
           <FeatureCard
             title="Downloads"
-            description="Forms, reports & documents"
             icon={Download}
             color="gray"
             href="/app/parent/downloads"
+            compact
           />
         </div>
       </RoleSection>
-
-      {/* Quick Actions */}
-      <QuickActionCard
-        title="Quick Actions"
-        actions={[
-          {
-            label: 'Pay Fees',
-            icon: DollarSign,
-            href: '/app/parent/fees',
-            primary: true,
-          },
-          {
-            label: 'View Alerts',
-            icon: AlertCircle,
-            href: '/app/parent/alerts',
-            primary: unreadAlerts > 0,
-          },
-          {
-            label: 'Message Teacher',
-            icon: MessageSquare,
-            href: '/app/parent/messages',
-          },
-          {
-            label: 'Download Report',
-            icon: Download,
-            onClick: () => {
-              navigate('/app/parent/downloads');
-            },
-          },
-        ]}
-      />
 
       {/* No Children Message */}
       {children.length === 0 && (

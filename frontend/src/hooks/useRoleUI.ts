@@ -7,6 +7,7 @@ export type UserRole =
   | 'ACADEMIC_ADMIN'
   | 'FINANCE_ADMIN'
   | 'HR_ADMIN'
+  | 'TRANSPORT_MANAGER'
   | 'HOD'
   | 'TEACHER'
   | 'PARENT'
@@ -133,6 +134,19 @@ const roleConfigs: Record<string, RoleUIConfig> = {
     showFinance: false,
     showProgress: false,
   },
+  TRANSPORT_MANAGER: {
+    focus: 'data',
+    primaryColor: 'amber-600',
+    accentColor: 'amber-500',
+    priorityFeatures: ['buses', 'routes', 'assignments', 'transport'],
+    dashboardLayout: 'data-dense',
+    showMetrics: true,
+    showCharts: false,
+    showQuickActions: true,
+    showAlerts: false,
+    showFinance: false,
+    showProgress: false,
+  },
   HOD: {
     focus: 'data',
     primaryColor: 'teal-600',
@@ -163,6 +177,7 @@ export function useRoleUI() {
     'ACADEMIC_ADMIN',
     'FINANCE_ADMIN',
     'HR_ADMIN',
+    'TRANSPORT_MANAGER',
   ].includes(role);
   
   return {

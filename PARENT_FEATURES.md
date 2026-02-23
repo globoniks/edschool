@@ -32,6 +32,7 @@ The Parent Portal is designed to give parents a comprehensive view of their chil
 - **Payment status tracking** (Paid/Pending/Partial)
 - **Download/Print receipts** for paid fees
 - **Total dues summary** across all children
+- **Note:** The “Pay Fees” button on the Fees & Payments page may be disabled with “Contact school for payment” when online payment is not yet configured; parents can view dues and history, and complete payment via the school.
 
 ### 4. **Academic Performance**
 - **Recent exam results** with grades
@@ -69,19 +70,16 @@ The Parent Portal is designed to give parents a comprehensive view of their chil
 - **Contact information** verification
 - **Medical information** (blood group, allergies if stored)
 
-### 9. **Quick Actions**
-- **Message teacher** button
-- **View detailed report** links
-- **Download documents** (report cards, receipts)
-- **Print** attendance/fee reports
-- **Export data** to PDF/Excel
+### 9. **Quick Access (tabs and tiles)**
+- **Bottom navigation**: Home, Messages, Profile
+- **Feature tiles** on dashboard: Academic Performance, Syllabus, Bus, Videos, Gallery, Holidays, Timetable, Downloads (icon + title; tap to open)
+- **Message teacher**, **Download report**, **Print** via the relevant sub-pages (Messages, Academic Performance, Timetable, etc.)
 
 ### 10. **Notifications & Alerts**
-- **Browser notifications** for important updates
-- **In-app notification center**
-- **Email notifications** (optional)
-- **SMS notifications** (if configured)
-- **Alert badges** on menu items
+- **Bell icon** in the top header (next to profile) links to the Alerts page
+- **In-app Alerts page**: mark as read, mark all read, view by type
+- **Alert count** on dashboard metrics card (optional)
+- Browser/email/SMS notifications (optional, if configured)
 
 ---
 
@@ -94,9 +92,9 @@ The Parent Portal is designed to give parents a comprehensive view of their chil
 - Quick access to most-used features
 
 ### **Child Selection**
-- Switch between multiple children easily
-- Side-by-side comparison (if multiple children)
-- Unified view for all children
+- **Compact child toggle** in the dashboard header (when multiple children): switch between children; selection applies to dashboard metrics
+- **Per-page child selector** on Attendance, Homework, Fees, Academic Performance, and Timetable so each page shows the selected child’s data
+- Unified view for all children where applicable
 
 ### **Mobile-Friendly**
 - Responsive design for mobile access
@@ -173,41 +171,34 @@ The Parent Portal is designed to give parents a comprehensive view of their chil
 
 ```
 Parent Portal Dashboard
-├── Header
+├── Header (top bar)
+│   ├── EdSchool logo
+│   ├── Bell icon → Alerts page
+│   └── Profile menu
+│
+├── Welcome + Child toggle
 │   ├── Welcome message
-│   └── Child selector (if multiple children)
+│   └── Child selector pills (if multiple children)
 │
 ├── Quick Stats Cards
-│   ├── Attendance % (this month)
-│   ├── Pending Fees Count
-│   ├── Upcoming Exams
-│   └── Overdue Homework
+│   ├── Fees Due / Payment Status
+│   ├── Alerts count
+│   └── Attendance %
 │
-├── Recent Attendance
-│   └── Last 7 days with status
+├── Payment Required (if pending fees)
+│   └── Pay Now → Fees page
 │
-├── Fee Dues
-│   ├── Pending fees list
-│   └── Payment history (recent)
+├── Feature tiles (icon + title, 2–4 columns)
+│   ├── Academic Performance, Syllabus, Bus, Videos
+│   └── Gallery, Holidays, Timetable, Downloads
 │
-├── Academic Performance
-│   ├── Recent exam results
-│   └── Subject-wise grades
-│
-├── Homework & Assignments
-│   ├── Active assignments
-│   └── Submission status
-│
-├── Upcoming Events
-│   ├── Exams schedule
-│   ├── Holidays
-│   └── Important dates
-│
-└── Quick Actions
-    ├── Message Teacher
-    ├── View Full Report
-    └── Download Documents
+└── Bottom navigation
+    ├── Home (parent portal)
+    ├── Messages
+    └── Profile
 ```
+
+**Note:** There is no standalone “Quick Actions” card; access to messaging, reports, and downloads is via the feature tiles and bottom tabs. Alerts are opened from the **bell icon** in the header.
 
 ---
 

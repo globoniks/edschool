@@ -119,11 +119,34 @@ Save: `Ctrl+X`, then `Y`, then `Enter`
 
 ## Step 6: Setup Database
 
+**Run these from the backend folder** (Prisma schema is in `backend/prisma/`):
+
 ```bash
 cd /var/www/edschool/backend
 npx prisma generate
 npx prisma migrate deploy
+npx prisma db seed
 ```
+
+Or from the project root use the npm scripts:
+
+```bash
+cd /var/www/edschool
+npm run prisma:generate
+npm run prisma:migrate
+npm run prisma:seed
+```
+
+**Important:** `npx prisma db seed` creates the initial test users. Without it, **no one can log in** (including `schooladmin@school.com`). The seed creates users such as:
+
+| Email | Password | Role |
+|-------|----------|------|
+| schooladmin@school.com | password123 | School Admin |
+| superadmin@school.com | password123 | Super Admin |
+| parent@school.com | password123 | Parent |
+| transport@school.com | password123 | Transport Manager |
+
+(Others are listed at the end of the seed output.)
 
 ---
 
@@ -284,6 +307,26 @@ node dist/index.js  # Test directly
 netstat -tulpn | grep 3001
 pm2 list  # Check if process is running
 ```
+
+### "invalid input value for enum UserRole: SUPER_ADMIN" when running seed?
+- The database enum is out of date (e.g. still only `ADMIN`, `TEACHER`, `PARENT`, `STUDENT`). Pending migrations that add `SUPER_ADMIN`, `TRANSPORT_MANAGER`, etc. have not been applied.
+- **Fix:** Apply all migrations, then run the seed:
+  ```bash
+  cd /var/www/edschool/backend
+  npx prisma migrate deploy
+  npx prisma db seed
+  ```
+
+### schooladmin@school.com (or any test user) "Invalid credentials" or not working?
+- **Seed was not run on the VPS.** The deployment only runs migrations; test users are created by the seed.
+- **Fix:** Run the seed from the **backend** directory (Prisma schema lives there). If you see the enum error above, run `npx prisma migrate deploy` first, then:
+  ```bash
+  cd /var/www/edschool/backend
+  npx prisma db seed
+  ```
+  Or from project root: `npm run prisma:seed`
+- **Password:** Use `password123` for all seed-created users (schooladmin@school.com, superadmin@school.com, etc.).
+- If you already ran seed once and changed the DB or re-migrated, run the seed again; it uses `upsert` so it will recreate or update test users.
 
 ---
 

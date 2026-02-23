@@ -36,6 +36,8 @@ model School {
   homeworks     Homework[]
   holidays      Holiday[]
   classMoments  ClassMoment[]
+  buses         Bus[]
+  routes        Route[]
 
   @@index([code])
 }
@@ -71,6 +73,7 @@ enum UserRole {
   ACADEMIC_ADMIN
   FINANCE_ADMIN
   HR_ADMIN
+  TRANSPORT_MANAGER
   HOD
   TEACHER
   PARENT
@@ -181,6 +184,7 @@ model Student {
   examMarks           ExamMark[]
   feePayments         FeePayment[]
   homeworkSubmissions HomeworkSubmission[]
+  studentTransport    StudentTransport[]
 
   @@index([schoolId])
   @@index([admissionNumber])
@@ -619,4 +623,64 @@ model AlertRead {
 
   @@unique([userId, alertId])
   @@index([userId])
+}
+
+// Transport: Bus, Route, Student transport (bus or parent pick up)
+model Bus {
+  id          String   @id @default(cuid())
+  schoolId    String
+  busNumber   String
+  driverName  String
+  driverPhone String?
+  capacity    Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  school School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  routes Route[]
+
+  @@unique([schoolId, busNumber])
+  @@index([schoolId])
+}
+
+model Route {
+  id          String   @id @default(cuid())
+  schoolId    String
+  busId       String?
+  routeNumber String
+  pickupPoint String
+  dropPoint   String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  school  School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  bus     Bus?               @relation(fields: [busId], references: [id], onDelete: SetNull)
+  studentTransports StudentTransport[]
+
+  @@index([schoolId])
+  @@index([busId])
+}
+
+enum TransportMode {
+  BUS
+  PARENT_PICKUP
+}
+
+model StudentTransport {
+  id            String        @id @default(cuid())
+  studentId     String        @unique
+  transportMode TransportMode
+  routeId       String?
+  pickupPoint   String?
+  dropPoint     String?
+  effectiveFrom DateTime      @default(now())
+  effectiveTo   DateTime?
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  route   Route?  @relation(fields: [routeId], references: [id], onDelete: SetNull)
+
+  @@index([studentId])
+  @@index([routeId])
 }

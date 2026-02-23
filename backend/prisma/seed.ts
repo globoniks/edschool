@@ -140,6 +140,29 @@ async function main() {
 
   console.log('✅ HR Admin user created:', hrAdminUser.email);
 
+  // Create TRANSPORT_MANAGER user
+  const transportManagerUser = await prisma.user.upsert({
+    where: { email: 'transport@school.com' },
+    update: {},
+    create: {
+      email: 'transport@school.com',
+      password: hashedPassword,
+      role: 'TRANSPORT_MANAGER',
+      schoolId: school.id,
+      isActive: true,
+      profile: {
+        create: {
+          firstName: 'Transport',
+          lastName: 'Manager',
+          phone: '+1234567896',
+        },
+      },
+    },
+    include: { profile: true },
+  });
+
+  console.log('✅ Transport Manager user created:', transportManagerUser.email);
+
   // Create Teacher user
   const teacherUser = await prisma.user.upsert({
     where: { email: 'teacher@school.com' },
@@ -439,7 +462,7 @@ async function main() {
 
   console.log('✅ Students created');
 
-  // Link parent to student
+  // Link parent to students (parent@school.com has two children: student1 and student2)
   await prisma.parentStudent.upsert({
     where: {
       parentId_studentId: {
@@ -456,7 +479,108 @@ async function main() {
     },
   });
 
+  await prisma.parentStudent.upsert({
+    where: {
+      parentId_studentId: {
+        parentId: parent.id,
+        studentId: student2.id,
+      },
+    },
+    update: {},
+    create: {
+      parentId: parent.id,
+      studentId: student2.id,
+      relationship: 'Parent',
+      isPrimary: false,
+    },
+  });
+
   console.log('✅ Parent-Student links created');
+
+  // Transport: buses, routes, student transport (bus + parent pick up)
+  const bus1 = await prisma.bus.upsert({
+    where: { schoolId_busNumber: { schoolId: school.id, busNumber: 'BUS-001' } },
+    update: {},
+    create: {
+      schoolId: school.id,
+      busNumber: 'BUS-001',
+      driverName: 'John Doe',
+      driverPhone: '+1234567890',
+      capacity: 40,
+      isActive: true,
+    },
+  });
+
+  const bus2 = await prisma.bus.upsert({
+    where: { schoolId_busNumber: { schoolId: school.id, busNumber: 'BUS-002' } },
+    update: {},
+    create: {
+      schoolId: school.id,
+      busNumber: 'BUS-002',
+      driverName: 'Jane Smith',
+      driverPhone: '+1234567891',
+      capacity: 35,
+      isActive: true,
+    },
+  });
+
+  let route1 = await prisma.route.findFirst({
+    where: { schoolId: school.id, routeNumber: 'Route 1' },
+  });
+  if (!route1) {
+    route1 = await prisma.route.create({
+      data: {
+        schoolId: school.id,
+        busId: bus1.id,
+        routeNumber: 'Route 1',
+        pickupPoint: 'Main Gate',
+        dropPoint: 'School Gate',
+        isActive: true,
+      },
+    });
+  }
+
+  let route2 = await prisma.route.findFirst({
+    where: { schoolId: school.id, routeNumber: 'Route 2' },
+  });
+  if (!route2) {
+    route2 = await prisma.route.create({
+      data: {
+        schoolId: school.id,
+        busId: bus2.id,
+        routeNumber: 'Route 2',
+        pickupPoint: 'North Block',
+        dropPoint: 'School Gate',
+        isActive: true,
+      },
+    });
+  }
+
+  console.log('✅ Buses and routes created');
+
+  // Student1 (linked to parent@school.com) uses bus; student2 uses parent pick up
+  await prisma.studentTransport.upsert({
+    where: { studentId: student1.id },
+    update: {},
+    create: {
+      studentId: student1.id,
+      transportMode: 'BUS',
+      routeId: route1.id,
+      pickupPoint: 'Main Gate',
+      dropPoint: 'School Gate',
+    },
+  });
+
+  await prisma.studentTransport.upsert({
+    where: { studentId: student2.id },
+    update: {},
+    create: {
+      studentId: student2.id,
+      transportMode: 'PARENT_PICKUP',
+    },
+  });
+
+  console.log('✅ Student transport assignments created');
 
   // Create additional dummy users for testing
   const additionalUsers = [
@@ -860,6 +984,9 @@ async function main() {
   console.log('  Password: password123');
   console.log('  Email: admin2@school.com');
   console.log('  Password: admin123');
+  console.log('\n🚌 TRANSPORT MANAGER:');
+  console.log('  Email: transport@school.com');
+  console.log('  Password: password123');
   console.log('\n👨‍🏫 TEACHER USERS:');
   console.log('  Email: teacher@school.com');
   console.log('  Password: password123');
@@ -899,3 +1026,14 @@ main()
   });
 
 
+  // Email	Password
+  // superadmin@school.com	password123
+  // schooladmin@school.com	password123
+  // academic@school.com	password123
+  // finance@school.com	password123
+  // hr@school.com	password123
+  // transport@school.com	password123
+  // teacher@school.com	password123
+  // parent@school.com	password123
+  // student@school.com	password123
+  

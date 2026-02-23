@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, Navigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import {
   LayoutDashboard,
@@ -20,6 +20,7 @@ import {
   Camera,
   User,
   ChevronDown,
+  Bus,
 } from 'lucide-react';
 import BottomNavigation from './BottomNavigation';
 import { clsx } from 'clsx';
@@ -30,6 +31,7 @@ const navigation = [
   { name: 'Holidays', href: '/app/holidays', icon: Calendar, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Students', href: '/app/students', icon: Users, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN', 'TEACHER'] },
   { name: 'Teachers', href: '/app/teachers', icon: GraduationCap, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'HR_ADMIN'] },
+  { name: 'Transport', href: '/app/transport', icon: Bus, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'TRANSPORT_MANAGER'] },
   { name: 'Attendance', href: '/app/attendance', icon: Calendar, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Fees', href: '/app/fees', icon: DollarSign, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'FINANCE_ADMIN', 'TEACHER', 'PARENT', 'STUDENT'] },
   { name: 'Exams', href: '/app/exams', icon: FileText, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'] },
@@ -54,6 +56,14 @@ function getProfileHref(role: string | undefined): string {
   }
 }
 
+function getDefaultRoute(role: string | undefined): string {
+  if (role === 'PARENT') return '/app/parent-portal';
+  if (role === 'TEACHER') return '/app/teacher-dashboard';
+  if (role === 'STUDENT') return '/app/student-dashboard';
+  if (role === 'TRANSPORT_MANAGER') return '/app/transport';
+  return '/app/dashboard';
+}
+
 export default function Layout() {
   const location = useLocation();
   const { user, logout } = useAuthStore();
@@ -76,7 +86,7 @@ export default function Layout() {
   useEffect(() => setUserMenuOpen(false), [location.pathname]);
 
   // Normalize role for nav: backend uses SUPER_ADMIN, SCHOOL_ADMIN, etc.; handle legacy or display variants
-  const knownRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'];
+  const knownRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TRANSPORT_MANAGER', 'HOD', 'TEACHER', 'PARENT', 'STUDENT'];
   const navRole = (() => {
     const r = user?.role;
     if (!r) return r;
@@ -98,13 +108,20 @@ export default function Layout() {
     (item) => !navRole || item.roles.includes(navRole)
   );
   // Fallback: if no items match (e.g. unknown or legacy role), show admin-capable links so sidebar isn't blank
-  const adminRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'HOD'];
+  const adminRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN', 'TRANSPORT_MANAGER', 'HOD'];
   const navItems =
     filteredNav.length > 0
       ? filteredNav
       : navigation.filter((item) => item.roles.some((r) => adminRoles.includes(r)));
 
   const profileHref = getProfileHref(user?.role);
+
+  // Redirect non-parents away from parent-only routes
+  const pathname = location.pathname;
+  const isParentOnlyRoute = pathname === '/app/parent-portal' || pathname.startsWith('/app/parent/');
+  if (user && isParentOnlyRoute && user.role !== 'PARENT') {
+    return <Navigate to={getDefaultRoute(user.role)} replace />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
@@ -126,8 +143,19 @@ export default function Layout() {
           </Link>
         </div>
 
-        {/* User menu – Profile & Logout always visible */}
-        <div className="relative" ref={userMenuRef}>
+        <div className="flex items-center gap-1">
+          {/* Alerts (parent): bell icon next to profile */}
+          {isParent && (
+            <Link
+              to="/app/parent/alerts"
+              className="touch-target min-h-[2.75rem] min-w-[2.75rem] p-2 rounded-lg text-gray-600 hover:bg-gray-100 flex items-center justify-center"
+              aria-label="View alerts"
+            >
+              <Bell className="w-5 h-5" />
+            </Link>
+          )}
+          {/* User menu – Profile & Logout always visible */}
+          <div className="relative" ref={userMenuRef}>
           <button
             type="button"
             onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -168,6 +196,7 @@ export default function Layout() {
               </button>
             </div>
           )}
+          </div>
         </div>
       </div>
 

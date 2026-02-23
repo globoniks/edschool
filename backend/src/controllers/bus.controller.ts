@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { AppError } from '../middleware/errorHandler.js';
@@ -10,9 +10,7 @@ export const getBusTracking = async (
 ) => {
   try {
     const userId = req.user!.id;
-    const schoolId = req.user!.schoolId;
 
-    // Get parent's children
     const parent = await prisma.parent.findFirst({
       where: { userId },
       include: {
@@ -21,6 +19,11 @@ export const getBusTracking = async (
             student: {
               include: {
                 class: true,
+                studentTransport: {
+                  include: {
+                    route: { include: { bus: true } },
+                  },
+                },
               },
             },
           },
@@ -32,23 +35,53 @@ export const getBusTracking = async (
       throw new AppError('No children found', 404);
     }
 
-    // For now, return mock data structure
-    // TODO: Implement actual bus tracking when schema is updated
-    res.json({
-      status: 'ON_ROUTE',
-      estimatedArrival: '15 minutes',
-      route: {
-        number: 'BUS-001',
-        pickupPoint: 'Main Gate',
-        dropPoint: 'School Gate',
-      },
-      driver: {
-        name: 'John Doe',
-        phone: '+1234567890',
-      },
+    const children = parent.students.map((ps) => ps.student);
+    const result = children.map((student) => {
+      const transport = Array.isArray(student.studentTransport)
+        ? student.studentTransport[0]
+        : student.studentTransport;
+      if (!transport || transport.transportMode === 'PARENT_PICKUP') {
+        return {
+          studentId: student.id,
+          studentName: `${student.firstName} ${student.lastName}`,
+          transportMode: 'PARENT_PICKUP',
+          status: 'PARENT_PICKUP',
+          message: 'Parent pick up – not using school bus',
+        };
+      }
+      const route = transport.route;
+      if (!route) {
+        return {
+          studentId: student.id,
+          studentName: `${student.firstName} ${student.lastName}`,
+          transportMode: 'BUS',
+          status: 'PARENT_PICKUP',
+          message: 'Route or bus not configured',
+        };
+      }
+      const bus = route.bus;
+      const pickup = transport.pickupPoint ?? route.pickupPoint;
+      const drop = transport.dropPoint ?? route.dropPoint;
+      return {
+        studentId: student.id,
+        studentName: `${student.firstName} ${student.lastName}`,
+        transportMode: 'BUS',
+        status: 'ON_ROUTE',
+        estimatedArrival: '—',
+        route: {
+          id: route.id,
+          number: route.routeNumber,
+          pickupPoint: pickup,
+          dropPoint: drop,
+        },
+        driver: bus
+          ? { name: bus.driverName, phone: bus.driverPhone ?? undefined }
+          : undefined,
+      };
     });
+
+    res.json({ children: result });
   } catch (error) {
     next(error);
   }
 };
-

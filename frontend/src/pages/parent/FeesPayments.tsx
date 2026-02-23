@@ -1,12 +1,15 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../lib/api';
 import { DollarSign, Download, CheckCircle } from 'lucide-react';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import EmptyState from '../../components/EmptyState';
+import { clsx } from 'clsx';
 
 export default function ParentFeesPayments() {
   const { user } = useAuthStore();
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['parent-dashboard'],
@@ -14,9 +17,15 @@ export default function ParentFeesPayments() {
     enabled: user?.role === 'PARENT',
   });
 
+  const children = dashboardData?.children || [];
+  const activeChild = selectedChildId
+    ? children.find((c: any) => c.studentId === selectedChildId)
+    : children[0];
+
   const { data: payments } = useQuery({
-    queryKey: ['fee-payments'],
+    queryKey: ['fee-payments', activeChild?.studentId],
     queryFn: () => api.get('/fees/payments').then((res) => res.data).catch(() => []),
+    enabled: !!dashboardData,
   });
 
   if (isLoading) {
@@ -27,12 +36,11 @@ export default function ParentFeesPayments() {
     );
   }
 
-  const activeChild = dashboardData?.children?.[0];
   const fees = activeChild?.fees?.dues || [];
 
   return (
     <div className="pb-20 md:pb-0">
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Fees & Payments</h1>
           <p className="text-sm text-gray-600 mt-1">Manage fee payments and view history. Contact school for payment options.</p>
@@ -47,6 +55,27 @@ export default function ParentFeesPayments() {
           Pay Fees
         </button>
       </div>
+
+      {/* Child selector */}
+      {children.length > 1 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {children.map((child: any) => (
+            <button
+              key={child.studentId}
+              type="button"
+              onClick={() => setSelectedChildId(child.studentId)}
+              className={clsx(
+                'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+                (selectedChildId === child.studentId || (!selectedChildId && child === children[0]))
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              )}
+            >
+              {child.firstName} {child.lastName}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Pending Fees */}
       {fees.length > 0 && (

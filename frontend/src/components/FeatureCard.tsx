@@ -11,6 +11,8 @@ interface FeatureCardProps {
   onClick?: () => void;
   href?: string;
   color?: 'blue' | 'green' | 'yellow' | 'red' | 'purple' | 'gray';
+  /** Compact: icon + title only, no description – mobile-friendly tile */
+  compact?: boolean;
 }
 
 const colorClasses = {
@@ -30,6 +32,7 @@ export default function FeatureCard({
   onClick,
   href,
   color = 'blue',
+  compact = false,
 }: FeatureCardProps) {
   const navigate = useNavigate();
 
@@ -43,11 +46,35 @@ export default function FeatureCard({
 
   const isClickable = !!onClick || !!href;
 
+  if (compact) {
+    return (
+      <div
+        onClick={handleClick}
+        className={clsx(
+          'relative bg-white rounded-xl shadow border border-gray-100 p-4 transition-all flex flex-col items-center justify-center min-h-[88px]',
+          isClickable && 'cursor-pointer hover:shadow-md active:scale-[0.98]'
+        )}
+      >
+        <div className={clsx('p-2.5 rounded-xl mb-2', colorClasses[color])}>
+          <Icon className="w-6 h-6" />
+        </div>
+        <h3 className="font-semibold text-gray-900 text-sm text-center leading-tight px-0.5">
+          {title}
+        </h3>
+        {badge != null && badge !== '' && (
+          <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            {badge}
+          </span>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div
       onClick={handleClick}
       className={clsx(
-        'bg-white rounded-xl shadow-md p-4 md:p-6 transition-all',
+        'bg-white rounded-xl shadow-md p-4 md:p-6 transition-all relative',
         isClickable && 'cursor-pointer hover:shadow-lg active:scale-95'
       )}
     >

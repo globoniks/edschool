@@ -8,6 +8,7 @@ import {
   BookOpen,
   Camera,
   Users,
+  Bus,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuthStore } from '../store/authStore';
@@ -41,6 +42,12 @@ const ADMIN_TABS: TabConfig[] = [
   { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
 ];
 
+const TRANSPORT_MANAGER_TABS: TabConfig[] = [
+  { name: 'Transport', href: '/app/transport', icon: Bus, activePaths: ['/app/transport'] },
+  { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard, activePaths: ['/app/dashboard'] },
+  { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
+];
+
 function getTabsForRole(role: string | undefined): TabConfig[] {
   switch (role) {
     case 'PARENT':
@@ -49,6 +56,8 @@ function getTabsForRole(role: string | undefined): TabConfig[] {
       return TEACHER_TABS;
     case 'STUDENT':
       return STUDENT_TABS;
+    case 'TRANSPORT_MANAGER':
+      return TRANSPORT_MANAGER_TABS;
     case 'SUPER_ADMIN':
     case 'SCHOOL_ADMIN':
     case 'ACADEMIC_ADMIN':

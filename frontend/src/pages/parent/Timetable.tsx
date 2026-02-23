@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../lib/api';
 import { Clock, Printer } from 'lucide-react';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import EmptyState from '../../components/EmptyState';
+import { clsx } from 'clsx';
 
 interface TimetableEntry {
   id: string;
@@ -21,6 +22,7 @@ const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 export default function ParentTimetable() {
   const { user } = useAuthStore();
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['parent-dashboard'],
@@ -28,7 +30,11 @@ export default function ParentTimetable() {
     enabled: user?.role === 'PARENT',
   });
 
-  const classId = dashboardData?.children?.[0]?.classId;
+  const children = dashboardData?.children || [];
+  const activeChild = selectedChildId
+    ? children.find((c: any) => c.studentId === selectedChildId)
+    : children[0];
+  const classId = activeChild?.classId;
 
   const { data: timetableEntries } = useQuery<TimetableEntry[]>({
     queryKey: ['timetable', classId],
@@ -62,11 +68,9 @@ export default function ParentTimetable() {
     );
   }
 
-  const activeChild = dashboardData?.children?.[0];
-
   return (
     <div className="pb-20 md:pb-0">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Timetable</h1>
           <p className="text-sm text-gray-600 mt-1">
@@ -81,6 +85,27 @@ export default function ParentTimetable() {
           Print
         </button>
       </div>
+
+      {/* Child selector */}
+      {children.length > 1 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {children.map((child: any) => (
+            <button
+              key={child.studentId}
+              type="button"
+              onClick={() => setSelectedChildId(child.studentId)}
+              className={clsx(
+                'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+                (selectedChildId === child.studentId || (!selectedChildId && child === children[0]))
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              )}
+            >
+              {child.firstName} {child.lastName}
+            </button>
+          ))}
+        </div>
+      )}
 
       {timetableEntries && timetableEntries.length > 0 && timeSlots.length > 0 ? (
         <div className="card">
