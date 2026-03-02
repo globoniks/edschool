@@ -513,7 +513,7 @@ export const importStudentsCSV = async (
       throw new AppError('Class not found', 404);
     }
 
-    const lines = csvRaw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const lines = csvRaw.split(/\r?\n/).map((l: string) => l.trim()).filter(Boolean);
     if (lines.length < 2) {
       throw new AppError('CSV must have a header row and at least one data row', 400);
     }

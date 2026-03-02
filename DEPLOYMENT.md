@@ -282,6 +282,30 @@ pm2 restart edschool-backend
 
 ---
 
+## 📌 Update deployment (run after pushing new code)
+
+**Option A – Use the update script (recommended)**
+
+On the VPS, from the project root:
+
+```bash
+cd /var/www/edschool
+chmod +x scripts/update-vps.sh   # only first time
+./scripts/update-vps.sh
+```
+
+Or from another directory:
+
+```bash
+./scripts/update-vps.sh /var/www/edschool
+```
+
+The script: pulls latest code, installs deps, runs Prisma generate + migrate, builds backend and frontend, and restarts PM2.
+
+**Option B – Manual steps**
+
+---
+
 ## 📌 After pushing latest update (run these in order)
 
 Run these on the VPS **every time** you deploy a new version (e.g. after `git pull`):

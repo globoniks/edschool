@@ -281,3 +281,12 @@ MIT License
 
 For issues and questions, please open an issue on GitHub.
 
+---
+
+## Documentation
+
+- **[USER_GUIDE.md](./USER_GUIDE.md)** — Platform user guide for admins, staff, teachers, and parents (login, roles, features, Parent Portal, tips).
+- **[FEATURES_AND_USER_FLOWS.md](./FEATURES_AND_USER_FLOWS.md)** — Features overview and user flows for school administration (presentation-ready).
+- **DEPLOYMENT.md** — VPS/server deployment and update steps.
+- **SCHOOL_PRESENTATION.md** — High-level overview for schools.
+

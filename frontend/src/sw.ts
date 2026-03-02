@@ -2,10 +2,10 @@
 
 import { precacheAndRoute } from 'workbox-precaching';
 
-declare const self: ServiceWorkerGlobalScope & { __WB_MANIFEST?: Array<{ url: string; revision?: string | null }> };
+declare const self: ServiceWorkerGlobalScope;
 
-const manifest = Array.isArray(self.__WB_MANIFEST) ? self.__WB_MANIFEST : [];
-precacheAndRoute(manifest);
+// This will be replaced by Workbox during build - must be exactly one occurrence
+precacheAndRoute(self.__WB_MANIFEST);
 
 self.skipWaiting();
 self.clients.claim();
