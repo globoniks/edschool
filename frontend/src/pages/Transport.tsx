@@ -97,7 +97,7 @@ export default function Transport() {
 
   /* ── Assignment state ── */
   const [assignModalOpen, setAssignModalOpen] = useState(false);
-  const [assignForm, setAssignForm] = useState({ studentId: '', transportMode: 'BUS' as 'BUS' | 'PARENT_PICKUP', routeId: '' });
+  const [assignForm, setAssignForm] = useState({ studentId: '', transportMode: 'BUS' as 'BUS' | 'PARENT_PICKUP', busId: '', routeId: '' });
   const [assignDeleteId, setAssignDeleteId] = useState<string | null>(null);
 
   /* ── Queries ── */
@@ -278,6 +278,38 @@ export default function Transport() {
   const studentsWithAssignment = new Set(assignments.map((a) => a.studentId));
   const availableStudents = students.filter((s: { id: string }) => !studentsWithAssignment.has(s.id));
 
+  const routesForSelectedBus = assignForm.busId
+    ? routes.filter((r) => r.isActive && r.busId === assignForm.busId)
+    : [];
+
+  const assignmentsByBus = (() => {
+    const grouped = new Map<string, { bus: BusRecord | null; items: AssignmentRecord[] }>();
+    const noBusKey = '__no_bus__';
+    const parentKey = '__parent__';
+    for (const a of assignments) {
+      if (a.transportMode === 'PARENT_PICKUP') {
+        if (!grouped.has(parentKey)) grouped.set(parentKey, { bus: null, items: [] });
+        grouped.get(parentKey)!.items.push(a);
+        continue;
+      }
+      const busId = a.route?.busId;
+      const key = busId || noBusKey;
+      if (!grouped.has(key)) grouped.set(key, { bus: busId ? buses.find((b) => b.id === busId) ?? null : null, items: [] });
+      grouped.get(key)!.items.push(a);
+    }
+    return grouped;
+  })();
+
+  const studentCountByBus = (() => {
+    const counts = new Map<string, number>();
+    for (const a of assignments) {
+      if (a.transportMode === 'BUS' && a.route?.busId) {
+        counts.set(a.route.busId, (counts.get(a.route.busId) || 0) + 1);
+      }
+    }
+    return counts;
+  })();
+
   /* ─────────────────── RENDER ─────────────────── */
   return (
     <div className="pb-20 md:pb-8 overflow-x-hidden">
@@ -312,6 +344,7 @@ export default function Transport() {
         <div className="divide-y divide-gray-50">
           {buses.map((b) => {
             const info = getDriverInfo(b);
+            const stuCount = studentCountByBus.get(b.id) || 0;
             return (
               <div key={b.id} className="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center gap-3 hover:bg-gray-50/50 transition-colors">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -323,6 +356,11 @@ export default function Transport() {
                       <span className="text-sm font-semibold text-gray-900">{b.busNumber}</span>
                       <Badge active={b.isActive} />
                       {b.capacity && <span className="text-[10px] text-gray-400">{b.capacity} seats</span>}
+                      {stuCount > 0 && (
+                        <span className="text-[10px] bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded-full font-medium inline-flex items-center gap-0.5">
+                          <Users className="w-3 h-3" /> {stuCount} student{stuCount !== 1 ? 's' : ''}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5 flex-wrap text-xs">
                       {info.registered ? (
@@ -398,27 +436,51 @@ export default function Transport() {
         icon={<Users className="w-5 h-5 text-orange-500" />}
         title="Student Transport"
         count={assignments.length}
-        action={<Btn onClick={() => { setAssignForm({ studentId: '', transportMode: 'BUS', routeId: '' }); setAssignModalOpen(true); }} disabled={availableStudents.length === 0}><Plus className="w-4 h-4" /> Add Assignment</Btn>}
+        action={<Btn onClick={() => { setAssignForm({ studentId: '', transportMode: 'BUS', busId: '', routeId: '' }); setAssignModalOpen(true); }} disabled={availableStudents.length === 0}><Plus className="w-4 h-4" /> Assign Student</Btn>}
         loading={assignmentsLoading}
         empty={assignments.length === 0}
-        emptyMsg="Assign students to a route or parent pick up"
+        emptyMsg="Assign students to a bus so their parents can track live location"
         last
       >
-        <div className="divide-y divide-gray-50">
-          {assignments.map((a) => (
-            <div key={a.id} className="px-5 py-3 flex items-center gap-3 hover:bg-gray-50/50 transition-colors">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900">{a.student.firstName} {a.student.lastName} <span className="text-gray-400 font-normal">({a.student.admissionNumber})</span></p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {a.student.class?.name ?? '—'} &middot;{' '}
-                  {a.transportMode === 'BUS' ? (
-                    <span className="text-primary-600">{a.route?.routeNumber}{a.route?.bus ? ` / ${a.route.bus.busNumber}` : ''}</span>
-                  ) : (
-                    <span className="text-amber-600">Parent pick up</span>
-                  )}
-                </p>
+        <div>
+          {Array.from(assignmentsByBus.entries()).map(([key, { bus, items }]) => (
+            <div key={key}>
+              <div className="px-5 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
+                {key === '__parent__' ? (
+                  <>
+                    <Users className="w-3.5 h-3.5 text-amber-500" />
+                    <span className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Parent Pick Up</span>
+                    <span className="text-[10px] text-gray-400 ml-1">({items.length})</span>
+                  </>
+                ) : (
+                  <>
+                    <BusIcon className="w-3.5 h-3.5 text-primary-500" />
+                    <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                      {bus ? bus.busNumber : 'No Bus Assigned'}
+                    </span>
+                    <span className="text-[10px] text-gray-400 ml-1">({items.length} student{items.length !== 1 ? 's' : ''})</span>
+                  </>
+                )}
               </div>
-              <IconBtn onClick={() => setAssignDeleteId(a.id)} label="Remove" danger><Trash2 className="w-4 h-4" /></IconBtn>
+              <div className="divide-y divide-gray-50">
+                {items.map((a) => (
+                  <div key={a.id} className="px-5 py-3 flex items-center gap-3 hover:bg-gray-50/50 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900">
+                        {a.student.firstName} {a.student.lastName}
+                        <span className="text-gray-400 font-normal ml-1">({a.student.admissionNumber})</span>
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {a.student.class?.name ?? '—'}
+                        {a.transportMode === 'BUS' && a.route && (
+                          <> &middot; <span className="text-primary-600">{a.route.routeNumber}</span></>
+                        )}
+                      </p>
+                    </div>
+                    <IconBtn onClick={() => setAssignDeleteId(a.id)} label="Remove" danger><Trash2 className="w-4 h-4" /></IconBtn>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -561,34 +623,62 @@ export default function Transport() {
       </Modal>
 
       {/* ════════ ASSIGNMENT MODAL ════════ */}
-      <Modal open={assignModalOpen} onClose={() => setAssignModalOpen(false)} title="Add Transport Assignment">
+      <Modal open={assignModalOpen} onClose={() => setAssignModalOpen(false)} title="Assign Student to Bus">
         <div className="space-y-4">
           <FormField label="Student" required>
             <Select value={assignForm.studentId} onChange={(e) => setAssignForm((f) => ({ ...f, studentId: e.target.value }))}>
               <option value="">Select student</option>
-              {availableStudents.map((s: { id: string; firstName: string; lastName: string; admissionNumber: string }) => (
-                <option key={s.id} value={s.id}>{s.firstName} {s.lastName} ({s.admissionNumber})</option>
+              {availableStudents.map((s: { id: string; firstName: string; lastName: string; admissionNumber: string; class?: { name: string } | null }) => (
+                <option key={s.id} value={s.id}>{s.firstName} {s.lastName} ({s.admissionNumber}){s.class ? ` — ${s.class.name}` : ''}</option>
               ))}
             </Select>
           </FormField>
-          <FormField label="Mode" required>
-            <Select value={assignForm.transportMode} onChange={(e) => setAssignForm((f) => ({ ...f, transportMode: e.target.value as 'BUS' | 'PARENT_PICKUP' }))}>
-              <option value="BUS">Bus</option>
-              <option value="PARENT_PICKUP">Parent pick up</option>
+          <FormField label="Transport Mode" required>
+            <Select value={assignForm.transportMode} onChange={(e) => setAssignForm((f) => ({ ...f, transportMode: e.target.value as 'BUS' | 'PARENT_PICKUP', busId: '', routeId: '' }))}>
+              <option value="BUS">School Bus</option>
+              <option value="PARENT_PICKUP">Parent Pick Up</option>
             </Select>
           </FormField>
           {assignForm.transportMode === 'BUS' && (
-            <FormField label="Route" required>
-              <Select value={assignForm.routeId} onChange={(e) => setAssignForm((f) => ({ ...f, routeId: e.target.value }))}>
-                <option value="">Select route</option>
-                {routes.filter((r) => r.isActive).map((r) => (
-                  <option key={r.id} value={r.id}>{r.routeNumber} ({r.pickupPoint} → {r.dropPoint})</option>
-                ))}
-              </Select>
-            </FormField>
+            <>
+              <FormField label="Bus" required>
+                <Select value={assignForm.busId} onChange={(e) => setAssignForm((f) => ({ ...f, busId: e.target.value, routeId: '' }))}>
+                  <option value="">Select a bus</option>
+                  {buses.filter((b) => b.isActive).map((b) => {
+                    const cnt = studentCountByBus.get(b.id) || 0;
+                    return (
+                      <option key={b.id} value={b.id}>
+                        {b.busNumber}{b.capacity ? ` (${cnt}/${b.capacity})` : cnt > 0 ? ` (${cnt} students)` : ''}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </FormField>
+              {assignForm.busId && (
+                <FormField label="Route" required>
+                  <Select value={assignForm.routeId} onChange={(e) => setAssignForm((f) => ({ ...f, routeId: e.target.value }))}>
+                    <option value="">Select a route</option>
+                    {routesForSelectedBus.map((r) => (
+                      <option key={r.id} value={r.id}>{r.routeNumber} ({r.pickupPoint} → {r.dropPoint})</option>
+                    ))}
+                  </Select>
+                  {routesForSelectedBus.length === 0 && (
+                    <p className="text-xs text-amber-600 mt-1">No routes linked to this bus. <span className="underline cursor-pointer" onClick={() => { setAssignModalOpen(false); openCreateRoute(); }}>Create a route first.</span></p>
+                  )}
+                </FormField>
+              )}
+            </>
+          )}
+          {assignForm.transportMode === 'BUS' && assignForm.busId && assignForm.routeId && (
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+              <p className="text-xs text-blue-700 font-medium flex items-center gap-1.5">
+                <BusIcon className="w-3.5 h-3.5" />
+                Parents will see live bus location once a trip starts on this bus
+              </p>
+            </div>
           )}
         </div>
-        <ModalFooter onCancel={() => setAssignModalOpen(false)} onSubmit={submitAssign} loading={createAssignMut.isPending} label="Create" />
+        <ModalFooter onCancel={() => setAssignModalOpen(false)} onSubmit={submitAssign} loading={createAssignMut.isPending} label="Assign" />
       </Modal>
 
       {/* ════════ CONFIRM DIALOGS ════════ */}
