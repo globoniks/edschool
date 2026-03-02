@@ -15,6 +15,7 @@ const registerSchema = z.object({
     'SUB_ADMIN',
     'TEACHER',
     'PARENT',
+    'DRIVER',
   ]),
   schoolId: z.string().optional(),
   profile: z.object({

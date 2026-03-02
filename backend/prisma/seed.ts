@@ -777,10 +777,15 @@ async function main() {
         schoolId: school.id,
         busId: bus1.id,
         routeNumber: 'Route 1',
-        pickupPoint: 'Main Gate',
-        dropPoint: 'School Gate',
+        pickupPoint: 'ISBT Sector 43',
+        dropPoint: 'School (Sector 9)',
         isActive: true,
       },
+    });
+  } else {
+    route1 = await prisma.route.update({
+      where: { id: route1.id },
+      data: { pickupPoint: 'ISBT Sector 43', dropPoint: 'School (Sector 9)', busId: bus1.id },
     });
   }
 
@@ -793,10 +798,15 @@ async function main() {
         schoolId: school.id,
         busId: bus2.id,
         routeNumber: 'Route 2',
-        pickupPoint: 'North Block',
-        dropPoint: 'School Gate',
+        pickupPoint: 'Manimajra',
+        dropPoint: 'School (Sector 9)',
         isActive: true,
       },
+    });
+  } else {
+    route2 = await prisma.route.update({
+      where: { id: route2.id },
+      data: { pickupPoint: 'Manimajra', dropPoint: 'School (Sector 9)', busId: bus2.id },
     });
   }
 
@@ -810,8 +820,8 @@ async function main() {
       studentId: student1.id,
       transportMode: 'BUS',
       routeId: route1.id,
-      pickupPoint: 'Main Gate',
-      dropPoint: 'School Gate',
+      pickupPoint: 'Sector 22 Market',
+      dropPoint: 'School (Sector 9)',
     },
   });
 
@@ -825,6 +835,85 @@ async function main() {
   });
 
   console.log('✅ Student transport assignments created');
+
+  // Create DRIVER user and assign to bus
+  const driverUser = await prisma.user.upsert({
+    where: { email: 'driver@school.com' },
+    update: {},
+    create: {
+      email: 'driver@school.com',
+      password: hashedPassword,
+      role: 'DRIVER',
+      schoolId: school.id,
+      isActive: true,
+      profile: {
+        create: {
+          firstName: 'John',
+          lastName: 'Doe',
+          phone: '+1234567890',
+        },
+      },
+    },
+    include: { profile: true },
+  });
+  await prisma.bus.update({
+    where: { id: bus1.id },
+    data: { driverId: driverUser.id },
+  });
+
+  await prisma.driver.upsert({
+    where: { employeeId: 'DRV-001' },
+    update: {},
+    create: {
+      schoolId: school.id,
+      userId: driverUser.id,
+      employeeId: 'DRV-001',
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '+1234567890',
+      email: 'driver@school.com',
+      dateOfBirth: new Date('1985-06-15'),
+      gender: 'Male',
+      bloodGroup: 'B+',
+      address: 'Sector 22, Chandigarh',
+      licenseNumber: 'CH01 2020 0012345',
+      licenseType: 'HMV',
+      licenseExpiry: new Date('2028-06-15'),
+      experience: 8,
+      previousEmployer: 'City Transport Corp',
+      emergencyContactName: 'Jane Doe',
+      emergencyContactPhone: '+1234567891',
+      emergencyContactRelation: 'Spouse',
+      salary: 18000,
+      joiningDate: new Date('2024-01-15'),
+      isActive: true,
+    },
+  });
+  console.log('✅ Driver user + profile created and assigned to BUS-001:', driverUser.email);
+
+  // Add stops to Route 1 (Chandigarh sector route)
+  await prisma.busStop.deleteMany({ where: { routeId: route1.id } });
+  await prisma.busStop.createMany({
+    data: [
+      { routeId: route1.id, name: 'ISBT Sector 43', latitude: 30.7090, longitude: 76.7410, orderIndex: 0 },
+      { routeId: route1.id, name: 'Sector 35 Chowk', latitude: 30.7260, longitude: 76.7600, orderIndex: 1 },
+      { routeId: route1.id, name: 'Sector 22 Market', latitude: 30.7350, longitude: 76.7780, orderIndex: 2 },
+      { routeId: route1.id, name: 'Sector 17 Plaza', latitude: 30.7410, longitude: 76.7840, orderIndex: 3 },
+      { routeId: route1.id, name: 'School (Sector 9)', latitude: 30.7530, longitude: 76.7900, orderIndex: 4 },
+    ],
+  });
+
+  // Add stops to Route 2 (Chandigarh alternate route)
+  await prisma.busStop.deleteMany({ where: { routeId: route2.id } });
+  await prisma.busStop.createMany({
+    data: [
+      { routeId: route2.id, name: 'Manimajra', latitude: 30.7230, longitude: 76.8140, orderIndex: 0 },
+      { routeId: route2.id, name: 'Sector 26 Grain Market', latitude: 30.7280, longitude: 76.7940, orderIndex: 1 },
+      { routeId: route2.id, name: 'Sector 15 Market', latitude: 30.7460, longitude: 76.7870, orderIndex: 2 },
+      { routeId: route2.id, name: 'School (Sector 9)', latitude: 30.7530, longitude: 76.7900, orderIndex: 3 },
+    ],
+  });
+  console.log('✅ Bus stops added to Route 1 & Route 2 (Chandigarh)');
 
   // Create additional dummy users for testing
   const additionalUsers = [
@@ -1187,6 +1276,9 @@ async function main() {
   console.log('  Password: admin123');
   console.log('\n🚌 TRANSPORT MANAGER:');
   console.log('  Email: transport@school.com');
+  console.log('  Password: password123');
+  console.log('\n🚐 DRIVER:');
+  console.log('  Email: driver@school.com');
   console.log('  Password: password123');
   console.log('\n👨‍🏫 TEACHER USERS:');
   console.log('  Email: teacher@school.com');

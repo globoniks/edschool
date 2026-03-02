@@ -57,6 +57,9 @@ export function getUserPermissions(user: UserWithTags): string[] {
       }
     }
   }
+  if (user.role === 'DRIVER') {
+    set.add('viewBusTracking');
+  }
   return Array.from(set);
 }
 

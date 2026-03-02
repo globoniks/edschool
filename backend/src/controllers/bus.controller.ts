@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { AppError } from '../middleware/errorHandler.js';
+import { getLiveLocation } from '../socket/busTracking.js';
 
 export const getBusTracking = async (
   req: AuthRequest,
@@ -21,7 +22,12 @@ export const getBusTracking = async (
                 class: true,
                 studentTransport: {
                   include: {
-                    route: { include: { bus: true } },
+                    route: {
+                      include: {
+                        bus: true,
+                        stops: { orderBy: { orderIndex: 'asc' } },
+                      },
+                    },
                   },
                 },
               },
@@ -44,7 +50,7 @@ export const getBusTracking = async (
         return {
           studentId: student.id,
           studentName: `${student.firstName} ${student.lastName}`,
-          transportMode: 'PARENT_PICKUP',
+          transportMode: 'PARENT_PICKUP' as const,
           status: 'PARENT_PICKUP',
           message: 'Parent pick up – not using school bus',
         };
@@ -54,28 +60,53 @@ export const getBusTracking = async (
         return {
           studentId: student.id,
           studentName: `${student.firstName} ${student.lastName}`,
-          transportMode: 'BUS',
-          status: 'PARENT_PICKUP',
+          transportMode: 'BUS' as const,
+          status: 'NOT_CONFIGURED',
           message: 'Route or bus not configured',
         };
       }
       const bus = route.bus;
       const pickup = transport.pickupPoint ?? route.pickupPoint;
       const drop = transport.dropPoint ?? route.dropPoint;
+
+      const liveLoc = bus ? getLiveLocation(bus.id) : null;
+      const isLive = !!liveLoc;
+
       return {
         studentId: student.id,
         studentName: `${student.firstName} ${student.lastName}`,
-        transportMode: 'BUS',
-        status: 'ON_ROUTE',
-        estimatedArrival: '—',
+        transportMode: 'BUS' as const,
+        status: isLive ? 'LIVE' : 'IDLE',
         route: {
           id: route.id,
           number: route.routeNumber,
           pickupPoint: pickup,
           dropPoint: drop,
+          stops: route.stops?.map((s: { id: string; name: string; latitude: number; longitude: number; orderIndex: number }) => ({
+            id: s.id,
+            name: s.name,
+            latitude: s.latitude,
+            longitude: s.longitude,
+            orderIndex: s.orderIndex,
+          })) ?? [],
         },
+        bus: bus
+          ? {
+              id: bus.id,
+              busNumber: bus.busNumber,
+            }
+          : undefined,
         driver: bus
           ? { name: bus.driverName, phone: bus.driverPhone ?? undefined }
+          : undefined,
+        live: isLive
+          ? {
+              latitude: liveLoc!.latitude,
+              longitude: liveLoc!.longitude,
+              speed: liveLoc!.speed,
+              heading: liveLoc!.heading,
+              timestamp: liveLoc!.timestamp,
+            }
           : undefined,
       };
     });

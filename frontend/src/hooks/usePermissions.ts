@@ -5,7 +5,8 @@ type UserRole =
   | 'SCHOOL_ADMIN'
   | 'SUB_ADMIN'
   | 'TEACHER'
-  | 'PARENT';
+  | 'PARENT'
+  | 'DRIVER';
 
 export function usePermissions() {
   const { user } = useAuthStore();
@@ -98,9 +99,13 @@ export function usePermissions() {
   const canViewClassMoments = (): boolean => role === 'TEACHER' || isReadOnly();
   const canViewStudents = (): boolean => canManageStudents() || role === 'TEACHER';
   const showParentPortal = (): boolean => role === 'PARENT';
-  const showDashboard = (): boolean => role !== 'PARENT';
+  const showDriverDashboard = (): boolean => role === 'DRIVER';
+  const showDashboard = (): boolean => role !== 'PARENT' && role !== 'DRIVER';
   const showAcademicSetup = (): boolean => canManageAcademicSetup() || role === 'TEACHER';
   const showUsersAndPermissions = (): boolean => role === 'SUPER_ADMIN' || role === 'SCHOOL_ADMIN';
+  const canManageDrivers = (): boolean => {
+    return hasPermission('manageTransport');
+  };
 
   return {
     role,
@@ -133,8 +138,10 @@ export function usePermissions() {
     canViewClassMoments,
     canViewStudents,
     showParentPortal,
+    showDriverDashboard,
     showDashboard,
     showAcademicSetup,
     showUsersAndPermissions,
+    canManageDrivers,
   };
 }

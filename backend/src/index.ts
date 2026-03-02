@@ -1,7 +1,9 @@
 import express from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import { initSocketServer } from './socket/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { authRoutes } from './routes/auth.routes.js';
 import { schoolRoutes } from './routes/school.routes.js';
@@ -32,12 +34,15 @@ import { classMomentRoutes } from './routes/classMoment.routes.js';
 import { pushRoutes } from './routes/push.routes.js';
 import { tagRoutes } from './routes/tag.routes.js';
 import { userRoutes } from './routes/user.routes.js';
+import { tripRoutes } from './routes/trip.routes.js';
+import driverRoutes from './routes/driver.routes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
 const PORT = parseInt(process.env.PORT || '3001', 10);
 
 // CORS configuration - flexible for IP-based or domain-based access
@@ -99,6 +104,8 @@ app.use('/api/class-moments', classMomentRoutes);
 app.use('/api/push', pushRoutes);
 app.use('/api/tags', tagRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/trips', tripRoutes);
+app.use('/api/drivers', driverRoutes);
 
 // Error handling
 app.use(errorHandler);
@@ -108,7 +115,9 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+initSocketServer(httpServer);
+
+httpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
 

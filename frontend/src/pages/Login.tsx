@@ -50,6 +50,8 @@ export default function Login() {
         navigate('/app/parent-portal');
       } else if (response.data.user?.role === 'TEACHER') {
         navigate('/app/teacher-dashboard');
+      } else if (response.data.user?.role === 'DRIVER') {
+        navigate('/app/driver-dashboard');
       } else {
         navigate('/app/dashboard');
       }

@@ -9,6 +9,7 @@ import {
   Camera,
   Users,
   Bus,
+  Navigation,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuthStore } from '../store/authStore';
@@ -41,9 +42,15 @@ const TRANSPORT_TABS: TabConfig[] = [
   { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
 ];
 
+const DRIVER_TABS: TabConfig[] = [
+  { name: 'Dashboard', href: '/app/driver-dashboard', icon: Navigation, activePaths: ['/app/driver-dashboard'] },
+  { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
+];
+
 function getTabsForRole(role: string | undefined, permissions?: string[]): TabConfig[] {
   if (role === 'PARENT') return PARENT_TABS;
   if (role === 'TEACHER') return TEACHER_TABS;
+  if (role === 'DRIVER') return DRIVER_TABS;
   if (role === 'SUB_ADMIN' && permissions?.includes('manageTransport')) return TRANSPORT_TABS;
   if (['SUPER_ADMIN', 'SCHOOL_ADMIN', 'SUB_ADMIN'].includes(role ?? '')) return ADMIN_TABS;
   return [];

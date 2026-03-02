@@ -36,7 +36,9 @@ model School {
   holidays      Holiday[]
   classMoments  ClassMoment[]
   buses         Bus[]
+  drivers       Driver[]
   routes        Route[]
+  trips         Trip[]
   tags          Tag[]
   curricula     Curriculum[]
   leaves        Leave[]
@@ -66,6 +68,9 @@ model User {
   userTags           UserTag[]
   pushSubscriptions  PushSubscription[]
   approvedLeaves     Leave[]             @relation("LeaveApprovedBy")
+  driverProfile      Driver?
+  driverBuses        Bus[]               @relation("BusDriver")
+  driverTrips        Trip[]
 
   @@index([email])
   @@index([schoolId])
@@ -92,6 +97,7 @@ enum UserRole {
   SUB_ADMIN
   TEACHER
   PARENT
+  DRIVER
 }
 
 // Tag-based permissions: sub-admins get tags (ACADEMIC, FINANCE, HR, TRANSPORT); teachers can have HOD
@@ -743,16 +749,55 @@ model Bus {
   busNumber   String
   driverName  String
   driverPhone String?
+  driverId    String?
   capacity    Int?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   school School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  driver User?   @relation("BusDriver", fields: [driverId], references: [id], onDelete: SetNull)
   routes Route[]
+  trips  Trip[]
 
   @@unique([schoolId, busNumber])
   @@index([schoolId])
+  @@index([driverId])
+}
+
+model Driver {
+  id                       String    @id @default(cuid())
+  schoolId                 String
+  userId                   String?   @unique
+  employeeId               String    @unique
+  firstName                String
+  lastName                 String
+  dateOfBirth              DateTime?
+  gender                   String?
+  phone                    String
+  email                    String?
+  photo                    String?
+  address                  String?
+  bloodGroup               String?
+  licenseNumber            String
+  licenseType              String    @default("HMV")
+  licenseExpiry            DateTime
+  experience               Int?      @default(0)
+  previousEmployer         String?
+  emergencyContactName     String?
+  emergencyContactPhone    String?
+  emergencyContactRelation String?
+  salary                   Float?
+  joiningDate              DateTime  @default(now())
+  isActive                 Boolean   @default(true)
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([schoolId])
+  @@index([employeeId])
 }
 
 model Route {
@@ -766,12 +811,76 @@ model Route {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  school  School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  bus     Bus?               @relation(fields: [busId], references: [id], onDelete: SetNull)
+  school            School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  bus               Bus?               @relation(fields: [busId], references: [id], onDelete: SetNull)
   studentTransports StudentTransport[]
+  stops             BusStop[]
+  trips             Trip[]
 
   @@index([schoolId])
   @@index([busId])
+}
+
+model BusStop {
+  id         String   @id @default(cuid())
+  routeId    String
+  name       String
+  latitude   Float
+  longitude  Float
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  route Route @relation(fields: [routeId], references: [id], onDelete: Cascade)
+
+  @@index([routeId])
+}
+
+enum TripStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Trip {
+  id        String     @id @default(cuid())
+  schoolId  String
+  busId     String
+  routeId   String
+  driverId  String
+  status    TripStatus @default(SCHEDULED)
+  startedAt DateTime?
+  endedAt   DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  school    School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  bus       Bus           @relation(fields: [busId], references: [id], onDelete: Cascade)
+  route     Route         @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  driver    User          @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  locations BusLocation[]
+
+  @@index([schoolId])
+  @@index([busId])
+  @@index([driverId])
+  @@index([status])
+}
+
+model BusLocation {
+  id         String   @id @default(cuid())
+  tripId     String
+  busId      String
+  latitude   Float
+  longitude  Float
+  speed      Float?
+  heading    Float?
+  recordedAt DateTime @default(now())
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@index([tripId])
+  @@index([busId, recordedAt])
 }
 
 enum TransportMode {

@@ -28,8 +28,11 @@ const ParentPortal = lazy(() => import('./pages/ParentPortal'));
 const TeacherDashboard = lazy(() => import('./pages/TeacherDashboard'));
 const ClassMoments = lazy(() => import('./pages/ClassMoments'));
 const Transport = lazy(() => import('./pages/Transport'));
+const AdminBusTracking = lazy(() => import('./pages/AdminBusTracking'));
+const DriverDashboard = lazy(() => import('./pages/DriverDashboard'));
 const Users = lazy(() => import('./pages/Users'));
 const Leave = lazy(() => import('./pages/Leave'));
+const Drivers = lazy(() => import('./pages/Drivers'));
 
 // Parent-specific pages
 const ParentAttendance = lazy(() => import('./pages/parent/Attendance'));
@@ -56,6 +59,7 @@ const LoadingFallback = () => (
 const getDefaultRoute = (role?: string): string => {
   if (role === 'PARENT') return '/app/parent-portal';
   if (role === 'TEACHER') return '/app/teacher-dashboard';
+  if (role === 'DRIVER') return '/app/driver-dashboard';
   return '/app/dashboard';
 };
 
@@ -96,6 +100,9 @@ function AppRoutes() {
           <Route path="student-dashboard" element={<Navigate to="/app/dashboard" replace />} />
           <Route path="class-moments" element={<ClassMoments />} />
           <Route path="transport" element={<Transport />} />
+          <Route path="transport/live" element={<AdminBusTracking />} />
+          <Route path="driver-dashboard" element={<DriverDashboard />} />
+          <Route path="drivers" element={<Drivers />} />
           <Route path="users" element={<Users />} />
           <Route path="leave" element={<Leave />} />
 

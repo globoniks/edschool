@@ -22,6 +22,8 @@ import {
   User,
   ChevronDown,
   Bus,
+  Navigation,
+  Shield,
 } from 'lucide-react';
 import BottomNavigation from './BottomNavigation';
 import { usePermissions } from '../hooks/usePermissions';
@@ -29,10 +31,12 @@ import { clsx } from 'clsx';
 
 const navigation: { name: string; href: string; icon: typeof LayoutDashboard; show?: (p: ReturnType<typeof usePermissions>) => boolean }[] = [
   { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard, show: (p) => p.showDashboard() },
+  { name: 'Driver Dashboard', href: '/app/driver-dashboard', icon: Navigation, show: (p) => p.showDriverDashboard() },
   { name: 'Parent Portal', href: '/app/parent-portal', icon: UserCircle, show: (p) => p.showParentPortal() },
-  { name: 'Holidays', href: '/app/holidays', icon: Calendar, show: () => true },
+  { name: 'Holidays', href: '/app/holidays', icon: Calendar, show: (p) => p.role !== 'DRIVER' },
   { name: 'Students', href: '/app/students', icon: Users, show: (p) => p.canViewStudents() },
   { name: 'Teachers', href: '/app/teachers', icon: GraduationCap, show: (p) => p.canManageTeachers() },
+  { name: 'Drivers', href: '/app/drivers', icon: Shield, show: (p) => p.canManageDrivers() },
   { name: 'Transport', href: '/app/transport', icon: Bus, show: (p) => p.canManageTransport() },
   { name: 'Attendance', href: '/app/attendance', icon: Calendar, show: (p) => p.canViewAttendance() },
   { name: 'Leave', href: '/app/leave', icon: CalendarOff, show: (p) => p.role === 'TEACHER' || p.canManageHR() },
@@ -50,12 +54,14 @@ const navigation: { name: string; href: string; icon: typeof LayoutDashboard; sh
 function getProfileHref(role: string | undefined): string {
   if (role === 'PARENT') return '/app/parent/profile';
   if (role === 'TEACHER') return '/app/teacher-dashboard';
+  if (role === 'DRIVER') return '/app/driver-dashboard';
   return '/app/dashboard';
 }
 
 function getDefaultRoute(role: string | undefined): string {
   if (role === 'PARENT') return '/app/parent-portal';
   if (role === 'TEACHER') return '/app/teacher-dashboard';
+  if (role === 'DRIVER') return '/app/driver-dashboard';
   return '/app/dashboard';
 }
 
@@ -68,6 +74,7 @@ export default function Layout() {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const isParent = user?.role === 'PARENT';
+  const isDriver = user?.role === 'DRIVER';
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -85,19 +92,22 @@ export default function Layout() {
 
   const profileHref = getProfileHref(user?.role);
 
-  // Redirect non-parents away from parent-only routes
   const pathname = location.pathname;
   const isParentOnlyRoute = pathname === '/app/parent-portal' || pathname.startsWith('/app/parent/');
   if (user && isParentOnlyRoute && user.role !== 'PARENT') {
     return <Navigate to={getDefaultRoute(user.role)} replace />;
   }
+  const isDriverOnlyRoute = pathname === '/app/driver-dashboard';
+  if (user && isDriverOnlyRoute && user.role !== 'DRIVER') {
+    return <Navigate to={getDefaultRoute(user.role)} replace />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-      {/* Top header: on mobile for all roles; on desktop only for parent (no sidebar) */}
-      <div className={`fixed top-0 left-0 right-0 z-40 bg-white shadow-md min-h-[4rem] flex items-center justify-between px-4 safe-area-inset-top ${isParent ? 'flex' : 'lg:hidden flex'}`}>
+      {/* Top header: on mobile for all roles; on desktop only for parent/driver (no sidebar) */}
+      <div className={`fixed top-0 left-0 right-0 z-40 bg-white shadow-md min-h-[4rem] flex items-center justify-between px-4 safe-area-inset-top ${isParent || isDriver ? 'flex' : 'lg:hidden flex'}`}>
         <div className="flex items-center gap-2 min-h-[2.75rem]">
-          {!isParent && (
+          {!isParent && !isDriver && (
             <button
               type="button"
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -107,7 +117,7 @@ export default function Layout() {
               {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           )}
-          <Link to={isParent ? '/app/parent-portal' : '/app/dashboard'} className="flex items-center min-h-[2.75rem]">
+          <Link to={isParent ? '/app/parent-portal' : isDriver ? '/app/driver-dashboard' : '/app/dashboard'} className="flex items-center min-h-[2.75rem]">
             <h1 className="text-lg sm:text-xl font-bold text-primary-600">EdSchool</h1>
           </Link>
         </div>
@@ -172,7 +182,7 @@ export default function Layout() {
       {/* Sidebar – drawer on mobile/tablet, fixed on lg+ */}
       <div
         className={`sidebar-drawer fixed inset-y-0 left-0 w-64 max-w-[85vw] bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-30 ${
-          isParent ? 'md:hidden -translate-x-full' : (sidebarOpen ? 'translate-x-0' : '-translate-x-full')
+          isParent || isDriver ? 'md:hidden -translate-x-full' : (sidebarOpen ? 'translate-x-0' : '-translate-x-full')
         } lg:translate-x-0 lg:max-w-none`}
       >
         <div className="flex flex-col h-full pt-16 lg:pt-0">
@@ -235,7 +245,7 @@ export default function Layout() {
       )}
 
       {/* Main content – padding: top bar always; sidebar offset only for non-parent on lg */}
-      <div className={`pt-16 w-full min-w-0 ${isParent ? '' : 'lg:pl-64 lg:pt-0'}`}>
+      <div className={`pt-16 w-full min-w-0 ${isParent || isDriver ? '' : 'lg:pl-64 lg:pt-0'}`}>
         <main className="p-4 sm:p-5 md:p-6 lg:p-8 max-w-full overflow-x-hidden pb-20 md:pb-8">
           <Outlet />
         </main>

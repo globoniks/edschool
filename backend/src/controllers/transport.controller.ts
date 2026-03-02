@@ -15,6 +15,7 @@ const createBusSchema = z.object({
   busNumber: z.string().min(1),
   driverName: z.string().min(1),
   driverPhone: z.string().optional(),
+  driverId: z.string().nullable().optional(),
   capacity: z.number().int().positive().optional(),
   isActive: z.boolean().optional(),
 });
@@ -25,6 +26,12 @@ export const listBuses = async (req: AuthRequest, res: Response, next: NextFunct
     const buses = await prisma.bus.findMany({
       where: { schoolId },
       orderBy: { busNumber: 'asc' },
+      include: {
+        driver: {
+          select: { id: true, email: true, profile: { select: { firstName: true, lastName: true, phone: true } } },
+        },
+        routes: { where: { isActive: true }, select: { id: true, routeNumber: true } },
+      },
     });
     res.json(buses);
   } catch (error) {
@@ -86,12 +93,21 @@ export const deleteBus = async (req: AuthRequest, res: Response, next: NextFunct
 };
 
 // --- Routes ---
+const stopSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1),
+  latitude: z.number(),
+  longitude: z.number(),
+  orderIndex: z.number().int().min(0),
+});
+
 const createRouteSchema = z.object({
   routeNumber: z.string().min(1),
   busId: z.string().optional().nullable(),
   pickupPoint: z.string().min(1),
   dropPoint: z.string().min(1),
   isActive: z.boolean().optional(),
+  stops: z.array(stopSchema).optional(),
 });
 
 export const listRoutes = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -99,7 +115,7 @@ export const listRoutes = async (req: AuthRequest, res: Response, next: NextFunc
     const schoolId = getSchoolId(req);
     const routes = await prisma.route.findMany({
       where: { schoolId },
-      include: { bus: true },
+      include: { bus: true, stops: { orderBy: { orderIndex: 'asc' } } },
       orderBy: { routeNumber: 'asc' },
     });
     res.json(routes);
@@ -124,8 +140,16 @@ export const createRoute = async (req: AuthRequest, res: Response, next: NextFun
         pickupPoint: data.pickupPoint,
         dropPoint: data.dropPoint,
         isActive: data.isActive ?? true,
+        stops: data.stops?.length ? {
+          create: data.stops.map((s) => ({
+            name: s.name,
+            latitude: s.latitude,
+            longitude: s.longitude,
+            orderIndex: s.orderIndex,
+          })),
+        } : undefined,
       },
-      include: { bus: true },
+      include: { bus: true, stops: { orderBy: { orderIndex: 'asc' } } },
     });
     res.status(201).json(route);
   } catch (error) {
@@ -144,14 +168,35 @@ export const updateRoute = async (req: AuthRequest, res: Response, next: NextFun
       const bus = await prisma.bus.findFirst({ where: { id: data.busId, schoolId } });
       if (!bus) throw new AppError('Bus not found', 400);
     }
-    const updated = await prisma.route.update({
-      where: { id },
-      data: {
-        ...data,
-        busId: data.busId === null ? null : data.busId,
-      },
-      include: { bus: true },
+
+    const { stops, ...routeData } = data;
+
+    const updated = await prisma.$transaction(async (tx) => {
+      if (stops !== undefined) {
+        await tx.busStop.deleteMany({ where: { routeId: id } });
+        if (stops.length > 0) {
+          await tx.busStop.createMany({
+            data: stops.map((s) => ({
+              routeId: id,
+              name: s.name,
+              latitude: s.latitude,
+              longitude: s.longitude,
+              orderIndex: s.orderIndex,
+            })),
+          });
+        }
+      }
+
+      return tx.route.update({
+        where: { id },
+        data: {
+          ...routeData,
+          busId: routeData.busId === null ? null : routeData.busId,
+        },
+        include: { bus: true, stops: { orderBy: { orderIndex: 'asc' } } },
+      });
     });
+
     res.json(updated);
   } catch (error) {
     next(error);

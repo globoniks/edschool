@@ -6,7 +6,8 @@ export type UserRole =
   | 'SCHOOL_ADMIN'
   | 'SUB_ADMIN'
   | 'TEACHER'
-  | 'PARENT';
+  | 'PARENT'
+  | 'DRIVER';
 
 export type RoleFocus = 'finance-alerts' | 'progress' | 'action' | 'data';
 
@@ -90,6 +91,19 @@ const roleConfigs: Record<string, RoleUIConfig> = {
     showFinance: true,
     showProgress: false,
   },
+  DRIVER: {
+    focus: 'action',
+    primaryColor: 'emerald-600',
+    accentColor: 'emerald-500',
+    priorityFeatures: ['trip', 'gps', 'route'],
+    dashboardLayout: 'action-focused',
+    showMetrics: false,
+    showCharts: false,
+    showQuickActions: true,
+    showAlerts: false,
+    showFinance: false,
+    showProgress: false,
+  },
 };
 
 export function useRoleUI() {
@@ -100,6 +114,7 @@ export function useRoleUI() {
 
   const isParent = role === 'PARENT';
   const isTeacher = role === 'TEACHER';
+  const isDriver = role === 'DRIVER';
   const isAdmin = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'SUB_ADMIN'].includes(role);
   
   return {
@@ -107,6 +122,7 @@ export function useRoleUI() {
     config,
     isParent,
     isTeacher,
+    isDriver,
     isAdmin,
     // Quick access to config properties
     focus: config.focus,
