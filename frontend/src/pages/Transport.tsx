@@ -421,8 +421,10 @@ export default function Transport() {
                 <Select
                   value={busForm.isActive ? 'true' : 'false'}
                   onChange={(e) => setBusForm((f) => ({ ...f, isActive: e.target.value === 'true' }))}
-                  options={[{ value: 'true', label: 'Yes' }, { value: 'false', label: 'No' }]}
-                />
+                >
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </Select>
               </FormField>
             </div>
             <div className="flex gap-2 mt-6 justify-end">
@@ -448,8 +450,12 @@ export default function Transport() {
                 <Select
                   value={routeForm.busId}
                   onChange={(e) => setRouteForm((f) => ({ ...f, busId: e.target.value }))}
-                  options={[{ value: '', label: '— None —' }, ...(buses as BusRecord[]).filter((b) => b.isActive).map((b) => ({ value: b.id, label: b.busNumber }))]}
-                />
+                >
+                  <option value="">— None —</option>
+                  {(buses as BusRecord[]).filter((b) => b.isActive).map((b) => (
+                    <option key={b.id} value={b.id}>{b.busNumber}</option>
+                  ))}
+                </Select>
               </FormField>
               <FormField label="Pickup point">
                 <Input value={routeForm.pickupPoint} onChange={(e) => setRouteForm((f) => ({ ...f, pickupPoint: e.target.value }))} placeholder="Main Gate" />
@@ -461,8 +467,10 @@ export default function Transport() {
                 <Select
                   value={routeForm.isActive ? 'true' : 'false'}
                   onChange={(e) => setRouteForm((f) => ({ ...f, isActive: e.target.value === 'true' }))}
-                  options={[{ value: 'true', label: 'Yes' }, { value: 'false', label: 'No' }]}
-                />
+                >
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </Select>
               </FormField>
             </div>
             <div className="flex gap-2 mt-6 justify-end">
@@ -485,26 +493,33 @@ export default function Transport() {
                 <Select
                   value={assignForm.studentId}
                   onChange={(e) => setAssignForm((f) => ({ ...f, studentId: e.target.value }))}
-                  options={[{ value: '', label: 'Select student' }, ...availableStudents.map((s: { id: string; firstName: string; lastName: string; admissionNumber: string }) => ({
-                    value: s.id,
-                    label: `${s.firstName} ${s.lastName} (${s.admissionNumber})`,
-                  }))]}
-                />
+                >
+                  <option value="">Select student</option>
+                  {availableStudents.map((s: { id: string; firstName: string; lastName: string; admissionNumber: string }) => (
+                    <option key={s.id} value={s.id}>{s.firstName} {s.lastName} ({s.admissionNumber})</option>
+                  ))}
+                </Select>
               </FormField>
               <FormField label="Mode">
                 <Select
                   value={assignForm.transportMode}
                   onChange={(e) => setAssignForm((f) => ({ ...f, transportMode: e.target.value as 'BUS' | 'PARENT_PICKUP' }))}
-                  options={[{ value: 'BUS', label: 'Bus' }, { value: 'PARENT_PICKUP', label: 'Parent pick up' }]}
-                />
+                >
+                  <option value="BUS">Bus</option>
+                  <option value="PARENT_PICKUP">Parent pick up</option>
+                </Select>
               </FormField>
               {assignForm.transportMode === 'BUS' && (
                 <FormField label="Route">
                   <Select
                     value={assignForm.routeId}
                     onChange={(e) => setAssignForm((f) => ({ ...f, routeId: e.target.value }))}
-                    options={[{ value: '', label: 'Select route' }, ...(routes as RouteRecord[]).filter((r) => r.isActive).map((r) => ({ value: r.id, label: r.routeNumber }))]}
-                  />
+                  >
+                    <option value="">Select route</option>
+                    {(routes as RouteRecord[]).filter((r) => r.isActive).map((r) => (
+                      <option key={r.id} value={r.id}>{r.routeNumber}</option>
+                    ))}
+                  </Select>
                 </FormField>
               )}
             </div>
@@ -519,25 +534,25 @@ export default function Transport() {
       )}
 
       <ConfirmDialog
-        open={!!busDeleteId}
+        isOpen={!!busDeleteId}
         title="Delete bus?"
         message="This cannot be undone. Routes linked to this bus will be unlinked."
         onConfirm={() => busDeleteId && deleteBusMutation.mutate(busDeleteId)}
-        onCancel={() => setBusDeleteId(null)}
+        onClose={() => setBusDeleteId(null)}
       />
       <ConfirmDialog
-        open={!!routeDeleteId}
+        isOpen={!!routeDeleteId}
         title="Delete route?"
         message="Student assignments on this route will need to be updated."
         onConfirm={() => routeDeleteId && deleteRouteMutation.mutate(routeDeleteId)}
-        onCancel={() => setRouteDeleteId(null)}
+        onClose={() => setRouteDeleteId(null)}
       />
       <ConfirmDialog
-        open={!!assignDeleteId}
+        isOpen={!!assignDeleteId}
         title="Remove assignment?"
         message="The student will have no transport record until assigned again."
         onConfirm={() => assignDeleteId && deleteAssignMutation.mutate(assignDeleteId)}
-        onCancel={() => setAssignDeleteId(null)}
+        onClose={() => setAssignDeleteId(null)}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { getParentAccessibleStudents, canParentAccessStudent } from '../utils/permissions.js';
+import { sendPushToUsers } from '../utils/pushNotification.js';
 
 const createFeeStructureSchema = z.object({
   name: z.string(),
@@ -119,6 +120,22 @@ export const createPayment = async (
       },
     });
 
+    // Fire-and-forget push to parents of this student
+    try {
+      const parents = await prisma.parentStudent.findMany({
+        where: { studentId: data.studentId },
+        include: { parent: { select: { userId: true } } },
+      });
+      const userIds = parents.map((p) => p.parent.userId).filter((id): id is string => id != null);
+      if (userIds.length > 0) {
+        sendPushToUsers(userIds, {
+          title: 'Fee Payment Recorded',
+          body: `Receipt ${payment.receiptNumber} – ${payment.feeStructure.name}.`,
+          url: '/edschool/app/fees',
+        });
+      }
+    } catch (_) {}
+
     res.status(201).json(payment);
   } catch (error) {
     next(error);
@@ -200,7 +217,7 @@ export const getPayments = async (
     }
 
     // Admin/school roles: restrict to current school (students in this school only)
-    const schoolScopedRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'FINANCE_ADMIN', 'ACADEMIC_ADMIN', 'HR_ADMIN'];
+    const schoolScopedRoles = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'SUB_ADMIN'];
     if (schoolScopedRoles.includes(req.user!.role as string) && req.user!.schoolId) {
       where.student = { schoolId: req.user!.schoolId };
     }

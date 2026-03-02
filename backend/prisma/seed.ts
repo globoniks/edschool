@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -21,6 +21,49 @@ async function main() {
   });
 
   console.log('✅ School created:', school.name);
+
+  // STEP 7/8: Demo School for RBAC testing (code = demo-school)
+  const demoSchool = await prisma.school.upsert({
+    where: { code: 'demo-school' },
+    update: {},
+    create: {
+      name: 'Demo School',
+      code: 'demo-school',
+      address: '456 Demo Avenue',
+      phone: '+1987654321',
+      email: 'admin@demoschool.com',
+      isActive: true,
+    },
+  });
+  console.log('✅ Demo School created:', demoSchool.name);
+
+  // Upsert predefined tags (STEP 7: permission arrays per spec)
+  const tagAcademic = await prisma.tag.upsert({
+    where: { slug: 'ACADEMIC' },
+    update: { permissions: ['manageAcademic', 'createExam'] },
+    create: { slug: 'ACADEMIC', name: 'Academic', type: 'SUB_ADMIN', permissions: ['manageAcademic', 'createExam'] },
+  });
+  const tagFinance = await prisma.tag.upsert({
+    where: { slug: 'FINANCE' },
+    update: { permissions: ['manageFees', 'viewReports'] },
+    create: { slug: 'FINANCE', name: 'Finance', type: 'SUB_ADMIN', permissions: ['manageFees', 'viewReports'] },
+  });
+  const tagHr = await prisma.tag.upsert({
+    where: { slug: 'HR' },
+    update: { permissions: ['manageTeachers', 'manageStaff'] },
+    create: { slug: 'HR', name: 'HR', type: 'SUB_ADMIN', permissions: ['manageTeachers', 'manageStaff'] },
+  });
+  const tagTransport = await prisma.tag.upsert({
+    where: { slug: 'TRANSPORT' },
+    update: { permissions: ['manageTransport'] },
+    create: { slug: 'TRANSPORT', name: 'Transport', type: 'SUB_ADMIN', permissions: ['manageTransport'] },
+  });
+  const tagHod = await prisma.tag.upsert({
+    where: { slug: 'HOD' },
+    update: { permissions: ['hodViewSubmissions', 'hodEnterExamMarks'] },
+    create: { slug: 'HOD', name: 'HOD', type: 'TEACHER', permissions: ['hodViewSubmissions', 'hodEnterExamMarks'] },
+  });
+  console.log('✅ Tags created');
 
   // Hash password for all users
   const hashedPassword = await bcrypt.hash('password123', 10);
@@ -71,14 +114,14 @@ async function main() {
 
   console.log('✅ School Admin user created:', schoolAdminUser.email);
 
-  // Create ACADEMIC_ADMIN user
+  // Create SUB_ADMIN users (one per area, each with one tag)
   const academicAdminUser = await prisma.user.upsert({
     where: { email: 'academic@school.com' },
     update: {},
     create: {
       email: 'academic@school.com',
       password: hashedPassword,
-      role: 'ACADEMIC_ADMIN',
+      role: 'SUB_ADMIN',
       schoolId: school.id,
       isActive: true,
       profile: {
@@ -91,17 +134,20 @@ async function main() {
     },
     include: { profile: true },
   });
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: academicAdminUser.id, tagId: tagAcademic.id } },
+    update: {},
+    create: { userId: academicAdminUser.id, tagId: tagAcademic.id },
+  });
+  console.log('✅ Sub-admin (Academic) user created:', academicAdminUser.email);
 
-  console.log('✅ Academic Admin user created:', academicAdminUser.email);
-
-  // Create FINANCE_ADMIN user
   const financeAdminUser = await prisma.user.upsert({
     where: { email: 'finance@school.com' },
     update: {},
     create: {
       email: 'finance@school.com',
       password: hashedPassword,
-      role: 'FINANCE_ADMIN',
+      role: 'SUB_ADMIN',
       schoolId: school.id,
       isActive: true,
       profile: {
@@ -114,17 +160,20 @@ async function main() {
     },
     include: { profile: true },
   });
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: financeAdminUser.id, tagId: tagFinance.id } },
+    update: {},
+    create: { userId: financeAdminUser.id, tagId: tagFinance.id },
+  });
+  console.log('✅ Sub-admin (Finance) user created:', financeAdminUser.email);
 
-  console.log('✅ Finance Admin user created:', financeAdminUser.email);
-
-  // Create HR_ADMIN user
   const hrAdminUser = await prisma.user.upsert({
     where: { email: 'hr@school.com' },
     update: {},
     create: {
       email: 'hr@school.com',
       password: hashedPassword,
-      role: 'HR_ADMIN',
+      role: 'SUB_ADMIN',
       schoolId: school.id,
       isActive: true,
       profile: {
@@ -137,17 +186,20 @@ async function main() {
     },
     include: { profile: true },
   });
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: hrAdminUser.id, tagId: tagHr.id } },
+    update: {},
+    create: { userId: hrAdminUser.id, tagId: tagHr.id },
+  });
+  console.log('✅ Sub-admin (HR) user created:', hrAdminUser.email);
 
-  console.log('✅ HR Admin user created:', hrAdminUser.email);
-
-  // Create TRANSPORT_MANAGER user
   const transportManagerUser = await prisma.user.upsert({
     where: { email: 'transport@school.com' },
     update: {},
     create: {
       email: 'transport@school.com',
       password: hashedPassword,
-      role: 'TRANSPORT_MANAGER',
+      role: 'SUB_ADMIN',
       schoolId: school.id,
       isActive: true,
       profile: {
@@ -160,8 +212,12 @@ async function main() {
     },
     include: { profile: true },
   });
-
-  console.log('✅ Transport Manager user created:', transportManagerUser.email);
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: transportManagerUser.id, tagId: tagTransport.id } },
+    update: {},
+    create: { userId: transportManagerUser.id, tagId: tagTransport.id },
+  });
+  console.log('✅ Sub-admin (Transport) user created:', transportManagerUser.email);
 
   // Create Teacher user
   const teacherUser = await prisma.user.upsert({
@@ -200,8 +256,12 @@ async function main() {
       isActive: true,
     },
   });
-
-  console.log('✅ Teacher created:', teacher.employeeId);
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: teacherUser.id, tagId: tagHod.id } },
+    update: {},
+    create: { userId: teacherUser.id, tagId: tagHod.id },
+  });
+  console.log('✅ Teacher (with HOD tag) created:', teacher.employeeId);
 
   // Create Parent user
   const parentUser = await prisma.user.upsert({
@@ -364,34 +424,12 @@ async function main() {
 
   console.log('✅ Class-Subject mappings created');
 
-  // Create Student user
-  const studentUser = await prisma.user.upsert({
-    where: { email: 'student@school.com' },
-    update: {},
-    create: {
-      email: 'student@school.com',
-      password: hashedPassword,
-      role: 'STUDENT',
-      schoolId: school.id,
-      isActive: true,
-      profile: {
-        create: {
-          firstName: 'Alice',
-          lastName: 'Student',
-          phone: '+1234567894',
-        },
-      },
-    },
-    include: { profile: true },
-  });
-
-  // Create Students
+  // Create Students (no student login – parents see all data via parent portal)
   const student1 = await prisma.student.upsert({
     where: { admissionNumber: 'ADM001' },
     update: {},
     create: {
       schoolId: school.id,
-      userId: studentUser.id,
       admissionNumber: 'ADM001',
       firstName: 'Alice',
       lastName: 'Student',
@@ -456,7 +494,252 @@ async function main() {
     },
   });
 
+  // Additional students (no login – parents see via parent portal)
+  await prisma.student.upsert({
+    where: { admissionNumber: 'ADM003' },
+    update: {},
+    create: {
+      schoolId: school.id,
+      admissionNumber: 'ADM003',
+      firstName: 'Charlie',
+      lastName: 'Student',
+      dateOfBirth: new Date('2011-03-10'),
+      gender: 'Male',
+      classId: class1.id,
+      admissionDate: new Date('2024-04-01'),
+      isActive: true,
+    },
+  });
+  await prisma.student.upsert({
+    where: { admissionNumber: 'ADM004' },
+    update: {},
+    create: {
+      schoolId: school.id,
+      admissionNumber: 'ADM004',
+      firstName: 'Diana',
+      lastName: 'Student',
+      dateOfBirth: new Date('2010-11-25'),
+      gender: 'Female',
+      classId: class2.id,
+      admissionDate: new Date('2024-04-01'),
+      isActive: true,
+    },
+  });
+
   console.log('✅ Parent-Student links created');
+
+  // STEP 8 — Demo users (@test.com, password 123456) for RBAC testing
+  const demoPasswordHash = await bcrypt.hash('123456', 10);
+
+  const superAdminTest = await prisma.user.upsert({
+    where: { email: 'superadmin@test.com' },
+    update: {},
+    create: {
+      email: 'superadmin@test.com',
+      password: demoPasswordHash,
+      role: 'SUPER_ADMIN',
+      schoolId: demoSchool.id,
+      isActive: true,
+      profile: { create: { firstName: 'Super', lastName: 'Admin Test', phone: '+1000000001' } },
+    },
+    include: { profile: true },
+  });
+  console.log('✅ Demo user: superadmin@test.com (SUPER_ADMIN)');
+
+  const schoolAdminTest = await prisma.user.upsert({
+    where: { email: 'schooladmin@test.com' },
+    update: {},
+    create: {
+      email: 'schooladmin@test.com',
+      password: demoPasswordHash,
+      role: 'SCHOOL_ADMIN',
+      schoolId: demoSchool.id,
+      isActive: true,
+      profile: { create: { firstName: 'School', lastName: 'Admin Test', phone: '+1000000002' } },
+    },
+    include: { profile: true },
+  });
+  console.log('✅ Demo user: schooladmin@test.com (SCHOOL_ADMIN)');
+
+  const academicTest = await prisma.user.upsert({
+    where: { email: 'academic@test.com' },
+    update: {},
+    create: {
+      email: 'academic@test.com',
+      password: demoPasswordHash,
+      role: 'SUB_ADMIN',
+      schoolId: demoSchool.id,
+      isActive: true,
+      profile: { create: { firstName: 'Academic', lastName: 'Sub Admin', phone: '+1000000003' } },
+    },
+    include: { profile: true },
+  });
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: academicTest.id, tagId: tagAcademic.id } },
+    update: {},
+    create: { userId: academicTest.id, tagId: tagAcademic.id },
+  });
+  console.log('✅ Demo user: academic@test.com (SUB_ADMIN, ACADEMIC tag)');
+
+  const financeTest = await prisma.user.upsert({
+    where: { email: 'finance@test.com' },
+    update: {},
+    create: {
+      email: 'finance@test.com',
+      password: demoPasswordHash,
+      role: 'SUB_ADMIN',
+      schoolId: demoSchool.id,
+      isActive: true,
+      profile: { create: { firstName: 'Finance', lastName: 'Sub Admin', phone: '+1000000004' } },
+    },
+    include: { profile: true },
+  });
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: financeTest.id, tagId: tagFinance.id } },
+    update: {},
+    create: { userId: financeTest.id, tagId: tagFinance.id },
+  });
+  console.log('✅ Demo user: finance@test.com (SUB_ADMIN, FINANCE tag)');
+
+  const teacherTest = await prisma.user.upsert({
+    where: { email: 'teacher@test.com' },
+    update: {},
+    create: {
+      email: 'teacher@test.com',
+      password: demoPasswordHash,
+      role: 'TEACHER',
+      schoolId: demoSchool.id,
+      isActive: true,
+      profile: { create: { firstName: 'Demo', lastName: 'Teacher', phone: '+1000000005' } },
+    },
+    include: { profile: true },
+  });
+  const teacherTestProfile = await prisma.teacher.upsert({
+    where: { employeeId: 'DEMO-T001' },
+    update: {},
+    create: {
+      schoolId: demoSchool.id,
+      userId: teacherTest.id,
+      employeeId: 'DEMO-T001',
+      firstName: 'Demo',
+      lastName: 'Teacher',
+      email: 'teacher@test.com',
+      phone: '+1000000005',
+      qualification: 'B.Ed.',
+      experience: 3,
+      isActive: true,
+    },
+  });
+  console.log('✅ Demo user: teacher@test.com (TEACHER, no HOD tag)');
+
+  const hodTest = await prisma.user.upsert({
+    where: { email: 'hod@test.com' },
+    update: {},
+    create: {
+      email: 'hod@test.com',
+      password: demoPasswordHash,
+      role: 'TEACHER',
+      schoolId: demoSchool.id,
+      isActive: true,
+      profile: { create: { firstName: 'HOD', lastName: 'Teacher', phone: '+1000000006' } },
+    },
+    include: { profile: true },
+  });
+  await prisma.teacher.upsert({
+    where: { employeeId: 'DEMO-HOD01' },
+    update: {},
+    create: {
+      schoolId: demoSchool.id,
+      userId: hodTest.id,
+      employeeId: 'DEMO-HOD01',
+      firstName: 'HOD',
+      lastName: 'Teacher',
+      email: 'hod@test.com',
+      phone: '+1000000006',
+      qualification: 'M.Ed.',
+      experience: 8,
+      isActive: true,
+    },
+  });
+  await prisma.userTag.upsert({
+    where: { userId_tagId: { userId: hodTest.id, tagId: tagHod.id } },
+    update: {},
+    create: { userId: hodTest.id, tagId: tagHod.id },
+  });
+  console.log('✅ Demo user: hod@test.com (TEACHER, HOD tag)');
+
+  // Parent needs a student: create Demo class + student, then Parent + link
+  const demoClass = await prisma.class.upsert({
+    where: {
+      schoolId_name_section_academicYear: {
+        schoolId: demoSchool.id,
+        name: 'Class 1',
+        section: 'A',
+        academicYear: '2024-2025',
+      },
+    },
+    update: {},
+    create: {
+      schoolId: demoSchool.id,
+      name: 'Class 1',
+      section: 'A',
+      academicYear: '2024-2025',
+      capacity: 40,
+    },
+  });
+  const demoStudent = await prisma.student.upsert({
+    where: { admissionNumber: 'DEMO-ADM001' },
+    update: {},
+    create: {
+      schoolId: demoSchool.id,
+      admissionNumber: 'DEMO-ADM001',
+      firstName: 'Demo',
+      lastName: 'Student',
+      dateOfBirth: new Date('2012-01-01'),
+      gender: 'Male',
+      classId: demoClass.id,
+      admissionDate: new Date('2024-04-01'),
+      isActive: true,
+    },
+  });
+  const parentTest = await prisma.user.upsert({
+    where: { email: 'parent@test.com' },
+    update: {},
+    create: {
+      email: 'parent@test.com',
+      password: demoPasswordHash,
+      role: 'PARENT',
+      schoolId: demoSchool.id,
+      isActive: true,
+      profile: { create: { firstName: 'Demo', lastName: 'Parent', phone: '+1000000007' } },
+    },
+    include: { profile: true },
+  });
+  const parentTestProfile = await prisma.parent.upsert({
+    where: { phone: '+1000000007' },
+    update: {},
+    create: {
+      userId: parentTest.id,
+      firstName: 'Demo',
+      lastName: 'Parent',
+      phone: '+1000000007',
+      email: 'parent@test.com',
+      occupation: 'Parent',
+    },
+  });
+  await prisma.parentStudent.upsert({
+    where: {
+      parentId_studentId: { parentId: parentTestProfile.id, studentId: demoStudent.id },
+    },
+    update: {},
+    create: {
+      parentId: parentTestProfile.id,
+      studentId: demoStudent.id,
+      relationship: 'Parent',
+      isPrimary: true,
+    },
+  });
+  console.log('✅ Demo user: parent@test.com (PARENT, 1 child)');
 
   // Transport: buses, routes, student transport (bus + parent pick up)
   const bus1 = await prisma.bus.upsert({
@@ -597,30 +880,6 @@ async function main() {
       occupation: 'Lawyer',
     },
     // Additional Students
-    {
-      email: 'student2@school.com',
-      password: 'student123',
-      role: 'STUDENT' as const,
-      firstName: 'Charlie',
-      lastName: 'Student',
-      phone: '+1234567900',
-      admissionNumber: 'ADM003',
-      dateOfBirth: new Date('2011-03-10'),
-      gender: 'Male',
-      classId: class1.id,
-    },
-    {
-      email: 'student3@school.com',
-      password: 'student123',
-      role: 'STUDENT' as const,
-      firstName: 'Diana',
-      lastName: 'Student',
-      phone: '+1234567901',
-      admissionNumber: 'ADM004',
-      dateOfBirth: new Date('2010-11-25'),
-      gender: 'Female',
-      classId: class2.id,
-    },
   ];
 
   for (const userData of additionalUsers) {
@@ -675,25 +934,6 @@ async function main() {
           phone: userData.phone,
           email: userData.email,
           occupation: 'occupation' in userData ? userData.occupation : undefined,
-        },
-      });
-    } else if (userData.role === 'STUDENT' && 'admissionNumber' in userData) {
-      await prisma.student.upsert({
-        where: { admissionNumber: userData.admissionNumber },
-        update: {},
-        create: {
-          schoolId: school.id,
-          userId: user.id,
-          admissionNumber: userData.admissionNumber,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          dateOfBirth: userData.dateOfBirth,
-          gender: userData.gender,
-          phone: userData.phone,
-          email: userData.email,
-          classId: userData.classId,
-          admissionDate: new Date('2024-04-01'),
-          isActive: true,
         },
       });
     }
@@ -962,13 +1202,7 @@ async function main() {
   console.log('  Password: parent123');
   console.log('  Email: parent3@school.com');
   console.log('  Password: parent123');
-  console.log('\n🎓 STUDENT USERS:');
-  console.log('  Email: student@school.com');
-  console.log('  Password: password123');
-  console.log('  Email: student2@school.com');
-  console.log('  Password: student123');
-  console.log('  Email: student3@school.com');
-  console.log('  Password: student123');
+  console.log('\n  (Students do not log in; parents see all student data in the portal.)');
   console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('💡 Quick Login Tips:');
   console.log('  - All passwords follow pattern: [role]123 or password123');
@@ -990,11 +1224,10 @@ main()
   // Email	Password
   // superadmin@school.com	password123
   // schooladmin@school.com	password123
-  // academic@school.com	password123
-  // finance@school.com	password123
-  // hr@school.com	password123
-  // transport@school.com	password123
-  // teacher@school.com	password123
+  // academic@school.com	password123 (Sub-admin, Academic tag)
+  // finance@school.com	password123 (Sub-admin, Finance tag)
+  // hr@school.com	password123 (Sub-admin, HR tag)
+  // transport@school.com	password123 (Sub-admin, Transport tag)
+  // teacher@school.com	password123 (Teacher, HOD tag)
   // parent@school.com	password123
-  // student@school.com	password123
   

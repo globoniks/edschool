@@ -10,8 +10,10 @@ export default function Messages() {
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useToast();
   const [composeOpen, setComposeOpen] = useState(false);
+  const [sendToClassMode, setSendToClassMode] = useState(false);
   const [composeForm, setComposeForm] = useState({
     receiverId: '',
+    classId: '',
     subject: '',
     content: '',
   });
@@ -22,16 +24,22 @@ export default function Messages() {
     queryFn: () => api.get(`/messages?type=${filterType}`).then((res) => res.data),
   });
 
-  const { data: teachersData } = useQuery({
-    queryKey: ['teachers-for-messages'],
-    queryFn: () => api.get('/teachers?limit=500').then((res) => res.data),
+  const { data: recipients = [], isLoading: recipientsLoading } = useQuery({
+    queryKey: ['messages-recipients'],
+    queryFn: () => api.get('/messages/recipients').then((res) => res.data),
     enabled: composeOpen,
   });
 
-  const recipients = (teachersData as any)?.teachers ?? [];
-  const recipientOptions = recipients
-    .filter((t: any) => t.user?.id)
-    .map((t: any) => ({ value: t.user.id, label: `${t.firstName} ${t.lastName} (Teacher)` }));
+  const { data: recipientClasses = [], isLoading: classesLoading } = useQuery({
+    queryKey: ['messages-recipient-classes'],
+    queryFn: () => api.get('/messages/recipient-classes').then((res) => res.data),
+    enabled: composeOpen && sendToClassMode,
+  });
+
+  const recipientOptions = (recipients as { userId: string; label: string }[]).map((r) => ({
+    value: r.userId,
+    label: r.label,
+  }));
 
   const sendMessageMutation = useMutation({
     mutationFn: (data: { receiverId: string; subject?: string; content: string }) =>
@@ -39,11 +47,28 @@ export default function Messages() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       setComposeOpen(false);
-      setComposeForm({ receiverId: '', subject: '', content: '' });
+      setComposeForm({ receiverId: '', classId: '', subject: '', content: '' });
+      setSendToClassMode(false);
       showSuccess('Message sent');
     },
     onError: (error: any) => {
       showError(error.response?.data?.message || 'Failed to send message');
+    },
+  });
+
+  const sendToClassMutation = useMutation({
+    mutationFn: (data: { classId: string; subject?: string; content: string }) =>
+      api.post('/messages/send-to-class', data),
+    onSuccess: (res: any) => {
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      setComposeOpen(false);
+      setComposeForm({ receiverId: '', classId: '', subject: '', content: '' });
+      setSendToClassMode(false);
+      const data = res?.data ?? {};
+      showSuccess(data.message || `Message sent to ${data.count ?? 0} parent(s)`);
+    },
+    onError: (error: any) => {
+      showError(error.response?.data?.message || 'Failed to send to class');
     },
   });
 
@@ -133,26 +158,81 @@ export default function Messages() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                sendMessageMutation.mutate({
-                  receiverId: composeForm.receiverId,
-                  subject: composeForm.subject || undefined,
-                  content: composeForm.content,
-                });
+                if (sendToClassMode) {
+                  if (!composeForm.classId) {
+                    showError('Select a class');
+                    return;
+                  }
+                  sendToClassMutation.mutate({
+                    classId: composeForm.classId,
+                    subject: composeForm.subject || undefined,
+                    content: composeForm.content,
+                  });
+                } else {
+                  if (!composeForm.receiverId) {
+                    showError('Select a recipient');
+                    return;
+                  }
+                  sendMessageMutation.mutate({
+                    receiverId: composeForm.receiverId,
+                    subject: composeForm.subject || undefined,
+                    content: composeForm.content,
+                  });
+                }
               }}
               className="p-6 space-y-4"
             >
-              <FormField label="To" required>
-                <Select
-                  required
-                  value={composeForm.receiverId}
-                  onChange={(e) => setComposeForm({ ...composeForm, receiverId: e.target.value })}
-                >
-                  <option value="">Select recipient</option>
-                  {recipientOptions.map((opt: { value: string; label: string }) => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </Select>
-              </FormField>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="sendToClass"
+                  checked={sendToClassMode}
+                  onChange={(e) => {
+                    setSendToClassMode(e.target.checked);
+                    setComposeForm((f) => ({ ...f, receiverId: '', classId: '' }));
+                  }}
+                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                />
+                <label htmlFor="sendToClass" className="text-sm font-medium text-gray-700">
+                  Send to entire class (all parents of students in the class)
+                </label>
+              </div>
+
+              {sendToClassMode ? (
+                <FormField label="Class" required>
+                  <Select
+                    required
+                    value={composeForm.classId}
+                    onChange={(e) => setComposeForm({ ...composeForm, classId: e.target.value })}
+                  >
+                    <option value="">Select class</option>
+                    {(recipientClasses as { id: string; name: string; section: string }[]).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name} {c.section ? `- ${c.section}` : ''}
+                      </option>
+                    ))}
+                  </Select>
+                  {recipientClasses.length === 0 && !classesLoading && (
+                    <p className="mt-1 text-xs text-gray-500">No classes available for you to message.</p>
+                  )}
+                </FormField>
+              ) : (
+                <FormField label="To" required>
+                  <Select
+                    required
+                    value={composeForm.receiverId}
+                    onChange={(e) => setComposeForm({ ...composeForm, receiverId: e.target.value })}
+                  >
+                    <option value="">Select recipient</option>
+                    {recipientOptions.map((opt: { value: string; label: string }) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </Select>
+                  {recipientOptions.length === 0 && !recipientsLoading && (
+                    <p className="mt-1 text-xs text-gray-500">No recipients available.</p>
+                  )}
+                </FormField>
+              )}
               <FormField label="Subject">
                 <Input
                   value={composeForm.subject}
@@ -175,10 +255,10 @@ export default function Messages() {
                 </button>
                 <button
                   type="submit"
-                  disabled={sendMessageMutation.isPending}
+                  disabled={sendMessageMutation.isPending || sendToClassMutation.isPending}
                   className="btn btn-primary flex items-center gap-2"
                 >
-                  {sendMessageMutation.isPending && <LoadingSpinner size="sm" />}
+                  {(sendMessageMutation.isPending || sendToClassMutation.isPending) && <LoadingSpinner size="sm" />}
                   Send
                 </button>
               </div>

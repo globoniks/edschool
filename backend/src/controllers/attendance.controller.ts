@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { canTeacherAccessClass, getTeacherAccessibleClasses, getParentAccessibleStudents } from '../utils/permissions.js';
+import { sendPushToUsers } from '../utils/pushNotification.js';
 
 const markAttendanceSchema = z.object({
   studentId: z.string(),
@@ -134,6 +135,25 @@ export const markBulkAttendance = async (
         });
       })
     );
+
+    // Fire-and-forget push to parents of students marked absent
+    try {
+      const absentStudentIds = data.attendances.filter((a) => a.status === 'ABSENT').map((a) => a.studentId);
+      if (absentStudentIds.length > 0) {
+        const parents = await prisma.parentStudent.findMany({
+          where: { studentId: { in: absentStudentIds } },
+          include: { parent: { select: { userId: true } } },
+        });
+        const userIds = parents.map((p) => p.parent.userId).filter((id): id is string => id != null);
+        if (userIds.length > 0) {
+          const dateStr = data.date.toLocaleDateString();
+          sendPushToUsers(
+            [...new Set(userIds)],
+            { title: 'Absence Recorded', body: `Your child was marked absent on ${dateStr}.`, url: '/edschool/app/alerts' }
+          );
+        }
+      }
+    } catch (_) {}
 
     res.status(201).json({ attendances: results });
   } catch (error) {
@@ -309,8 +329,16 @@ export const markTeacherAttendance = async (
   next: NextFunction
 ) => {
   try {
+    const schoolId = req.user!.schoolId;
     const { teacherId, date, status, checkIn, checkOut, remarks } = req.body;
     const dateObj = new Date(date);
+
+    const teacher = await prisma.teacher.findFirst({
+      where: { id: teacherId, schoolId },
+    });
+    if (!teacher) {
+      throw new AppError('Teacher not found', 404);
+    }
 
     const existing = await prisma.teacherAttendance.findUnique({
       where: {
@@ -355,3 +383,111 @@ export const markTeacherAttendance = async (
   }
 };
 
+/** GET /attendance/teacher - list teacher attendance (teachers: own only; admin/HR: all or by teacherId) */
+export const getTeacherAttendance = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const schoolId = req.user!.schoolId;
+    const { teacherId, startDate, endDate } = req.query;
+
+    const where: any = { teacher: { schoolId } };
+
+    if (req.user!.role === 'TEACHER') {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: req.user!.id, schoolId },
+        select: { id: true },
+      });
+      if (!teacher) return res.json([]);
+      where.teacherId = teacher.id;
+    } else if (teacherId) {
+      const teacher = await prisma.teacher.findFirst({
+        where: { id: teacherId as string, schoolId },
+      });
+      if (!teacher) throw new AppError('Teacher not found', 404);
+      where.teacherId = teacherId as string;
+    }
+
+    if (startDate && endDate) {
+      where.date = {
+        gte: new Date(startDate as string),
+        lte: new Date(endDate as string),
+      };
+    }
+
+    const list = await prisma.teacherAttendance.findMany({
+      where,
+      include: { teacher: { select: { id: true, firstName: true, lastName: true, employeeId: true } } },
+      orderBy: { date: 'desc' },
+      take: 500,
+    });
+    res.json(list);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/** GET /attendance/teacher/stats - stats for a teacher or all (admin) */
+export const getTeacherAttendanceStats = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const schoolId = req.user!.schoolId;
+    const { teacherId, month, year } = req.query;
+
+    const startDate = new Date(
+      Number(year) || new Date().getFullYear(),
+      (Number(month) || new Date().getMonth() + 1) - 1,
+      1
+    );
+    const endDate = new Date(
+      Number(year) || new Date().getFullYear(),
+      Number(month) || new Date().getMonth() + 1,
+      0
+    );
+
+    const where: any = {
+      teacher: { schoolId },
+      date: { gte: startDate, lte: endDate },
+    };
+
+    if (req.user!.role === 'TEACHER') {
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: req.user!.id, schoolId },
+        select: { id: true },
+      });
+      if (!teacher) return res.json({ total: 0, present: 0, absent: 0, late: 0, excused: 0, percentage: '0' });
+      where.teacherId = teacher.id;
+    } else if (teacherId) {
+      where.teacherId = teacherId as string;
+    }
+
+    const grouped = await prisma.teacherAttendance.groupBy({
+      by: ['status'],
+      where,
+      _count: { status: true },
+    });
+
+    const total = grouped.reduce((sum, g) => sum + g._count.status, 0);
+    const present = grouped.find((g) => g.status === 'PRESENT')?._count.status ?? 0;
+    const absent = grouped.find((g) => g.status === 'ABSENT')?._count.status ?? 0;
+    const late = grouped.find((g) => g.status === 'LATE')?._count.status ?? 0;
+    const excused = grouped.find((g) => g.status === 'EXCUSED')?._count.status ?? 0;
+    const presentOrLate = present + late;
+
+    res.json({
+      total,
+      present,
+      absent,
+      late,
+      excused,
+      percentage: total > 0 ? ((presentOrLate / total) * 100).toFixed(2) : '0',
+    });
+  } catch (error) {
+    next(error);
+  }
+};

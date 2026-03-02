@@ -2,22 +2,27 @@ import { Router } from 'express';
 import {
   createClass,
   getClasses,
+  getClassFull,
+  updateClass,
   createSubject,
   getSubjects,
   assignClassSubject,
   getClassSubjects,
+  removeClassSubject,
 } from '../controllers/academic.controller.js';
-import { authenticate, authorize } from '../middleware/auth.middleware.js';
+import { authenticate, authorizeByPermission } from '../middleware/auth.middleware.js';
 
 export const academicRoutes = Router();
 
 academicRoutes.use(authenticate);
 
-// Only ACADEMIC_ADMIN and SCHOOL_ADMIN can manage academic setup
-academicRoutes.post('/classes', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'), createClass);
+academicRoutes.post('/classes', authorizeByPermission('manageAcademic'), createClass);
 academicRoutes.get('/classes', getClasses);
-academicRoutes.post('/subjects', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'), createSubject);
+academicRoutes.get('/classes/:classId/full', getClassFull);
+academicRoutes.patch('/classes/:id', authorizeByPermission('manageAcademic'), updateClass);
+academicRoutes.post('/subjects', authorizeByPermission('manageAcademic'), createSubject);
 academicRoutes.get('/subjects', getSubjects);
-academicRoutes.post('/class-subjects', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'), assignClassSubject);
+academicRoutes.post('/class-subjects', authorizeByPermission('manageAcademic'), assignClassSubject);
+academicRoutes.delete('/class-subjects', authorizeByPermission('manageAcademic'), removeClassSubject);
 academicRoutes.get('/classes/:classId/subjects', getClassSubjects);
 

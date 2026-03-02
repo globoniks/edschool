@@ -18,6 +18,9 @@
     "prisma:migrate": "cd backend && npx prisma migrate deploy",
     "prisma:seed": "cd backend && npx prisma db seed"
   },
+  "dependencies": {
+    "web-push": "^3.6.7"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   }

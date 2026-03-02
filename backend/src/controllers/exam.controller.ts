@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { getTeacherAccessibleSubjects, getParentAccessibleStudents, getParentAccessibleClasses, canParentAccessStudent } from '../utils/permissions.js';
+import { sendPushToUsers } from '../utils/pushNotification.js';
 
 const createExamSchema = z.object({
   name: z.string(),
@@ -164,6 +165,24 @@ export const createExamMark = async (
         subject: true,
       },
     });
+
+    // Fire-and-forget push to parents of this student
+    try {
+      const parents = await prisma.parentStudent.findMany({
+        where: { studentId: data.studentId },
+        include: { parent: { select: { userId: true } } },
+      });
+      const userIds = parents.map((p) => p.parent.userId).filter((id): id is string => id != null);
+      if (userIds.length > 0) {
+        const examName = mark.exam?.name ?? 'Exam';
+        const subjName = mark.subject?.name ?? 'Subject';
+        sendPushToUsers(userIds, {
+          title: 'New Exam Result',
+          body: `${examName} – ${subjName} result is available.`,
+          url: '/edschool/app/alerts',
+        });
+      }
+    } catch (_) {}
 
     res.status(201).json(mark);
   } catch (error) {

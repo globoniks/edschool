@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { getTeacherAccessibleClasses, getParentAccessibleStudents } from '../utils/permissions.js';
+import { sendPushToUsers } from '../utils/pushNotification.js';
 
 const createHomeworkSchema = z.object({
   classId: z.string(),
@@ -35,6 +36,26 @@ export const createHomework = async (
       throw new AppError('Teacher not found', 404);
     }
 
+    const classSubjectCount = await prisma.classSubject.count({
+      where: { classId: data.classId, class: { schoolId } },
+    });
+    if (classSubjectCount === 0) {
+      throw new AppError('This class has no subjects assigned. Assign subjects in Academic > Class setup (Subjects & teachers) first.', 400);
+    }
+
+    if (data.subjectId) {
+      const classSubject = await prisma.classSubject.findFirst({
+        where: {
+          classId: data.classId,
+          subjectId: data.subjectId,
+          class: { schoolId },
+        },
+      });
+      if (!classSubject) {
+        throw new AppError('This subject is not assigned to the class. Assign it in Academic > Class setup first.', 400);
+      }
+    }
+
     // Verify teacher has access to this class
     const hasAccess = await prisma.classSubject.findFirst({
       where: {
@@ -64,6 +85,29 @@ export const createHomework = async (
         },
       },
     });
+
+    // Fire-and-forget push to parents of students in this class
+    try {
+      const students = await prisma.student.findMany({
+        where: { classId: data.classId },
+        select: { id: true },
+      });
+      const studentIds = students.map((s) => s.id);
+      if (studentIds.length > 0) {
+        const parents = await prisma.parentStudent.findMany({
+          where: { studentId: { in: studentIds } },
+          include: { parent: { select: { userId: true } } },
+        });
+        const userIds = [...new Set(parents.map((p) => p.parent.userId).filter((id): id is string => id != null))];
+        if (userIds.length > 0) {
+          sendPushToUsers(userIds, {
+            title: 'New Homework',
+            body: `${data.title} – due ${homework.dueDate.toLocaleDateString()}`,
+            url: '/edschool/app/homework',
+          });
+        }
+      }
+    } catch (_) {}
 
     res.status(201).json(homework);
   } catch (error) {

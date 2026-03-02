@@ -25,7 +25,16 @@ export default function FilterPanel({ filters, onFilterChange, className }: Filt
   const [activeFilters, setActiveFilters] = useState<Record<string, string | string[]>>({});
 
   const handleFilterChange = (key: string, value: string | string[]) => {
-    const newFilters = { ...activeFilters, [key]: value };
+    const isEmpty =
+      value === '' ||
+      value === undefined ||
+      (Array.isArray(value) && value.length === 0);
+    const newFilters = { ...activeFilters };
+    if (isEmpty) {
+      delete newFilters[key];
+    } else {
+      newFilters[key] = value;
+    }
     setActiveFilters(newFilters);
     onFilterChange(newFilters);
   };
@@ -45,7 +54,7 @@ export default function FilterPanel({ filters, onFilterChange, className }: Filt
   const activeCount = Object.keys(activeFilters).length;
 
   return (
-    <div className={clsx('relative', className)}>
+    <div className={clsx('relative flex-shrink-0', className)}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="btn btn-secondary flex items-center gap-2 relative"
@@ -65,7 +74,7 @@ export default function FilterPanel({ filters, onFilterChange, className }: Filt
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 min-w-[300px] max-w-md">
+          <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 min-w-[300px] max-w-md sm:max-w-[min(400px,calc(100vw-2rem))]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900">Filters</h3>
               <button

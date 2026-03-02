@@ -21,6 +21,27 @@ const createStudentSchema = z.object({
   parentIds: z.array(z.string()).optional(),
 });
 
+const bulkStudentItemSchema = z.object({
+  admissionNumber: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  dateOfBirth: z.string(),
+  gender: z.string().min(1),
+  bloodGroup: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional().nullable(),
+});
+
+const bulkCreateSchema = z.object({
+  classId: z.string().min(1),
+  students: z.array(bulkStudentItemSchema).min(1).max(500),
+});
+
+const bulkClassSchema = z.object({
+  classId: z.string().min(1),
+  studentIds: z.array(z.string()).min(1).max(500),
+});
+
 export const createStudent = async (
   req: AuthRequest,
   res: Response,
@@ -307,6 +328,277 @@ export const deleteStudent = async (
     });
 
     res.json({ message: 'Student deactivated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/** POST /api/students/bulk - create multiple students and assign to a class */
+export const bulkCreateStudents = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = bulkCreateSchema.parse(req.body);
+    const schoolId = req.user!.schoolId;
+
+    const classExists = await prisma.class.findFirst({
+      where: { id: data.classId, schoolId },
+    });
+    if (!classExists) {
+      throw new AppError('Class not found', 404);
+    }
+
+    const existingAdmissionNumbers = await prisma.student.findMany({
+      where: {
+        admissionNumber: { in: data.students.map((s) => s.admissionNumber) },
+      },
+      select: { admissionNumber: true },
+    });
+    const existingSet = new Set(existingAdmissionNumbers.map((r) => r.admissionNumber));
+
+    const toCreate = data.students.filter((s) => !existingSet.has(s.admissionNumber));
+    const errors: { admissionNumber: string; message: string }[] = data.students
+      .filter((s) => existingSet.has(s.admissionNumber))
+      .map((s) => ({ admissionNumber: s.admissionNumber, message: 'Admission number already exists' }));
+
+    const created: any[] = [];
+    for (const s of toCreate) {
+      try {
+        const dob = new Date(s.dateOfBirth);
+        if (isNaN(dob.getTime())) {
+          errors.push({ admissionNumber: s.admissionNumber, message: 'Invalid date of birth' });
+          continue;
+        }
+        const student = await prisma.student.create({
+          data: {
+            schoolId,
+            classId: data.classId,
+            admissionNumber: s.admissionNumber,
+            firstName: s.firstName,
+            lastName: s.lastName,
+            dateOfBirth: dob,
+            gender: s.gender,
+            bloodGroup: s.bloodGroup ?? undefined,
+            phone: s.phone ?? undefined,
+            email: s.email ?? undefined,
+            admissionDate: new Date(),
+          },
+          include: { class: true },
+        });
+        created.push(student);
+      } catch (err: any) {
+        errors.push({ admissionNumber: s.admissionNumber, message: err?.message || 'Failed to create' });
+      }
+    }
+
+    res.status(201).json({
+      created: created.length,
+      errors: errors.length ? errors : undefined,
+      students: created,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/** PATCH /api/students/bulk-class - assign existing students to a class */
+export const bulkAssignClass = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = bulkClassSchema.parse(req.body);
+    const schoolId = req.user!.schoolId;
+
+    const classExists = await prisma.class.findFirst({
+      where: { id: data.classId, schoolId },
+    });
+    if (!classExists) {
+      throw new AppError('Class not found', 404);
+    }
+
+    const result = await prisma.student.updateMany({
+      where: {
+        id: { in: data.studentIds },
+        schoolId,
+      },
+      data: { classId: data.classId },
+    });
+
+    res.json({ updated: result.count });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/** Parse a single CSV line respecting quoted fields (RFC 4180 style) */
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let i = 0;
+  while (i < line.length) {
+    if (line[i] === '"') {
+      let field = '';
+      i++;
+      while (i < line.length) {
+        if (line[i] === '"') {
+          if (line[i + 1] === '"') {
+            field += '"';
+            i += 2;
+          } else {
+            i++;
+            break;
+          }
+        } else {
+          field += line[i];
+          i++;
+        }
+      }
+      result.push(field);
+    } else {
+      let field = '';
+      while (i < line.length && line[i] !== ',') {
+        field += line[i];
+        i++;
+      }
+      result.push(field.trim());
+      if (line[i] === ',') i++;
+    }
+  }
+  return result;
+}
+
+/** Map CSV headers to our field names (case-insensitive, flexible) */
+const CSV_HEADER_MAP: Record<string, string> = {
+  'admission number': 'admissionNumber',
+  'admission no': 'admissionNumber',
+  'admission no.': 'admissionNumber',
+  'first name': 'firstName',
+  'firstname': 'firstName',
+  'last name': 'lastName',
+  'lastname': 'lastName',
+  'date of birth': 'dateOfBirth',
+  'dob': 'dateOfBirth',
+  'gender': 'gender',
+  'email': 'email',
+  'phone': 'phone',
+  'blood group': 'bloodGroup',
+  'bloodgroup': 'bloodGroup',
+};
+
+/** POST /api/students/import - import students from CSV (body: { classId, csv } or multipart later) */
+export const importStudentsCSV = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const schoolId = req.user!.schoolId;
+    const classId = typeof req.body?.classId === 'string' ? req.body.classId.trim() : null;
+    const csvRaw = typeof req.body?.csv === 'string' ? req.body.csv : null;
+
+    if (!classId) {
+      throw new AppError('classId is required', 400);
+    }
+    if (!csvRaw) {
+      throw new AppError('csv is required (string content of the CSV file)', 400);
+    }
+
+    const classExists = await prisma.class.findFirst({
+      where: { id: classId, schoolId },
+    });
+    if (!classExists) {
+      throw new AppError('Class not found', 404);
+    }
+
+    const lines = csvRaw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    if (lines.length < 2) {
+      throw new AppError('CSV must have a header row and at least one data row', 400);
+    }
+
+    const headerLine = parseCSVLine(lines[0]);
+    const headers = headerLine.map((h) => h.trim().toLowerCase().replace(/\s+/g, ' '));
+    const dataRows = lines.slice(1);
+
+    const existingAdmissionNumbers = await prisma.student.findMany({
+      where: { schoolId },
+      select: { admissionNumber: true },
+    });
+    const existingSet = new Set(existingAdmissionNumbers.map((r) => r.admissionNumber));
+
+    const created: any[] = [];
+    const errors: { row: number; admissionNumber?: string; message: string }[] = [];
+    const seenInFile = new Set<string>();
+
+    for (let rowIndex = 0; rowIndex < dataRows.length; rowIndex++) {
+      const row = parseCSVLine(dataRows[rowIndex]);
+      const rowNum = rowIndex + 2; // 1-based + header
+      const record: Record<string, string> = {};
+      headers.forEach((h, i) => {
+        const key = CSV_HEADER_MAP[h] || h.replace(/\s/g, '');
+        if (key && row[i] !== undefined) {
+          record[key] = row[i].trim();
+        }
+      });
+
+      const admissionNumber = (record.admissionNumber || record['Admission Number'] || '').trim();
+      const firstName = (record.firstName || record['First Name'] || '').trim();
+      const lastName = (record.lastName || record['Last Name'] || '').trim();
+      const dateOfBirth = (record.dateOfBirth || record['Date of Birth'] || record.dob || '').trim();
+      const gender = (record.gender || record['Gender'] || '').trim();
+      const email = (record.email || record['Email'] || '').trim() || undefined;
+      const phone = (record.phone || record['Phone'] || '').trim() || undefined;
+
+      if (!admissionNumber || !firstName || !lastName || !dateOfBirth || !gender) {
+        errors.push({ row: rowNum, admissionNumber: admissionNumber || undefined, message: 'Missing required field (Admission Number, First Name, Last Name, Date of Birth, Gender)' });
+        continue;
+      }
+      if (seenInFile.has(admissionNumber)) {
+        errors.push({ row: rowNum, admissionNumber, message: 'Duplicate admission number in file' });
+        continue;
+      }
+      seenInFile.add(admissionNumber);
+      if (existingSet.has(admissionNumber)) {
+        errors.push({ row: rowNum, admissionNumber, message: 'Admission number already exists' });
+        continue;
+      }
+
+      const dob = new Date(dateOfBirth);
+      if (isNaN(dob.getTime())) {
+        errors.push({ row: rowNum, admissionNumber, message: 'Invalid date of birth' });
+        continue;
+      }
+
+      try {
+        const student = await prisma.student.create({
+          data: {
+            schoolId,
+            classId,
+            admissionNumber,
+            firstName,
+            lastName,
+            dateOfBirth: dob,
+            gender,
+            email: email || undefined,
+            phone: phone || undefined,
+            admissionDate: new Date(),
+          },
+          include: { class: true },
+        });
+        created.push(student);
+        existingSet.add(admissionNumber);
+      } catch (err: any) {
+        errors.push({ row: rowNum, admissionNumber, message: err?.message || 'Failed to create' });
+      }
+    }
+
+    res.status(201).json({
+      created: created.length,
+      errors: errors.length ? errors : undefined,
+      students: created,
+    });
   } catch (error) {
     next(error);
   }

@@ -5,6 +5,8 @@ interface User {
   id: string;
   email: string;
   role: string;
+  tags?: string[];
+  permissions?: string[];
   profile?: {
     firstName: string;
     lastName: string;

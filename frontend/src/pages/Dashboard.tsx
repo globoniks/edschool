@@ -27,14 +27,8 @@ export default function Dashboard() {
     return <Navigate to="/app/teacher-dashboard" replace />;
   }
 
-  // Redirect students to student dashboard
-  if (user?.role === 'STUDENT') {
-    return <Navigate to="/app/student-dashboard" replace />;
-  }
-
-  const isAdmin = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN', 'FINANCE_ADMIN', 'HR_ADMIN'].includes(user?.role || '');
+  const isAdmin = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'SUB_ADMIN'].includes(user?.role || '');
   const isParent = user?.role === 'PARENT';
-  const isStudent = user?.role === 'STUDENT';
 
   // Fetch parent dashboard data for parents
   const { data: parentDashboard } = useQuery({
@@ -276,13 +270,6 @@ export default function Dashboard() {
           fees: totalPendingCount,
           feesAmount: totalPendingFees,
         };
-      }
-      if (isStudent) {
-        const [attendance, fees] = await Promise.all([
-          api.get('/attendance/stats').then((res) => res.data).catch(() => ({ percentage: 0 })),
-          api.get('/fees/payments?status=PENDING').then((res) => res.data?.length || 0).catch(() => 0),
-        ]);
-        return { attendance, fees };
       }
       return {};
     },

@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { sendPushToSchool, sendPushToSchoolRole } from '../utils/pushNotification.js';
 
 const createAnnouncementSchema = z.object({
   title: z.string(),
@@ -41,6 +42,21 @@ export const createAnnouncement = async (
         createdBy,
       },
     });
+
+    // Fire-and-forget push to target audience
+    try {
+      const payload = {
+        title: data.title,
+        body: data.content.slice(0, 120) + (data.content.length > 120 ? '…' : ''),
+        url: '/edschool/app/notices',
+      };
+      if (data.targetAudience.includes('ALL')) {
+        sendPushToSchool(schoolId, payload);
+      } else {
+        if (data.targetAudience.includes('PARENTS')) sendPushToSchoolRole(schoolId, 'PARENT', payload);
+        if (data.targetAudience.includes('TEACHERS')) sendPushToSchoolRole(schoolId, 'TEACHER', payload);
+      }
+    } catch (_) {}
 
     res.status(201).json(announcement);
   } catch (error) {

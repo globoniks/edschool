@@ -25,6 +25,17 @@ export const createTimetable = async (
     const data = createTimetableSchema.parse(req.body);
     const schoolId = req.user!.schoolId;
 
+    const classSubject = await prisma.classSubject.findFirst({
+      where: {
+        classId: data.classId,
+        subjectId: data.subjectId,
+        class: { schoolId },
+      },
+    });
+    if (!classSubject) {
+      throw new AppError('This subject is not assigned to the class. Assign it first via Academic > Class setup (Subjects & teachers).', 400);
+    }
+
     const timetable = await prisma.timetable.create({
       data: {
         ...data,

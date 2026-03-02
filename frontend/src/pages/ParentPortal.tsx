@@ -335,7 +335,7 @@ export default function ParentPortal() {
             title="Holidays"
             icon={Calendar}
             color="blue"
-            href="/app/parent/holidays"
+            href="/app/holidays"
             compact
           />
           <FeatureCard

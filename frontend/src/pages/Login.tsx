@@ -6,6 +6,7 @@ import { GraduationCap } from 'lucide-react';
 import { useToast } from '../components/ToastProvider';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { FormField, Input } from '../components/FormField';
+import { isPushSupported, subscribeToPush } from '../utils/pushNotifications';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,6 +36,15 @@ export default function Login() {
     try {
       const response = await api.post('/auth/login', { email, password });
       setAuth(response.data.token, response.data.user);
+
+      // Request push subscription (fire-and-forget) so we can send notifications
+      if (isPushSupported() && Notification.permission !== 'denied') {
+        if (Notification.permission === 'default') {
+          await Notification.requestPermission();
+        }
+        subscribeToPush();
+      }
+
       // Redirect based on user role
       if (response.data.user?.role === 'PARENT') {
         navigate('/app/parent-portal');

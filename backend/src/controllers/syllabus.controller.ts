@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { AppError } from '../middleware/errorHandler.js';
 
+/** GET /api/syllabus/tracking - syllabus progress per subject (from real Curriculum + chapters) */
 export const getSyllabusTracking = async (
   req: AuthRequest,
   res: Response,
@@ -12,7 +13,6 @@ export const getSyllabusTracking = async (
     const userId = req.user!.id;
     const schoolId = req.user!.schoolId;
 
-    // Get parent's children
     const parent = await prisma.parent.findFirst({
       where: { userId },
       include: {
@@ -20,15 +20,7 @@ export const getSyllabusTracking = async (
           include: {
             student: {
               include: {
-                class: {
-                  include: {
-                    subjects: {
-                      include: {
-                        subject: true,
-                      },
-                    },
-                  },
-                },
+                class: true,
               },
             },
           },
@@ -40,15 +32,28 @@ export const getSyllabusTracking = async (
       throw new AppError('No children found', 404);
     }
 
-    // For now, return mock data structure
-    // TODO: Implement actual syllabus tracking when schema is updated
-    const subjects = parent.students[0].student.class?.subjects?.map((cs: any) => ({
-      id: cs.subjectId,
-      name: cs.subject.name,
-      completionPercentage: Math.floor(Math.random() * 100), // Mock data
-      completedChapters: Math.floor(Math.random() * 10),
-      totalChapters: 10,
-    })) || [];
+    const student = parent.students[0].student;
+    const classId = student.classId;
+    if (!classId || !student.class) {
+      return res.json({ subjects: [] });
+    }
+
+    const academicYear = student.class.academicYear;
+    const curricula = await prisma.curriculum.findMany({
+      where: { classId, schoolId, academicYear },
+      include: {
+        subject: { select: { id: true, name: true } },
+        _count: { select: { chapters: true } },
+      },
+    });
+
+    const subjects = curricula.map((c) => ({
+      id: c.subjectId,
+      name: c.subject.name,
+      totalChapters: c._count.chapters,
+      completedChapters: 0,
+      completionPercentage: c._count.chapters === 0 ? 0 : 0,
+    }));
 
     res.json({ subjects });
   } catch (error) {

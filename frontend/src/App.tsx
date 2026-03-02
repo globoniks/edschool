@@ -26,9 +26,10 @@ const Academic = lazy(() => import('./pages/Academic'));
 const Holidays = lazy(() => import('./pages/Holidays'));
 const ParentPortal = lazy(() => import('./pages/ParentPortal'));
 const TeacherDashboard = lazy(() => import('./pages/TeacherDashboard'));
-const StudentDashboard = lazy(() => import('./pages/StudentDashboard'));
 const ClassMoments = lazy(() => import('./pages/ClassMoments'));
 const Transport = lazy(() => import('./pages/Transport'));
+const Users = lazy(() => import('./pages/Users'));
+const Leave = lazy(() => import('./pages/Leave'));
 
 // Parent-specific pages
 const ParentAttendance = lazy(() => import('./pages/parent/Attendance'));
@@ -52,12 +53,9 @@ const LoadingFallback = () => (
   </div>
 );
 
-// Helper function to get default route based on user role
 const getDefaultRoute = (role?: string): string => {
   if (role === 'PARENT') return '/app/parent-portal';
   if (role === 'TEACHER') return '/app/teacher-dashboard';
-  if (role === 'STUDENT') return '/app/student-dashboard';
-  if (role === 'TRANSPORT_MANAGER') return '/app/transport';
   return '/app/dashboard';
 };
 
@@ -95,9 +93,11 @@ function AppRoutes() {
           <Route path="holidays" element={<Holidays />} />
           <Route path="parent-portal" element={<ParentPortal />} />
           <Route path="teacher-dashboard" element={<TeacherDashboard />} />
-          <Route path="student-dashboard" element={<StudentDashboard />} />
+          <Route path="student-dashboard" element={<Navigate to="/app/dashboard" replace />} />
           <Route path="class-moments" element={<ClassMoments />} />
           <Route path="transport" element={<Transport />} />
+          <Route path="users" element={<Users />} />
+          <Route path="leave" element={<Leave />} />
 
           {/* Parent-specific routes */}
           <Route path="parent/attendance" element={<ParentAttendance />} />

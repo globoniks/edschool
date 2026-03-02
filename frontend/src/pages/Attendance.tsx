@@ -57,8 +57,54 @@ export default function Attendance() {
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const queryClient = useQueryClient();
-  const { canMarkAttendance } = usePermissions();
+  const { canMarkAttendance, canManageHR } = usePermissions();
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [attendanceTab, setAttendanceTab] = useState<'students' | 'staff'>('students');
+  const showStaffAttendance = user?.role === 'TEACHER' || canManageHR();
+
+  const [staffDate, setStaffDate] = useState(new Date().toISOString().split('T')[0]);
+  const [staffTeacherId, setStaffTeacherId] = useState('');
+  const [staffStatus, setStaffStatus] = useState<AttendanceStatus>('PRESENT');
+
+  const { data: teachersList } = useQuery({
+    queryKey: ['teachers'],
+    queryFn: () => api.get('/teachers?limit=500').then((res) => res.data),
+    enabled: canManageHR() && attendanceTab === 'staff',
+  });
+
+  const { data: teacherAttendanceList } = useQuery({
+    queryKey: ['attendance-teacher', staffDate, staffTeacherId, attendanceTab],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      params.set('startDate', staffDate);
+      params.set('endDate', staffDate);
+      if (staffTeacherId) params.set('teacherId', staffTeacherId);
+      return api.get(`/attendance/teacher?${params}`).then((res) => res.data);
+    },
+    enabled: showStaffAttendance && attendanceTab === 'staff' && !!staffDate,
+  });
+
+  const { data: teacherStats } = useQuery({
+    queryKey: ['attendance-teacher-stats', staffTeacherId, staffDate],
+    queryFn: () => {
+      const d = new Date(staffDate);
+      return api.get(`/attendance/teacher/stats?month=${d.getMonth() + 1}&year=${d.getFullYear()}${staffTeacherId ? `&teacherId=${staffTeacherId}` : ''}`).then((res) => res.data);
+    },
+    enabled: showStaffAttendance && attendanceTab === 'staff',
+  });
+
+  const markTeacherAttendanceMutation = useMutation({
+    mutationFn: (payload: { teacherId: string; date: string; status: string }) =>
+      api.post('/attendance/teacher', payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attendance-teacher'] });
+      queryClient.invalidateQueries({ queryKey: ['attendance-teacher-stats'] });
+      showSuccess('Staff attendance saved');
+    },
+    onError: (err: any) => {
+      showError(err.response?.data?.message || 'Failed to save');
+    },
+  });
 
   // Fetch classes
   const { data: classes } = useQuery({
@@ -267,7 +313,7 @@ export default function Attendance() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Attendance</h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-2">Mark and track student attendance</p>
+            <p className="text-sm sm:text-base text-gray-600 mt-2">Mark and track student and staff attendance</p>
           </div>
           {/* Save Status Indicator */}
           {canMarkAttendance() && classId && students.length > 0 && (
@@ -294,6 +340,15 @@ export default function Attendance() {
         </div>
       </div>
 
+      {showStaffAttendance && (
+        <div className="flex gap-2 mb-4 border-b border-gray-200">
+          <button type="button" onClick={() => setAttendanceTab('students')} className={`px-4 py-2 font-medium text-sm ${attendanceTab === 'students' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-gray-600'}`}>Student attendance</button>
+          <button type="button" onClick={() => setAttendanceTab('staff')} className={`px-4 py-2 font-medium text-sm ${attendanceTab === 'staff' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-gray-600'}`}>Staff / Teacher attendance</button>
+        </div>
+      )}
+
+      {attendanceTab === 'students' && (
+      <>
       <div className="card mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -520,6 +575,73 @@ export default function Attendance() {
             </div>
           )}
         </>
+      )}
+      </>
+      )}
+
+      {attendanceTab === 'staff' && (
+        <div className="card">
+          <h2 className="text-lg font-semibold mb-4">Staff / Teacher attendance</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input type="date" value={staffDate} onChange={(e) => setStaffDate(e.target.value)} className="input w-full" />
+            </div>
+            {canManageHR() && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Teacher</label>
+                <select value={staffTeacherId} onChange={(e) => setStaffTeacherId(e.target.value)} className="input w-full">
+                  <option value="">All</option>
+                  {(teachersList as any)?.teachers?.map((t: any) => (
+                    <option key={t.id} value={t.id}>{t.firstName} {t.lastName}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+          {teacherStats && (
+            <div className="mb-4 p-3 bg-gray-50 rounded-lg text-sm">
+              This month: Present {teacherStats.present}, Absent {teacherStats.absent}, Late {teacherStats.late} — {teacherStats.percentage}% present
+            </div>
+          )}
+          {canManageHR() && (
+            <div className="flex flex-wrap gap-2 mb-4 p-3 border rounded-lg">
+              <span className="text-sm font-medium">Mark attendance:</span>
+              <select value={staffTeacherId} onChange={(e) => setStaffTeacherId(e.target.value)} className="input text-sm w-auto">
+                <option value="">Select teacher</option>
+                {(teachersList as any)?.teachers?.map((t: any) => (
+                  <option key={t.id} value={t.id}>{t.firstName} {t.lastName}</option>
+                ))}
+              </select>
+              <select value={staffStatus} onChange={(e) => setStaffStatus(e.target.value as AttendanceStatus)} className="input text-sm w-auto">
+                <option value="PRESENT">Present</option>
+                <option value="ABSENT">Absent</option>
+                <option value="LATE">Late</option>
+                <option value="EXCUSED">Excused</option>
+              </select>
+              <button
+                type="button"
+                disabled={!staffTeacherId || markTeacherAttendanceMutation.isPending}
+                onClick={() => markTeacherAttendanceMutation.mutate({ teacherId: staffTeacherId, date: staffDate, status: staffStatus })}
+                className="btn btn-primary text-sm"
+              >
+                {markTeacherAttendanceMutation.isPending ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          )}
+          <div className="space-y-2">
+            {Array.isArray(teacherAttendanceList) && teacherAttendanceList.length > 0 ? (
+              teacherAttendanceList.map((att: any) => (
+                <div key={att.id} className={clsx('border rounded-lg p-3 flex items-center justify-between', getStatusColor(att.status))}>
+                  <span className="font-medium">{att.teacher?.firstName} {att.teacher?.lastName}</span>
+                  <span className="text-sm">{new Date(att.date).toLocaleDateString()} — {att.status}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-sm py-4">No staff attendance records for this date.</p>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

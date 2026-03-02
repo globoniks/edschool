@@ -11,13 +11,12 @@ import { FormField, Input, Select, Textarea } from '../components/FormField';
 import EmptyState from '../components/EmptyState';
 
 export default function Homework() {
-  const { user } = useAuthStore();
-  const { canCreateHomework } = usePermissions();
+  const { canCreateHomework, canViewHomeworkSubmissions } = usePermissions();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedHomework, setSelectedHomework] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useToast();
-  const canViewSubmissions = user?.role === 'TEACHER' || ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'ACADEMIC_ADMIN'].includes(user?.role || '');
+  const canViewSubmissions = canViewHomeworkSubmissions();
 
   const [formData, setFormData] = useState({
     classId: '',

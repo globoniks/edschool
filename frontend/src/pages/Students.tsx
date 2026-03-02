@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
-import { Plus, X, Download } from 'lucide-react';
+import { Plus, X, Download, Upload } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useToast } from '../components/ToastProvider';
 import { usePermissions } from '../hooks/usePermissions';
@@ -27,6 +27,16 @@ export default function Students() {
   const [selectedStudents, setSelectedStudents] = useState<any[]>([]);
   const [viewStudentId, setViewStudentId] = useState<string | null>(null);
   const [editStudentId, setEditStudentId] = useState<string | null>(null);
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [bulkClassId, setBulkClassId] = useState('');
+  const [bulkRows, setBulkRows] = useState<Array<{ admissionNumber: string; firstName: string; lastName: string; dateOfBirth: string; gender: string; phone?: string; email?: string }>>([
+    { admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' },
+    { admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' },
+    { admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' },
+  ]);
+  const [bulkResult, setBulkResult] = useState<{ created: number; errors?: { admissionNumber?: string; message: string; row?: number }[] } | null>(null);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importPending, setImportPending] = useState(false);
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useToast();
@@ -132,6 +142,44 @@ export default function Students() {
     },
     onError: (error: any) => {
       showError(error.response?.data?.message || 'Failed to create student');
+    },
+  });
+
+  const bulkCreateMutation = useMutation({
+    mutationFn: (payload: { classId: string; students: Array<{ admissionNumber: string; firstName: string; lastName: string; dateOfBirth: string; gender: string; phone?: string; email?: string }> }) =>
+      api.post('/students/bulk', payload),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['students'] });
+      setBulkResult({ created: res.data.created, errors: res.data.errors });
+      if (res.data.errors?.length) {
+        showSuccess(`${res.data.created} student(s) created. Some rows had errors.`);
+      } else {
+        showSuccess(`${res.data.created} student(s) added to class.`);
+      }
+    },
+    onError: (error: any) => {
+      showError(error.response?.data?.message || 'Bulk create failed');
+    },
+  });
+
+  const importCSVMutation = useMutation({
+    mutationFn: async (payload: { classId: string; csv: string }) => {
+      const res = await api.post('/students/import', payload);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['students'] });
+      setBulkResult({ created: data.created, errors: data.errors });
+      setImportFile(null);
+      if (data.errors?.length) {
+        showSuccess(`${data.created} student(s) created. Some rows had errors.`);
+      } else {
+        showSuccess(`${data.created} student(s) imported.`);
+      }
+    },
+    onError: (error: any) => {
+      showError(error.response?.data?.message || 'CSV import failed');
+      setImportPending(false);
     },
   });
 
@@ -333,6 +381,23 @@ export default function Students() {
               <Plus className="w-5 h-5 mr-2" />
               Add Student
             </button>
+            <button
+              onClick={() => {
+                setBulkModalOpen(true);
+                setBulkResult(null);
+                setBulkRows([
+                  { admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' },
+                  { admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' },
+                  { admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' },
+                ]);
+                setBulkClassId('');
+                setImportFile(null);
+              }}
+              className="btn btn-secondary flex items-center justify-center w-full sm:w-auto"
+            >
+              <Upload className="w-5 h-5 mr-2" />
+              Bulk add to class
+            </button>
           </div>
         )}
       </div>
@@ -466,6 +531,157 @@ export default function Students() {
           variant="danger"
           isLoading={bulkDeleteMutation.isPending}
         />
+      )}
+
+      {/* Bulk add to class modal */}
+      {bulkModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[95vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Bulk add students to class</h2>
+              <button
+                onClick={() => { setBulkModalOpen(false); setBulkResult(null); }}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              {bulkResult != null ? (
+                <div className="space-y-4">
+                  <p className="text-gray-700"><strong>{bulkResult.created}</strong> student(s) created.</p>
+                  {bulkResult.errors && bulkResult.errors.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-amber-800 mb-2">Errors ({bulkResult.errors.length}):</p>
+                      <ul className="text-sm text-gray-600 list-disc pl-5 space-y-1 max-h-40 overflow-y-auto">
+                        {bulkResult.errors.map((e, i) => (
+                          <li key={i}>{e.row ? `Row ${e.row}: ` : ''}{e.admissionNumber ? `${e.admissionNumber}: ` : ''}{e.message}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <div className="flex gap-2 pt-4">
+                    <button onClick={() => { setBulkResult(null); setBulkRows([{ admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' }]); setImportFile(null); }} className="btn btn-secondary">Add more</button>
+                    <button onClick={() => { setBulkModalOpen(false); setBulkResult(null); }} className="btn btn-primary">Close</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Class *</label>
+                    <select
+                      value={bulkClassId}
+                      onChange={(e) => setBulkClassId(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    >
+                      <option value="">Select class</option>
+                      {classes?.map((cls: any) => (
+                        <option key={cls.id} value={cls.id}>{cls.name}{cls.section ? ` ${cls.section}` : ''} ({cls.academicYear})</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Import from CSV</p>
+                    <p className="text-xs text-gray-500 mb-2">Use columns: Admission Number, First Name, Last Name, Date of Birth, Gender, Email (optional), Phone (optional)</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <input
+                        type="file"
+                        accept=".csv"
+                        onChange={(e) => setImportFile(e.target.files?.[0] ?? null)}
+                        className="text-sm"
+                      />
+                      <button
+                        type="button"
+                        disabled={!bulkClassId || !importFile || importCSVMutation.isPending}
+                        onClick={() => {
+                          if (!bulkClassId || !importFile) return;
+                          setImportPending(true);
+                          const reader = new FileReader();
+                          reader.onload = () => {
+                            const csv = (reader.result as string) || '';
+                            importCSVMutation.mutate({ classId: bulkClassId, csv }, {
+                              onSettled: () => setImportPending(false),
+                            });
+                          };
+                          reader.readAsText(importFile);
+                        }}
+                        className="btn btn-secondary text-sm"
+                      >
+                        {importCSVMutation.isPending || importPending ? 'Importing…' : 'Upload and import'}
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Or add rows manually:</p>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full border border-gray-200 rounded-lg">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-2 py-2 text-left text-xs font-medium text-gray-500">Admission No *</th>
+                          <th className="px-2 py-2 text-left text-xs font-medium text-gray-500">First Name *</th>
+                          <th className="px-2 py-2 text-left text-xs font-medium text-gray-500">Last Name *</th>
+                          <th className="px-2 py-2 text-left text-xs font-medium text-gray-500">DOB *</th>
+                          <th className="px-2 py-2 text-left text-xs font-medium text-gray-500">Gender *</th>
+                          <th className="px-2 py-2 text-left text-xs font-medium text-gray-500">Phone</th>
+                          <th className="px-2 py-2 text-left text-xs font-medium text-gray-500">Email</th>
+                          <th className="px-2 py-2 w-10"></th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {bulkRows.map((row, idx) => (
+                          <tr key={idx}>
+                            <td className="px-2 py-1"><input type="text" value={row.admissionNumber} onChange={(e) => setBulkRows((r) => r.map((x, i) => i === idx ? { ...x, admissionNumber: e.target.value } : x))} className="border rounded px-2 py-1 w-full text-sm" placeholder="ADM001" /></td>
+                            <td className="px-2 py-1"><input type="text" value={row.firstName} onChange={(e) => setBulkRows((r) => r.map((x, i) => i === idx ? { ...x, firstName: e.target.value } : x))} className="border rounded px-2 py-1 w-full text-sm" /></td>
+                            <td className="px-2 py-1"><input type="text" value={row.lastName} onChange={(e) => setBulkRows((r) => r.map((x, i) => i === idx ? { ...x, lastName: e.target.value } : x))} className="border rounded px-2 py-1 w-full text-sm" /></td>
+                            <td className="px-2 py-1"><input type="date" value={row.dateOfBirth} onChange={(e) => setBulkRows((r) => r.map((x, i) => i === idx ? { ...x, dateOfBirth: e.target.value } : x))} className="border rounded px-2 py-1 w-full text-sm" /></td>
+                            <td className="px-2 py-1">
+                              <select value={row.gender} onChange={(e) => setBulkRows((r) => r.map((x, i) => i === idx ? { ...x, gender: e.target.value } : x))} className="border rounded px-2 py-1 w-full text-sm">
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                              </select>
+                            </td>
+                            <td className="px-2 py-1"><input type="text" value={row.phone || ''} onChange={(e) => setBulkRows((r) => r.map((x, i) => i === idx ? { ...x, phone: e.target.value || undefined } : x))} className="border rounded px-2 py-1 w-full text-sm" placeholder="Optional" /></td>
+                            <td className="px-2 py-1"><input type="email" value={row.email || ''} onChange={(e) => setBulkRows((r) => r.map((x, i) => i === idx ? { ...x, email: e.target.value || undefined } : x))} className="border rounded px-2 py-1 w-full text-sm" placeholder="Optional" /></td>
+                            <td className="px-2 py-1">
+                              <button type="button" onClick={() => setBulkRows((r) => r.filter((_, i) => i !== idx))} className="text-red-600 hover:text-red-700 text-sm">Remove</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setBulkRows((r) => [...r, { admissionNumber: '', firstName: '', lastName: '', dateOfBirth: '', gender: '' }])}
+                      className="btn btn-secondary text-sm"
+                    >
+                      Add row
+                    </button>
+                    <button
+                      type="button"
+                      disabled={!bulkClassId || bulkRows.every((r) => !r.admissionNumber?.trim() && !r.firstName?.trim()) || bulkCreateMutation.isPending}
+                      onClick={() => {
+                        const students = bulkRows
+                          .filter((r) => r.admissionNumber?.trim() && r.firstName?.trim() && r.lastName?.trim() && r.dateOfBirth && r.gender)
+                          .map((r) => ({ admissionNumber: r.admissionNumber.trim(), firstName: r.firstName.trim(), lastName: r.lastName.trim(), dateOfBirth: r.dateOfBirth, gender: r.gender, phone: r.phone?.trim() || undefined, email: r.email?.trim() || undefined }));
+                        if (students.length === 0) {
+                          showError('Fill at least one full row (Admission No, First Name, Last Name, DOB, Gender).');
+                          return;
+                        }
+                        bulkCreateMutation.mutate({ classId: bulkClassId, students });
+                      }}
+                      className="btn btn-primary"
+                    >
+                      {bulkCreateMutation.isPending ? 'Creating…' : `Add ${bulkRows.filter((r) => r.admissionNumber?.trim() && r.firstName?.trim() && r.lastName?.trim() && r.dateOfBirth && r.gender).length} students`}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
       {/* View Student Modal */}

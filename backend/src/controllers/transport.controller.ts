@@ -4,8 +4,6 @@ import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { AppError } from '../middleware/errorHandler.js';
 
-const transportRoles = ['TRANSPORT_MANAGER', 'SCHOOL_ADMIN', 'SUPER_ADMIN'];
-
 function getSchoolId(req: AuthRequest): string {
   const schoolId = req.user!.schoolId;
   if (!schoolId) throw new AppError('School context required', 403);

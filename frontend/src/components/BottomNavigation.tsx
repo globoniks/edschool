@@ -29,44 +29,24 @@ const TEACHER_TABS: TabConfig[] = [
   { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
 ];
 
-const STUDENT_TABS: TabConfig[] = [
-  { name: 'Home', href: '/app/student-dashboard', icon: Home, activePaths: ['/app/student-dashboard'] },
-  { name: 'Homework', href: '/app/homework', icon: BookOpen, activePaths: ['/app/homework'] },
-  { name: 'Photos', href: '/app/class-moments', icon: Camera, activePaths: ['/app/class-moments'] },
-  { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
-];
-
 const ADMIN_TABS: TabConfig[] = [
   { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard, activePaths: ['/app/dashboard'] },
   { name: 'Students', href: '/app/students', icon: Users, activePaths: ['/app/students'] },
   { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
 ];
 
-const TRANSPORT_MANAGER_TABS: TabConfig[] = [
+const TRANSPORT_TABS: TabConfig[] = [
   { name: 'Transport', href: '/app/transport', icon: Bus, activePaths: ['/app/transport'] },
   { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard, activePaths: ['/app/dashboard'] },
   { name: 'Messages', href: '/app/messages', icon: MessageSquare, activePaths: ['/app/messages'] },
 ];
 
-function getTabsForRole(role: string | undefined): TabConfig[] {
-  switch (role) {
-    case 'PARENT':
-      return PARENT_TABS;
-    case 'TEACHER':
-      return TEACHER_TABS;
-    case 'STUDENT':
-      return STUDENT_TABS;
-    case 'TRANSPORT_MANAGER':
-      return TRANSPORT_MANAGER_TABS;
-    case 'SUPER_ADMIN':
-    case 'SCHOOL_ADMIN':
-    case 'ACADEMIC_ADMIN':
-    case 'FINANCE_ADMIN':
-    case 'HR_ADMIN':
-      return ADMIN_TABS;
-    default:
-      return [];
-  }
+function getTabsForRole(role: string | undefined, permissions?: string[]): TabConfig[] {
+  if (role === 'PARENT') return PARENT_TABS;
+  if (role === 'TEACHER') return TEACHER_TABS;
+  if (role === 'SUB_ADMIN' && permissions?.includes('manageTransport')) return TRANSPORT_TABS;
+  if (['SUPER_ADMIN', 'SCHOOL_ADMIN', 'SUB_ADMIN'].includes(role ?? '')) return ADMIN_TABS;
+  return [];
 }
 
 function isTabActive(tab: TabConfig, pathname: string): boolean {
@@ -84,7 +64,7 @@ export default function BottomNavigation() {
   const location = useLocation();
   const { user } = useAuthStore();
   const role = user?.role;
-  const tabs = getTabsForRole(role);
+  const tabs = getTabsForRole(role, user?.permissions);
 
   if (tabs.length === 0) return null;
 

@@ -4,6 +4,7 @@ import { generateToken } from '../utils/jwt.util.js';
 import { hashPassword, comparePassword } from '../utils/password.util.js';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma.js';
+import { getUserPermissions } from '../utils/permissions.js';
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -11,13 +12,9 @@ const registerSchema = z.object({
   role: z.enum([
     'SUPER_ADMIN',
     'SCHOOL_ADMIN',
-    'ACADEMIC_ADMIN',
-    'FINANCE_ADMIN',
-    'HR_ADMIN',
-    'TRANSPORT_MANAGER',
+    'SUB_ADMIN',
     'TEACHER',
     'PARENT',
-    'STUDENT',
   ]),
   schoolId: z.string().optional(),
   profile: z.object({
@@ -99,12 +96,12 @@ export const login = async (
   try {
     const data = loginSchema.parse(req.body);
 
-    // Find user
     const user = await prisma.user.findUnique({
       where: { email: data.email },
       include: {
         profile: true,
         school: true,
+        userTags: { include: { tag: true } },
       },
     });
 
@@ -133,6 +130,9 @@ export const login = async (
       schoolId: user.schoolId,
     });
 
+    const permissions = getUserPermissions(user);
+    const tags = (user.userTags ?? []).map((ut) => ut.tag.slug);
+
     res.json({
       user: {
         id: user.id,
@@ -140,6 +140,8 @@ export const login = async (
         role: user.role,
         profile: user.profile,
         school: user.school,
+        tags,
+        permissions,
       },
       token,
     });
@@ -164,12 +166,16 @@ export const getProfile = async (
         teacher: true,
         parent: true,
         student: true,
+        userTags: { include: { tag: true } },
       },
     });
 
     if (!user) {
       throw new AppError('User not found', 404);
     }
+
+    const permissions = getUserPermissions(user);
+    const tags = (user.userTags ?? []).map((ut) => ut.tag.slug);
 
     res.json({
       id: user.id,
@@ -180,6 +186,8 @@ export const getProfile = async (
       teacher: user.teacher,
       parent: user.parent,
       student: user.student,
+      tags,
+      permissions,
     });
   } catch (error) {
     next(error);

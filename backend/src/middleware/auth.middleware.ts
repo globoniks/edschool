@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AppError } from './errorHandler.js';
 import { prisma } from '../lib/prisma.js';
+import { getUserPermissions } from '../utils/permissions.js';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -9,6 +10,8 @@ export interface AuthRequest extends Request {
     email: string;
     role: string;
     schoolId: string;
+    tags?: string[];
+    permissions?: string[];
   };
 }
 
@@ -33,18 +36,26 @@ export const authenticate = async (
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
-      include: { school: true },
+      include: {
+        school: true,
+        userTags: { include: { tag: true } },
+      },
     });
 
     if (!user || !user.isActive) {
       throw new AppError('User not found or inactive', 401);
     }
 
+    const permissions = getUserPermissions(user);
+    const tags = (user.userTags ?? []).map((ut) => ut.tag.slug);
+
     req.user = {
       id: user.id,
       email: user.email,
       role: user.role,
       schoolId: user.schoolId,
+      tags,
+      permissions,
     };
 
     // If user is a parent, check if they have children linked
@@ -90,6 +101,60 @@ export const authorize = (...roles: string[]) => {
     next();
   };
 };
+
+/** Spec name: require one of the given roles (SUPER_ADMIN bypass not applied here). */
+export const authorizeRoles = (...roles: string[]) => authorize(...roles);
+
+/**
+ * Allow if user has any of the given permission keys.
+ * SUPER_ADMIN bypasses. SCHOOL_ADMIN bypasses tag checks (full school control).
+ * SUB_ADMIN and TEACHER: permissions come from merged tag permissions.
+ * PARENT: only own child-related routes (handled separately).
+ */
+export const authorizePermissions = (...permissionKeys: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new AppError('Authentication required', 401));
+    }
+    if (req.user.role === 'SUPER_ADMIN' || req.user.role === 'SCHOOL_ADMIN') {
+      return next();
+    }
+    const userPerms = req.user.permissions ?? [];
+    const hasAny = permissionKeys.some((p) => userPerms.includes(p));
+    if (!hasAny) {
+      return next(new AppError('Insufficient permissions', 403));
+    }
+    next();
+  };
+};
+
+/**
+ * Allow if user is TEACHER or has any of the given permission keys (or is SUPER_ADMIN/SCHOOL_ADMIN).
+ * Use for routes where both teachers and HOD/academic sub-admins can access.
+ */
+export const allowTeacherOrPermission = (...permissionKeys: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new AppError('Authentication required', 401));
+    }
+    if (req.user.role === 'SUPER_ADMIN' || req.user.role === 'SCHOOL_ADMIN') {
+      return next();
+    }
+    if (req.user.role === 'TEACHER') {
+      return next();
+    }
+    const userPerms = req.user.permissions ?? [];
+    const hasAny = permissionKeys.some((p) => userPerms.includes(p));
+    if (!hasAny) {
+      return next(new AppError('Insufficient permissions', 403));
+    }
+    next();
+  };
+};
+
+/** Backward-compat alias for authorizePermissions */
+export const authorizeByPermission = (...permissionKeys: string[]) =>
+  authorizePermissions(...permissionKeys);
 
 /**
  * Check if user has any of the specified permissions

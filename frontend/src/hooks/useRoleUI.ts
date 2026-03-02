@@ -1,16 +1,12 @@
 import { useAuthStore } from '../store/authStore';
 
-/** Role values aligned with backend (do not import @prisma/client in frontend). */
+/** Role values aligned with backend (tag-based: SUB_ADMIN has permissions via tags). */
 export type UserRole =
   | 'SUPER_ADMIN'
   | 'SCHOOL_ADMIN'
-  | 'ACADEMIC_ADMIN'
-  | 'FINANCE_ADMIN'
-  | 'HR_ADMIN'
-  | 'TRANSPORT_MANAGER'
+  | 'SUB_ADMIN'
   | 'TEACHER'
-  | 'PARENT'
-  | 'STUDENT';
+  | 'PARENT';
 
 export type RoleFocus = 'finance-alerts' | 'progress' | 'action' | 'data';
 
@@ -41,19 +37,6 @@ const roleConfigs: Record<string, RoleUIConfig> = {
     showAlerts: true,
     showFinance: true,
     showProgress: false,
-  },
-  STUDENT: {
-    focus: 'progress',
-    primaryColor: 'orange-600',
-    accentColor: 'orange-500',
-    priorityFeatures: ['progress', 'grades', 'attendance', 'homework'],
-    dashboardLayout: 'progress-timeline',
-    showMetrics: true,
-    showCharts: true,
-    showQuickActions: false,
-    showAlerts: false,
-    showFinance: false,
-    showProgress: true,
   },
   TEACHER: {
     focus: 'action',
@@ -94,24 +77,11 @@ const roleConfigs: Record<string, RoleUIConfig> = {
     showFinance: true,
     showProgress: false,
   },
-  ACADEMIC_ADMIN: {
+  SUB_ADMIN: {
     focus: 'data',
     primaryColor: 'blue-600',
     accentColor: 'blue-500',
-    priorityFeatures: ['academics', 'exams', 'attendance', 'reports'],
-    dashboardLayout: 'data-dense',
-    showMetrics: true,
-    showCharts: true,
-    showQuickActions: true,
-    showAlerts: false,
-    showFinance: false,
-    showProgress: false,
-  },
-  FINANCE_ADMIN: {
-    focus: 'data',
-    primaryColor: 'green-600',
-    accentColor: 'green-500',
-    priorityFeatures: ['fees', 'payments', 'reports', 'analytics'],
+    priorityFeatures: ['academics', 'exams', 'attendance', 'fees', 'staff', 'transport'],
     dashboardLayout: 'data-dense',
     showMetrics: true,
     showCharts: true,
@@ -120,57 +90,22 @@ const roleConfigs: Record<string, RoleUIConfig> = {
     showFinance: true,
     showProgress: false,
   },
-  HR_ADMIN: {
-    focus: 'data',
-    primaryColor: 'indigo-600',
-    accentColor: 'indigo-500',
-    priorityFeatures: ['staff', 'students', 'reports', 'attendance'],
-    dashboardLayout: 'data-dense',
-    showMetrics: true,
-    showCharts: true,
-    showQuickActions: true,
-    showAlerts: false,
-    showFinance: false,
-    showProgress: false,
-  },
-  TRANSPORT_MANAGER: {
-    focus: 'data',
-    primaryColor: 'amber-600',
-    accentColor: 'amber-500',
-    priorityFeatures: ['buses', 'routes', 'assignments', 'transport'],
-    dashboardLayout: 'data-dense',
-    showMetrics: true,
-    showCharts: false,
-    showQuickActions: true,
-    showAlerts: false,
-    showFinance: false,
-    showProgress: false,
-  },
 };
 
 export function useRoleUI() {
   const { user } = useAuthStore();
-  const role = (user?.role || 'STUDENT') as UserRole;
-  
-  const config = roleConfigs[role] || roleConfigs.STUDENT;
-  
+  const role = (user?.role || 'PARENT') as UserRole;
+
+  const config = roleConfigs[role] || roleConfigs.PARENT;
+
   const isParent = role === 'PARENT';
-  const isStudent = role === 'STUDENT';
   const isTeacher = role === 'TEACHER';
-  const isAdmin = [
-    'SUPER_ADMIN',
-    'SCHOOL_ADMIN',
-    'ACADEMIC_ADMIN',
-    'FINANCE_ADMIN',
-    'HR_ADMIN',
-    'TRANSPORT_MANAGER',
-  ].includes(role);
+  const isAdmin = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'SUB_ADMIN'].includes(role);
   
   return {
     role,
     config,
     isParent,
-    isStudent,
     isTeacher,
     isAdmin,
     // Quick access to config properties

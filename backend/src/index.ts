@@ -15,6 +15,8 @@ import { homeworkRoutes } from './routes/homework.routes.js';
 import { announcementRoutes } from './routes/announcement.routes.js';
 import { messageRoutes } from './routes/message.routes.js';
 import { academicRoutes } from './routes/academic.routes.js';
+import { curriculumRoutes } from './routes/curriculum.routes.js';
+import { leaveRoutes } from './routes/leave.routes.js';
 import { parentRoutes } from './routes/parent.routes.js';
 import { holidayRoutes } from './routes/holiday.routes.js';
 import { uploadRoutes } from './routes/upload.routes.js';
@@ -27,6 +29,9 @@ import { galleryRoutes } from './routes/gallery.routes.js';
 import { downloadRoutes } from './routes/download.routes.js';
 import { alertRoutes } from './routes/alert.routes.js';
 import { classMomentRoutes } from './routes/classMoment.routes.js';
+import { pushRoutes } from './routes/push.routes.js';
+import { tagRoutes } from './routes/tag.routes.js';
+import { userRoutes } from './routes/user.routes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -77,6 +82,8 @@ app.use('/api/homework', homeworkRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/academic', academicRoutes);
+app.use('/api/curriculum', curriculumRoutes);
+app.use('/api/leave', leaveRoutes);
 app.use('/api/parents', parentRoutes);
 app.use('/api/holidays', holidayRoutes);
 app.use('/api/upload', uploadRoutes);
@@ -89,6 +96,9 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/downloads', downloadRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/class-moments', classMomentRoutes);
+app.use('/api/push', pushRoutes);
+app.use('/api/tags', tagRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling
 app.use(errorHandler);

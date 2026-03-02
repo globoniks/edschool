@@ -37,6 +37,9 @@ model School {
   classMoments  ClassMoment[]
   buses         Bus[]
   routes        Route[]
+  tags          Tag[]
+  curricula     Curriculum[]
+  leaves        Leave[]
 
   @@index([code])
 }
@@ -54,27 +57,76 @@ model User {
   updatedAt DateTime  @updatedAt
 
   // Relations
-  school      School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  profile     UserProfile?
-  teacher     Teacher?
-  parent      Parent?
-  student     Student?
-  alertReads  AlertRead[]
+  school             School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  profile            UserProfile?
+  teacher            Teacher?
+  parent             Parent?
+  student            Student?
+  alertReads         AlertRead[]
+  userTags           UserTag[]
+  pushSubscriptions  PushSubscription[]
+  approvedLeaves     Leave[]             @relation("LeaveApprovedBy")
 
   @@index([email])
   @@index([schoolId])
 }
 
+// Web Push: store browser push subscriptions per user (multiple devices)
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, endpoint])
+  @@index([userId])
+}
+
 enum UserRole {
   SUPER_ADMIN
   SCHOOL_ADMIN
-  ACADEMIC_ADMIN
-  FINANCE_ADMIN
-  HR_ADMIN
-  TRANSPORT_MANAGER
+  SUB_ADMIN
   TEACHER
   PARENT
-  STUDENT
+}
+
+// Tag-based permissions: sub-admins get tags (ACADEMIC, FINANCE, HR, TRANSPORT); teachers can have HOD
+enum TagType {
+  SUB_ADMIN
+  TEACHER
+}
+
+model Tag {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  type        TagType
+  schoolId    String?
+  permissions Json
+  createdAt   DateTime @default(now())
+
+  school   School?   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  userTags UserTag[]
+
+  @@index([type])
+  @@index([schoolId])
+}
+
+model UserTag {
+  id     String @id @default(cuid())
+  userId String
+  tagId  String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tagId])
+  @@index([userId])
+  @@index([tagId])
 }
 
 // User profile information
@@ -94,25 +146,30 @@ model UserProfile {
 
 // Academic: Class and Section
 model Class {
-  id           String   @id @default(cuid())
-  schoolId     String
-  name         String // e.g., "Class 1", "Class 2"
-  section      String? // e.g., "A", "B", "C"
-  academicYear String
-  capacity     Int      @default(40)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  schoolId           String
+  name               String // e.g., "Class 1", "Class 2"
+  section            String? // e.g., "A", "B", "C"
+  academicYear       String
+  capacity           Int      @default(40)
+  classTeacherId     String?
+  responsibilities   Json?    // e.g. ["attendance_primary", "parent_communication", "discipline", "reports"]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  school       School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  students     Student[]
-  subjects     ClassSubject[]
-  timetables   Timetable[]
-  homeworks    Homework[]
-  attendances  Attendance[]
-  classMoments ClassMoment[]
+  school         School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  classTeacher   Teacher?       @relation(fields: [classTeacherId], references: [id], onDelete: SetNull)
+  students       Student[]
+  subjects       ClassSubject[]
+  timetables     Timetable[]
+  homeworks      Homework[]
+  attendances    Attendance[]
+  classMoments   ClassMoment[]
+  curricula      Curriculum[]
 
   @@unique([schoolId, name, section, academicYear])
   @@index([schoolId])
+  @@index([classTeacherId])
 }
 
 // Subject management
@@ -129,6 +186,7 @@ model Subject {
   classSubjects ClassSubject[]
   examMarks     ExamMark[]
   timetables    Timetable[]
+  curricula     Curriculum[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -149,6 +207,42 @@ model ClassSubject {
   @@unique([classId, subjectId])
   @@index([classId])
   @@index([teacherId])
+}
+
+// Curriculum (syllabus) per class and subject
+model Curriculum {
+  id          String   @id @default(cuid())
+  schoolId    String
+  classId     String
+  subjectId   String
+  academicYear String
+  name        String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  school    School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  class     Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subject   Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  chapters  CurriculumChapter[]
+
+  @@unique([classId, subjectId, academicYear])
+  @@index([schoolId])
+  @@index([classId])
+}
+
+model CurriculumChapter {
+  id           String   @id @default(cuid())
+  curriculumId String
+  title        String
+  order        Int      @default(0)
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  curriculum Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
+
+  @@index([curriculumId])
 }
 
 // Student management
@@ -247,10 +341,12 @@ model Teacher {
   school            School              @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   user              User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
   classSubjects     ClassSubject[]
+  classesAsClassTeacher Class[]         // classes where this teacher is the class teacher (homeroom)
   timetables        Timetable[]
   homeworks         Homework[]
   teacherAttendance TeacherAttendance[]
   classMoments      ClassMoment[]
+  leaves            Leave[]
 
   @@index([schoolId])
   @@index([employeeId])
@@ -300,6 +396,44 @@ model TeacherAttendance {
 
   @@unique([teacherId, date])
   @@index([date])
+}
+
+enum LeaveType {
+  SICK
+  CASUAL
+  EARNED
+  UNPAID
+  OTHER
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Leave {
+  id            String      @id @default(cuid())
+  teacherId     String
+  schoolId      String
+  startDate     DateTime
+  endDate       DateTime
+  type          LeaveType
+  status        LeaveStatus @default(PENDING)
+  reason        String?
+  approvedById  String?
+  approvedAt    DateTime?
+  remarks       String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  teacher     Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  approvedBy  User?    @relation("LeaveApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+
+  @@index([teacherId])
+  @@index([schoolId])
+  @@index([status])
 }
 
 // Fee management
