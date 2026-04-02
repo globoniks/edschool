@@ -112,6 +112,9 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['Fira Code', 'Monaco', 'Consolas', 'monospace'],
+        headline: ['Manrope', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        label: ['Inter', 'sans-serif'],
       },
       fontWeight: {
         normal: '400',
