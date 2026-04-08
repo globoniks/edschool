@@ -1,4 +1,4 @@
-# Parent Portal Features
+  # Parent Portal Features
 
 ## Overview
 The Parent Portal is designed to give parents a comprehensive view of their child's school activities, performance, and important information in one place. It focuses on **tracking and monitoring** rather than administrative tasks.

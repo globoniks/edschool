@@ -1,7 +1,6 @@
 import api from '../lib/api';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? '/api' : '/edschool/api');
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="EdSchool — The complete school platform. Academics, fees, attendance, transport, and parent engagement in one role-based system." />
+  <title>EdSchool — School Management, Simplified | Edumapping</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 1. Navigation -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="EdSchool home">EdSchool</a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-links" id="nav-links">
+        <a href="#features">Features</a>
+        <a href="#roles">Roles</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#contact">Contact</a>
+        <a href="#contact" class="nav-cta">Book a Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 2. Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1 class="hero-title">The Complete School Platform. One Login for Everyone.</h1>
+        <p class="hero-sub">EdSchool brings academics, fees, attendance, transport, and parent engagement into a single, role-based system — so every stakeholder has exactly what they need.</p>
+        <div class="hero-buttons">
+          <a href="#contact" class="btn btn-primary">Book a Demo</a>
+          <a href="#features" class="btn btn-ghost">See All Features</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-mockup" aria-hidden="true">
+          <div class="mockup-bar"></div>
+          <div class="mockup-content">
+            <div class="mockup-sidebar"></div>
+            <div class="mockup-main">
+              <div class="mockup-card"></div>
+              <div class="mockup-card"></div>
+              <div class="mockup-card"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="hero-trust">Trusted by schools · Role-based access · Mobile-friendly · Your data, your server</p>
+  </section>
+
+  <!-- 3. Stats strip -->
+  <section class="stats" aria-label="At a glance">
+    <div class="stats-inner">
+      <div class="stat-card">
+        <span class="stat-icon" aria-hidden="true">🏫</span>
+        <strong class="stat-title">1 Platform</strong>
+        <span class="stat-desc">For admin, teachers & parents</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon" aria-hidden="true">🔐</span>
+        <strong class="stat-title">8 Roles</strong>
+        <span class="stat-desc">Granular, built-in access control</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon" aria-hidden="true">📱</span>
+        <strong class="stat-title">Mobile Ready</strong>
+        <span class="stat-desc">Works on any device</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon" aria-hidden="true">🗄️</span>
+        <strong class="stat-title">Self-Hostable</strong>
+        <span class="stat-desc">Data stays with your school</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Features by module -->
+  <section class="features" id="features" data-animate>
+    <div class="features-inner">
+      <h2 class="section-title">Everything Your School Needs — In One Place</h2>
+      <div class="features-layout">
+        <aside class="features-sidebar" role="tablist">
+          <button type="button" class="feature-tab active" data-tab="dashboard" role="tab" aria-selected="true">Dashboard</button>
+          <button type="button" class="feature-tab" data-tab="academic" role="tab">Academic Setup</button>
+          <button type="button" class="feature-tab" data-tab="students" role="tab">Students</button>
+          <button type="button" class="feature-tab" data-tab="teachers" role="tab">Teachers</button>
+          <button type="button" class="feature-tab" data-tab="attendance" role="tab">Attendance</button>
+          <button type="button" class="feature-tab" data-tab="leave" role="tab">Leave Management</button>
+          <button type="button" class="feature-tab" data-tab="fees" role="tab">Fees</button>
+          <button type="button" class="feature-tab" data-tab="exams" role="tab">Examinations</button>
+          <button type="button" class="feature-tab" data-tab="timetable" role="tab">Timetable</button>
+          <button type="button" class="feature-tab" data-tab="homework" role="tab">Homework</button>
+          <button type="button" class="feature-tab" data-tab="announcements" role="tab">Announcements</button>
+          <button type="button" class="feature-tab" data-tab="class-photos" role="tab">Class Photos</button>
+          <button type="button" class="feature-tab" data-tab="transport" role="tab">Transport</button>
+          <button type="button" class="feature-tab" data-tab="holidays" role="tab">Holidays & Events</button>
+          <button type="button" class="feature-tab" data-tab="messaging" role="tab">Messaging</button>
+          <button type="button" class="feature-tab" data-tab="users" role="tab">Users & Permissions</button>
+          <button type="button" class="feature-tab" data-tab="parent-portal" role="tab">Parent Portal</button>
+        </aside>
+        <div class="features-detail" role="tabpanel">
+          <div class="feature-panel active" id="panel-dashboard" data-panel="dashboard">
+            <h3>Dashboard</h3>
+            <p>Live overview of students, attendance, fees, and quick links for every role.</p>
+          </div>
+          <div class="feature-panel" id="panel-academic" data-panel="academic">
+            <h3>Academic Setup</h3>
+            <p>Define classes, sections, subjects, and map teachers to subjects with ease.</p>
+          </div>
+          <div class="feature-panel" id="panel-students" data-panel="students">
+            <h3>Students</h3>
+            <p>Full student profiles: admissions, class assignment, parent linking, and photos.</p>
+          </div>
+          <div class="feature-panel" id="panel-teachers" data-panel="teachers">
+            <h3>Teachers</h3>
+            <p>Employee profiles, qualifications, subject assignment, and user account linking.</p>
+          </div>
+          <div class="feature-panel" id="panel-attendance" data-panel="attendance">
+            <h3>Attendance</h3>
+            <p>Daily marking (Present / Absent / Late / Excused) for students and staff; reports and statistics.</p>
+          </div>
+          <div class="feature-panel" id="panel-leave" data-panel="leave">
+            <h3>Leave Management</h3>
+            <p>Teacher leave applications with HR/Admin approval workflow and status tracking.</p>
+          </div>
+          <div class="feature-panel" id="panel-fees" data-panel="fees">
+            <h3>Fees</h3>
+            <p>Fee structures, payment recording, receipt generation, dues tracking, and discounts/scholarships.</p>
+          </div>
+          <div class="feature-panel" id="panel-exams" data-panel="exams">
+            <h3>Examinations</h3>
+            <p>Schedule exams, enter marks, generate report cards, and set passing thresholds.</p>
+          </div>
+          <div class="feature-panel" id="panel-timetable" data-panel="timetable">
+            <h3>Timetable</h3>
+            <p>Class-wise timetable builder with subject, teacher, time, and room assignment.</p>
+          </div>
+          <div class="feature-panel" id="panel-homework" data-panel="homework">
+            <h3>Homework</h3>
+            <p>Create assignments, track submissions, and evaluate with grades.</p>
+          </div>
+          <div class="feature-panel" id="panel-announcements" data-panel="announcements">
+            <h3>Announcements</h3>
+            <p>Targeted broadcasts to All / Parents / Teachers / Students.</p>
+          </div>
+          <div class="feature-panel" id="panel-class-photos" data-panel="class-photos">
+            <h3>Class Photos</h3>
+            <p>Teachers share class moments; parents view in their portal.</p>
+          </div>
+          <div class="feature-panel" id="panel-transport" data-panel="transport">
+            <h3>Transport + Live Tracking</h3>
+            <p>Manage buses, routes, student assignments, and monitor vehicles in real time.</p>
+          </div>
+          <div class="feature-panel" id="panel-holidays" data-panel="holidays">
+            <h3>Holidays & Events</h3>
+            <p>School calendar for holidays and events.</p>
+          </div>
+          <div class="feature-panel" id="panel-messaging" data-panel="messaging">
+            <h3>Messaging</h3>
+            <p>In-app messaging between admin, teachers, and parents.</p>
+          </div>
+          <div class="feature-panel" id="panel-users" data-panel="users">
+            <h3>Users & Permissions</h3>
+            <p>Create users, assign roles (Academic, Finance, HR, Transport) — School Admin only.</p>
+          </div>
+          <div class="feature-panel" id="panel-parent-portal" data-panel="parent-portal">
+            <h3>Parent Portal</h3>
+            <p>One place for parents: fees, attendance, homework, timetable, messages, and alerts.</p>
+          </div>
+        </div>
+      </div>
+      <div class="coming-soon">
+        <span class="badge">Coming Soon</span>
+        <p>Online fee payments (Stripe/PayPal) · Biometric / QR attendance · SMS & push notifications · Automated absence alerts · Payroll · Lesson planning · Weighted grade book · Native mobile app (iOS & Android) · Geofenced bus stop alerts · Multi-year academic records & alumni tracking · Custom report builder</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Role-based access -->
+  <section class="roles dark" id="roles" data-animate>
+    <div class="roles-bg"></div>
+    <div class="roles-inner">
+      <h2 class="section-title light">The Right Access for Every Person</h2>
+      <div class="roles-grid">
+        <div class="role-card"><span class="role-icon">👑</span><strong>Super Admin</strong><span>Multi-school oversight; full access</span></div>
+        <div class="role-card"><span class="role-icon">🏛️</span><strong>School Admin</strong><span>Full school access: setup, all modules, users</span></div>
+        <div class="role-card"><span class="role-icon">📚</span><strong>Academic</strong><span>Classes, subjects, timetable, exams</span></div>
+        <div class="role-card"><span class="role-icon">💰</span><strong>Finance</strong><span>Fees, payments, receipts, dues</span></div>
+        <div class="role-card"><span class="role-icon">👥</span><strong>HR</strong><span>Students, teachers, attendance, leave</span></div>
+        <div class="role-card"><span class="role-icon">🚌</span><strong>Transport</strong><span>Buses, routes, live tracking</span></div>
+        <div class="role-card"><span class="role-icon">👨‍🏫</span><strong>Teacher</strong><span>Attendance, homework, marks, leave, messages</span></div>
+        <div class="role-card"><span class="role-icon">👨‍👩‍👧</span><strong>Parent</strong><span>Portal only: fees, attendance, homework, timetable</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Parent portal spotlight -->
+  <section class="parent-spotlight" data-animate>
+    <div class="parent-spotlight-inner">
+      <div class="parent-mockup">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-header">Parent Portal</div>
+            <div class="phone-child">Rahul K.</div>
+            <div class="phone-ring"></div>
+            <div class="phone-badge">Fee due: ₹2,400</div>
+            <ul class="phone-list"><li>Homework: Math — Due tomorrow</li><li>Attendance: 94% this month</li></ul>
+          </div>
+        </div>
+      </div>
+      <div class="parent-copy">
+        <h2 class="section-title">One login. Everything about your child.</h2>
+        <ul class="parent-bullets">
+          <li>View daily attendance and monthly summaries</li>
+          <li>Check fee dues and download receipts</li>
+          <li>Monitor homework and exam results</li>
+          <li>Read messages from teachers</li>
+          <li>View the class timetable</li>
+          <li>Receive school announcements and alerts</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Benefits -->
+  <section class="benefits" id="benefits" data-animate>
+    <div class="benefits-inner">
+      <h2 class="section-title">Why Schools Choose EdSchool</h2>
+      <div class="benefits-grid">
+        <div class="benefit-card"><span class="benefit-icon">🧩</span><h3>Single System</h3><p>Fewer tools, less confusion. Academics, fees, HR, and transport all in one.</p></div>
+        <div class="benefit-card"><span class="benefit-icon">🔐</span><h3>Role-Based Access</h3><p>Staff see only what they need. Clear accountability, no data leaks.</p></div>
+        <div class="benefit-card"><span class="benefit-icon">👨‍👩‍👧</span><h3>Parent Engagement</h3><p>Reduce office calls. Parents get fees, attendance, and messages in their portal.</p></div>
+        <div class="benefit-card"><span class="benefit-icon">📋</span><h3>Audit Trail</h3><p>Every action logged. Attendance, payments, and leave in one traceable place.</p></div>
+        <div class="benefit-card"><span class="benefit-icon">📱</span><h3>Mobile-Friendly</h3><p>Teachers mark attendance from the classroom. Parents check from anywhere.</p></div>
+        <div class="benefit-card"><span class="benefit-icon">🗄️</span><h3>Your Data</h3><p>Self-hostable. When on your server, your data never leaves your school.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. How it works -->
+  <section class="how-it-works" data-animate>
+    <div class="how-inner">
+      <h2 class="section-title">Up and Running in a Day</h2>
+      <div class="stepper">
+        <div class="step"><span class="step-num">1</span><strong>Create Users</strong><span>Set up roles for Admin, Finance, HR, Academic, and Transport</span></div>
+        <div class="step"><span class="step-num">2</span><strong>Academic Setup</strong><span>Add classes, subjects, and teacher mappings</span></div>
+        <div class="step"><span class="step-num">3</span><strong>Add Students & Teachers</strong><span>With parent linking and user accounts</span></div>
+        <div class="step"><span class="step-num">4</span><strong>Configure Fees & Transport</strong><span>Set fee structures, buses, and routes</span></div>
+        <div class="step"><span class="step-num">5</span><strong>Go Live</strong><span>Share credentials; teachers and parents log in and everything is ready</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CTA / Contact -->
+  <section class="cta dark" id="contact" data-animate>
+    <div class="cta-bg"></div>
+    <div class="cta-inner">
+      <h2 class="section-title light">Ready to Simplify Your School?</h2>
+      <p class="cta-sub">Schedule a live demo or request a trial instance with sample data.</p>
+      <div class="cta-buttons">
+        <a href="mailto:support@edumapping.com?subject=EdSchool%20Demo%20Request" class="btn btn-primary">Book a Demo</a>
+        <a href="mailto:support@edumapping.com?subject=EdSchool%20Contact" class="btn btn-ghost light">Contact Us</a>
+      </div>
+      <form class="cta-form" id="contact-form" aria-label="Contact form">
+        <input type="text" name="name" placeholder="Name" required aria-label="Your name" />
+        <input type="text" name="school" placeholder="School" aria-label="School name" />
+        <input type="email" name="email" placeholder="Email" required aria-label="Email" />
+        <input type="tel" name="phone" placeholder="Phone" aria-label="Phone" />
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 10. Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="footer-logo">EdSchool</a>
+        <p class="footer-tagline">School Management, Simplified.</p>
+      </div>
+      <nav class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#roles">Roles</a>
+        <a href="#benefits">Parent Portal</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <p class="footer-copy">© 2025 Edumapping. All rights reserved.</p>
+      <a href="https://edumapping.com/edschool" class="footer-url">edumapping.com/edschool</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

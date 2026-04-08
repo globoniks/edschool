@@ -8,14 +8,16 @@ declare const self: ServiceWorkerGlobalScope;
 precacheAndRoute(self.__WB_MANIFEST);
 
 self.skipWaiting();
-self.clients.claim();
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
 
 self.addEventListener('push', (event: PushEvent) => {
   const data = event.data?.json() ?? {};
   const scope = self.registration.scope.replace(/\/$/, '');
   const icon = `${scope}/pwa-192x192.png`;
   event.waitUntil(
-    self.registration.showNotification(data.title || 'EdSchool', {
+    self.registration.showNotification(data.title || 'G Schools', {
       body: data.body ?? '',
       icon,
       badge: icon,

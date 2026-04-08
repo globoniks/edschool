@@ -62,7 +62,7 @@ const newsCards = [
     tag: 'Sports',
     tagColor: 'bg-red-700/80',
     date: 'March 5, 2025',
-    title: 'EdSchool Warriors Win Regional Basketball Finals',
+    title: 'G Schools Warriors Win Regional Basketball Finals',
     desc: 'Our boys\' team displayed incredible grit to secure the championship trophy in a nail-biting finish.',
     imgSrc: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&q=80',
   },
@@ -97,13 +97,8 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
-              style={{ background: 'linear-gradient(135deg, #000666 0%, #1a237e 100%)' }}
-            >
-              <GraduationCap className="w-5 h-5" />
-            </div>
-            <span className="text-xl font-bold text-blue-900 font-headline tracking-tight">EdSchool</span>
+            <img src="/logo.svg" alt="Globoniks Logo" className="w-9 h-9 object-contain" />
+            <span className="text-xl font-bold text-blue-900 font-headline tracking-tight">G Schools</span>
           </div>
 
           {/* Desktop Links */}
@@ -162,7 +157,7 @@ export default function Landing() {
             {/* Content */}
             <div className="relative z-10 px-8 md:px-16 max-w-2xl">
               <h1 className="text-white font-headline text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-                Welcome to <span className="text-green-300">EdSchool</span> Management
+                Welcome to <span className="text-green-300">Globoniks Schools</span> Management
               </h1>
               <p className="text-blue-200 text-lg mb-8 max-w-lg">
                 Empowering schools through excellence in academics, administration, and innovative digital management.
@@ -213,7 +208,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-end mb-8">
           <div>
             <h2 className="font-headline text-2xl font-bold text-blue-900">Latest News</h2>
-            <p className="text-slate-500 text-sm">Stay updated with life at EdSchool</p>
+            <p className="text-slate-500 text-sm">Stay updated with life at G Schools</p>
           </div>
           <button className="text-blue-900 font-bold text-sm flex items-center gap-1 hover:underline">
             See All <ArrowRight className="w-4 h-4" />
@@ -273,7 +268,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="font-headline text-3xl font-bold text-blue-900 mb-4">Why Choose EdSchool?</h2>
+              <h2 className="font-headline text-3xl font-bold text-blue-900 mb-4">Why Choose Globoniks Schools?</h2>
               <p className="text-slate-500 text-lg mb-8">
                 Built with modern technology to provide a seamless experience for administrators, teachers, parents, and students.
               </p>
@@ -315,7 +310,7 @@ export default function Landing() {
             Ready to Transform Your School Management?
           </h2>
           <p className="text-blue-200 text-lg mb-8 max-w-2xl mx-auto">
-            Join schools already using EdSchool to streamline their operations and improve communication.
+            Join schools already using Globoniks Schools to streamline their operations and improve communication.
           </p>
           <Link
             to="/login"
@@ -333,13 +328,8 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
-                  style={{ background: 'linear-gradient(135deg, #000666 0%, #1a237e 100%)' }}
-                >
-                  <GraduationCap className="w-4 h-4" />
-                </div>
-                <span className="text-white font-bold text-lg font-headline">EdSchool</span>
+                <img src="/logo.svg" alt="Globoniks Logo" className="w-8 h-8 object-contain" />
+                <span className="text-white font-bold text-lg font-headline">G Schools</span>
               </div>
               <p className="text-sm">Modern school management system for the digital age.</p>
             </div>
@@ -361,7 +351,7 @@ export default function Landing() {
             ))}
           </div>
           <div className="border-t border-slate-800 mt-8 pt-8 text-center text-sm">
-            <p>© {new Date().getFullYear()} EdSchool. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Globoniks Schools. All rights reserved.</p>
           </div>
         </div>
       </footer>

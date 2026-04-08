@@ -140,7 +140,7 @@ function AppRoutes() {
   );
 }
 
-// Match router basename to Vite base so /edschool/login works when app is served at /edschool/
+// Match router basename to Vite base
 const routerBasename = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '';
 
 function App() {

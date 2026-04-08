@@ -4,10 +4,9 @@ import { parseError, logError } from '../utils/errorHandler';
 
 // Use environment variable for API URL, fallback to relative path
 // In development: uses '/api' (proxied by Vite to localhost:3001)
-// In production, if using subdirectory: use '/edschool/api'
+// In production, if using root domain: use '/api'
 // If using separate domain/IP: set VITE_API_URL="http://your-ip:3001/api"
-const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (import.meta.env.DEV ? '/api' : '/edschool/api');
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -32,7 +31,7 @@ api.interceptors.response.use(
     // Handle authentication errors
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
-      window.location.href = '/edschool/login';
+      window.location.href = '/login';
       return Promise.reject(error);
     }
     

@@ -4,8 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 
 export default defineConfig({
-  // Use root path for preview/testing, subdirectory for production deployment
-  base: process.env.VITE_BASE_PATH || (process.env.NODE_ENV === 'production' ? '/edschool/' : '/'),
+  // Use root path for all environments since we run on a subdomain
+  base: process.env.VITE_BASE_PATH || '/',
   plugins: [
     react(),
     VitePWA({
@@ -16,15 +16,15 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['pwa-192x192.png', 'pwa-512x512.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'EdSchool - School Management System',
-        short_name: 'EdSchool',
+        name: 'Globoniks Schools - School Management System',
+        short_name: 'G Schools',
         description: 'Comprehensive multi-tenant school management system for students, teachers, and parents',
         theme_color: '#0284c7',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
-        scope: process.env.NODE_ENV === 'production' ? '/edschool/' : '/',
-        start_url: process.env.NODE_ENV === 'production' ? '/edschool/' : '/',
+        scope: '/',
+        start_url: '/',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -51,14 +51,14 @@ export default defineConfig({
             name: 'Dashboard',
             short_name: 'Dashboard',
             description: 'View your dashboard',
-            url: process.env.NODE_ENV === 'production' ? '/edschool/app/dashboard' : '/app/dashboard',
+            url: '/app/dashboard',
             icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
           },
           {
             name: 'Attendance',
             short_name: 'Attendance',
             description: 'Mark attendance',
-            url: process.env.NODE_ENV === 'production' ? '/edschool/app/attendance' : '/app/attendance',
+            url: '/app/attendance',
             icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
           }
         ]
@@ -85,11 +85,7 @@ export default defineConfig({
         target: 'http://localhost:3001',
         changeOrigin: true,
       },
-      '/edschool/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/edschool/, ''),
-      },
+      // /edschool/api is no longer needed since app runs on root
       '/socket.io': {
         target: 'http://localhost:3001',
         changeOrigin: true,

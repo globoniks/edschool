@@ -68,13 +68,8 @@ export default function Login() {
       <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl shadow-sm shadow-blue-900/5">
         <div className="flex items-center justify-between px-6 py-4 max-w-lg mx-auto">
           <div className="flex items-center gap-2 text-blue-900 font-extrabold font-headline text-xl tracking-tight">
-            <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center text-white"
-              style={{ background: 'linear-gradient(135deg, #000666 0%, #1a237e 100%)' }}
-            >
-              <GraduationCap className="w-4 h-4" />
-            </div>
-            EdSchool
+            <img src="/logo.svg" alt="Globoniks Logo" className="w-8 h-8 object-contain" />
+            G Schools
           </div>
           <div className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 text-sm font-bold">
             ?
@@ -89,7 +84,7 @@ export default function Login() {
         <div className="mb-10 relative">
           <div className="absolute -top-6 -right-4 w-32 h-32 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
           <h1 className="font-headline text-4xl font-bold text-blue-900 leading-tight mb-3">
-            Welcome back<br />to <span style={{ background: 'linear-gradient(135deg, #000666, #1a237e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>EdSchool.</span>
+            Welcome back<br />to <span style={{ background: 'linear-gradient(135deg, #000666, #1a237e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Globoniks Schools.</span>
           </h1>
           <p className="text-slate-500 font-medium">Log in to manage your school, track students, and communicate effectively.</p>
         </div>
@@ -207,8 +202,8 @@ export default function Login() {
       <footer className="bg-slate-100 pt-6 pb-10 px-6">
         <div className="max-w-lg mx-auto flex flex-col items-center text-center">
           <div className="flex items-center gap-2 text-slate-400 font-bold font-headline text-lg opacity-50 grayscale mb-4">
-            <GraduationCap className="w-4 h-4" />
-            EdSchool
+            <img src="/logo.svg" alt="Globoniks Logo" className="w-5 h-5 object-contain" />
+            G Schools
           </div>
           <p className="text-[11px] text-slate-400 font-medium">
             By continuing, you agree to our Terms of Service and Privacy Policy.

@@ -24,3 +24,4 @@ Running list of bugs and requested improvements. Add new items under the right s
 ## How to use
 
 - Add new bugs or enhancements as rows in the table above. Use **Status**: `Open` → `In progress` → `Done`. Optionally set **Priority** (e.g. High / Medium / Low) and **Notes** (links, assignee, date).
+   

@@ -1,0 +1,4068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GLOBONIKS - #1 Software Development Company | MERN Stack Experts | Tech Mentorship | globoniks.com</title>
+    
+    <!-- Enhanced SEO Meta Tags -->
+    <meta name="description" content="GLOBONIKS - Leading software development company specializing in MERN stack, mobile apps, and tech mentorship. Expert developers in React, Node.js, MongoDB. Transform your business with cutting-edge software solutions. Free consultation available.">
+    <meta name="keywords" content="GLOBONIKS, Globoniks, globoniks, globonics, GLOBONIKS software development, GLOBONIKS MERN stack, GLOBONIKS mobile apps, GLOBONIKS tech mentorship, GLOBONIKS React developers, GLOBONIKS Node.js experts, GLOBONIKS MongoDB specialists, GLOBONIKS Express.js, GLOBONIKS software company, GLOBONIKS Punjab, GLOBONIKS Mohali, GLOBONIKS Sector 68, GLOBONIKS Medallion 68, globonics software development, globonics MERN stack, globonics mobile apps, globonics tech mentorship, globonics React developers, globonics Node.js experts, globonics MongoDB specialists, globonics Express.js, globonics software company, globonics Punjab, globonics Mohali, software development company, MERN stack developers, mobile app development, web application development, tech mentorship programs, custom software solutions, React development, Node.js experts, MongoDB specialists, Express.js developers, digital transformation services, software consulting, full-stack development, cross-platform mobile apps, React Native development, Flutter development, business software solutions, enterprise software development, startup software development, software maintenance services, best software development company, top MERN stack developers, premium software solutions">
+    <meta name="author" content="GLOBONIKS">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://globoniks.com">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://globoniks.com/sitemap.xml">
+    <meta name="theme-color" content="#8B5CF6">
+    <meta name="msapplication-TileColor" content="#8B5CF6">
+    <meta name="application-name" content="GLOBONIKS">
+    <meta name="apple-mobile-web-app-title" content="GLOBONIKS">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="GLOBONIKS - #1 Software Development Company | MERN Stack Experts">
+    <meta property="og:description" content="Transform your business with cutting-edge MERN stack development, mobile apps, and revolutionary tech mentorship programs. Expert developers ready to build your next digital solution.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://globoniks.com">
+    <meta property="og:image" content="https://globoniks.com/full-logo.svg">
+    <meta property="og:site_name" content="GLOBONIKS">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GLOBONIKS - Premium Software Development & Tech Mentorship">
+    <meta name="twitter:description" content="Transform your business with cutting-edge MERN stack development, mobile apps, and revolutionary tech mentorship programs.">
+    <meta name="twitter:image" content="https://globoniks.com/full-logo.svg">
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="msapplication-TileColor" content="#8b5cf6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GLOBONIKS">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://globoniks.com">
+    
+    <!-- Favicon (consolidated + fixed relative paths) -->
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="G.svg">
+    <link rel="shortcut icon" href="favicon.ico">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "GLOBONIKS",
+        "description": "Premium software development company specializing in MERN stack development, mobile apps, and tech mentorship programs.",
+        "url": "https://globoniks.com",
+        "logo": "https://globoniks.com/full_logo.png",
+        "foundingDate": "2024",
+        "founder": {
+            "@type": "Person",
+            "name": "GLOBONIKS Team"
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "Global"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "availableLanguage": "English"
+        },
+        "sameAs": [
+            "https://globoniks.com"
+        ],
+        "offers": [
+            {
+                "@type": "Offer",
+                "name": "MERN Stack Development",
+                "description": "Full-stack web application development using MongoDB, Express.js, React, and Node.js"
+            },
+            {
+                "@type": "Offer",
+                "name": "Mobile App Development",
+                "description": "Native iOS, Android, and cross-platform mobile application development"
+            },
+            {
+                "@type": "Offer",
+                "name": "Tech Mentorship Programs",
+                "description": "Revolutionary tech mentorship programs for career transformation"
+            }
+        ],
+        "serviceArea": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": 0,
+                "longitude": 0
+            },
+            "geoRadius": "20000000"
+        }
+    }
+    </script>
+    <meta name="bingbot" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="distribution" content="global">
+    <meta name="rating" content="general">
+    <meta name="geo.region" content="US">
+    <meta name="geo.placename" content="United States">
+    <meta name="geo.position" content="39.50;-98.35">
+    <meta name="ICBM" content="39.50, -98.35">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://globoniks.com">
+    
+    <!-- Remove duplicate favicon declarations (use the ones above) -->
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- DNS Prefetch for performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Sitemap and additional SEO -->
+    <link rel="sitemap" href="https://globoniks.com/sitemap.xml">
+    <link rel="alternate" href="https://globoniks.com" hreflang="en-us">
+    <link rel="alternate" href="https://globoniks.com" hreflang="en">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="GLOBONIKS - Premium MERN Stack Development & Tech Mentorship Experts">
+    <meta property="og:description" content="Transform your business with expert MERN stack development, mobile apps, and revolutionary tech mentorship. Specializing in React, Node.js, MongoDB. Free consultation available.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://globoniks.com">
+    <meta property="og:image" content="https://globoniks.com/full%20logo.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="GLOBONIKS - Premium Software Development & Tech Mentorship">
+    <meta property="og:site_name" content="GLOBONIKS">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@globoniks">
+    <meta name="twitter:creator" content="@globoniks">
+    <meta name="twitter:title" content="GLOBONIKS - Premium MERN Stack Development & Tech Mentorship">
+    <meta name="twitter:description" content="Expert software development services specializing in MERN stack, mobile apps, and revolutionary tech mentorship. Transform your business with cutting-edge solutions.">
+    <meta name="twitter:image" content="https://globoniks.com/full%20logo.svg">
+    <meta name="twitter:image:alt" content="GLOBONIKS Software Development Services">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "GLOBONIKS",
+        "alternateName": "Globoniks Software Development",
+        "description": "Premium software development company specializing in MERN stack applications, mobile development, custom software solutions, and revolutionary tech mentorship programs",
+        "url": "https://globoniks.com",
+        "logo": "https://globoniks.com/full_logo.png",
+        "foundingDate": "2024",
+        "founder": {
+            "@type": "Person",
+            "name": "GLOBONIKS Team"
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "US",
+            "addressRegion": "United States"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+1-555-GLOBONIKS",
+            "contactType": "customer service",
+            "areaServed": "US",
+            "availableLanguage": "English"
+        },
+        "sameAs": [
+            "https://linkedin.com/company/globoniks",
+            "https://twitter.com/globoniks",
+            "https://github.com/globoniks"
+        ],
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Software Development Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "MERN Stack Development",
+                        "description": "Full-stack web applications using MongoDB, Express.js, React, and Node.js"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Mobile App Development",
+                        "description": "Native iOS/Android and cross-platform mobile applications"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Custom Software Solutions",
+                        "description": "Bespoke software applications built from scratch"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Tech Mentorship Programs",
+                        "description": "Revolutionary hands-on mentorship for career transformation"
+                    }
+                }
+            ]
+        }
+    }
+    </script>
+    
+    <!-- Additional Structured Data for Website -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "GLOBONIKS",
+        "url": "https://globoniks.com",
+        "description": "Premium software development and tech mentorship services",
+        "publisher": {
+            "@type": "Organization",
+            "name": "GLOBONIKS"
+        },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://globoniks.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <!-- Service Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Software Development",
+        "provider": {
+            "@type": "Organization",
+            "name": "GLOBONIKS"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "United States"
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Software Development Services"
+        }
+    }
+    </script>
+    
+    <style>
+        :root {
+            --primary-purple: #8B5CF6;
+            --secondary-purple: #A855F7;
+            --dark-bg: #000000;
+            --dark-secondary: #0A0A0A;
+            --dark-tertiary: #111111;
+            --text-light: #ffffff;
+            --text-muted: #b3b3b3;
+            --glass-bg: rgba(139, 92, 246, 0.05);
+            --border-glass: rgba(139, 92, 246, 0.2);
+            --transition: all 0.3s ease;
+            --header-height: 100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Remove default outlines from form elements */
+        input:focus, textarea:focus, select:focus, button:focus {
+            outline: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+
+        /* Ensure form elements don't get white backgrounds or borders */
+        input, textarea, select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--dark-bg);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Improved animated background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--primary-purple);
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1); 
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translateY(-30px) rotate(180deg) scale(1.2); 
+                opacity: 0.8;
+            }
+        }
+
+        /* Enhanced header with better glassmorphism */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Logo container */
+        .logo-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+
+
+
+        /* Full logo styling */
+        .logo-full {
+            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+            transition: transform 0.3s ease;
+        }
+
+        /* Enhanced hover effect for the full logo */
+        .logo-container:hover .logo-full {
+            transform: scale(1.05);
+        }
+
+        /* Add a subtle scale effect to the entire logo container on hover */
+        .logo-container:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container {
+            transition: transform 0.3s ease;
+        }
+
+        .logo-text {
+            color: var(--text-light);
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-purple);
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--primary-purple);
+            transform: scale(1.1);
+        }
+
+        /* Page management */
+        .page {
+            display: none;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+            padding-top: 0;
+        }
+        
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Enhanced hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            padding-top: calc(var(--header-height) + 3rem); /* Account for fixed header with extra spacing */
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Minimize entire hero container on scroll */
+        .hero.minimize {
+            height: 60vh;
+            padding-top: calc(var(--header-height) + 1rem);
+            transform: translateY(-40px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 2rem;
+            animation: fadeInUp 1.2s ease-out;
+            margin-top: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
+            background: linear-gradient(45deg, var(--text-light), var(--primary-purple), var(--text-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientShift 4s ease-in-out infinite;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 2;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Minimize hero h1 on scroll */
+        .hero.minimize h1 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            margin-bottom: 0.5rem;
+            transform: translateY(-20px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            margin-bottom: 3rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Minimize hero paragraph on scroll */
+        .hero.minimize p {
+            font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+            margin-bottom: 1rem;
+            opacity: 0.7;
+            transform: translateY(-15px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 2.8rem;
+            background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4), 0 0 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--primary-purple);
+            color: white;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Page content styles */
+        .page-content {
+            padding: calc(var(--header-height) + 4rem) 5% 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .page-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Minimize entire page-hero container on scroll */
+        .page-hero.minimize {
+            margin-bottom: 1.5rem;
+            padding-top: 0.5rem;
+            margin-top: 0.25rem;
+            transform: translateY(-20px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .page-hero .section-subtitle {
+            font-size: clamp(1rem, 2.8vw, 1.3rem);
+            margin-bottom: 2rem;
+            max-width: 85%;
+            padding: 0 2rem;
+            line-height: 1.6;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Minimize page hero subtitle on scroll */
+        .page-hero.minimize .section-subtitle {
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            margin-bottom: 1rem;
+            opacity: 0.7;
+            transform: translateY(-15px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .page-hero .section-subtitle:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .page-hero h1 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+            background: linear-gradient(45deg, var(--text-light), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 2;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Minimize page hero h1 on scroll */
+        .page-hero.minimize h1 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+            transform: translateY(-20px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 3vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            margin-top: 0;
+            background: linear-gradient(45deg, var(--text-light), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 85%;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            padding: 0 1.5rem;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-subtitle:hover {
+            opacity: 1;
+        }
+
+        /* Enhanced services grid */
+        .services {
+            padding: calc(var(--header-height) + 4rem) 5% 6rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .service-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glass);
+            border-radius: 28px;
+            padding: 3.5rem 2.5rem;
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary-purple);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            color: var(--primary-purple);
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+        }
+
+        .service-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            color: var(--text-light);
+            letter-spacing: -0.01em;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        /* Project card specific styling */
+        .project-card {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.25), 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .project-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-purple);
+            position: relative;
+        }
+
+        .project-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+            border-radius: 1px;
+        }
+
+        /* Enhanced project section styling */
+        .content-section {
+            position: relative;
+            margin-bottom: 4rem;
+        }
+
+        .content-section:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+        }
+
+        .content-section h2 {
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+            border-radius: 2px;
+        }
+
+        /* Project status badge */
+        .project-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--primary-purple);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-purple);
+            margin-bottom: 1rem;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .project-badge.live {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .project-badge.enterprise {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        /* Project action buttons */
+        .project-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid var(--primary-purple);
+            border-radius: 12px;
+            color: var(--primary-purple);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            background: var(--primary-purple);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .project-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Mentorship card specific styling */
+        .mentorship-card {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mentorship-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+        }
+
+        .mentorship-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.25), 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .mentorship-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-purple);
+            position: relative;
+        }
+
+        /* Content sections */
+        .content-section {
+            margin-bottom: 5rem;
+            margin-top: 3rem;
+            padding: 3rem 0;
+            min-height: 250px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 2rem;
+        }
+
+        .content-section h2 {
+            font-size: clamp(2rem, 3vw, 3.2rem);
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            margin-top: 0 !important;
+            color: var(--primary-purple);
+            position: relative;
+            padding-bottom: 1.5rem;
+            z-index: 2;
+            letter-spacing: -0.02em;
+        }
+
+        .content-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-purple), var(--secondary-purple));
+            border-radius: 2px;
+        }
+
+        .content-section h3 {
+            font-size: clamp(1.4rem, 2vw, 1.8rem);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-section p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Disable paragraph hiding on content sections to avoid fluctuation */
+        .content-section.hide-paragraphs > p { opacity: 1; transform: none; max-height: none; margin-bottom: 2rem; overflow: visible; }
+        .content-section.hide-paragraphs .service-card p,
+        .content-section.hide-paragraphs .feature-card p,
+        .content-section.hide-paragraphs .project-card p,
+        .content-section.hide-paragraphs .mentorship-card p,
+        .content-section.hide-paragraphs .stat-card p { opacity: 1; transform: none; max-height: none; margin-bottom: inherit; overflow: visible; }
+
+        /* Enhanced contact form */
+        .contact-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glass);
+            border-radius: 28px;
+            padding: 4.5rem;
+            margin: 4rem 0;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Address section styling */
+        .address-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .address-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .address-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .address-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .address-details h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .address-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .contact-item svg {
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .map-container {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 16px;
+        }
+
+        .contact-form {
+            max-width: 700px;
+            margin: 0 auto;
+            display: grid;
+            gap: 2.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        /* Remove fieldset borders completely */
+        fieldset {
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-width: 0 !important;
+            border-style: none !important;
+            border-color: transparent !important;
+            outline: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+        }
+
+        .contact-form fieldset {
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-width: 0 !important;
+            border-style: none !important;
+            border-color: transparent !important;
+            outline: none !important;
+        }
+
+        .contact-form fieldset legend {
+            display: none;
+        }
+
+        /* Override any inline styles on fieldset */
+        fieldset[style] {
+            border: none !important;
+            border-width: 0 !important;
+            border-style: none !important;
+            border-color: transparent !important;
+        }
+
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            width: 100%;
+            padding: 1.4rem 2rem;
+            background: transparent;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 16px;
+            color: var(--text-light) !important;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            font-family: inherit;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-focus-ring-color: transparent;
+        }
+
+        .contact-form input:hover,
+        .contact-form textarea:hover,
+        .contact-form select:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+            background: rgba(139, 92, 246, 0.02);
+            box-shadow: none;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus {
+            outline: none !important;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 10px rgba(139, 92, 246, 0.2);
+            background: rgba(139, 92, 246, 0.05);
+            color: var(--text-light) !important;
+        }
+
+        .contact-form input:active,
+        .contact-form textarea:active,
+        .contact-form select:active {
+            outline: none !important;
+            border-color: var(--primary-purple);
+            color: var(--text-light) !important;
+        }
+
+        /* Prevent autofill from making fields white */
+        .contact-form input:-webkit-autofill,
+        .contact-form input:-webkit-autofill:hover,
+        .contact-form input:-webkit-autofill:focus,
+        .contact-form input:-webkit-autofill:active {
+            -webkit-text-fill-color: var(--text-light) !important;
+            -webkit-box-shadow: 0 0 0px 1000px rgba(10, 10, 10, 0.9) inset !important;
+            box-shadow: 0 0 0px 1000px rgba(10, 10, 10, 0.9) inset !important;
+            border: 2px solid rgba(139, 92, 246, 0.4) !important;
+            outline: none !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .contact-form textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .contact-form select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+            padding-right: 3rem;
+            background-color: rgba(10, 10, 10, 0.9) !important;
+        }
+
+        .contact-form select option {
+            background: #0A0A0A !important;
+            color: #ffffff !important;
+            border: none;
+            padding: 1rem;
+        }
+
+        .contact-form select option:hover {
+            background: rgba(139, 92, 246, 0.3) !important;
+            color: #ffffff !important;
+        }
+
+        .contact-form select option:checked,
+        .contact-form select option:focus {
+            background: var(--primary-purple) !important;
+            color: #ffffff !important;
+        }
+
+        .contact-form select option:disabled {
+            color: rgba(255, 255, 255, 0.4) !important;
+            font-style: italic;
+            background: #0A0A0A !important;
+        }
+
+        /* Force dark background for select dropdown in various browsers */
+        .contact-form select::-ms-expand {
+            display: none;
+        }
+
+        .contact-form select::-webkit-select-option {
+            background: #0A0A0A !important;
+            color: #ffffff !important;
+        }
+
+        /* Custom Dropdown with Smooth Animations */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-dropdown-select {
+            width: 100%;
+            padding: 1.4rem 3rem 1.4rem 2rem;
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 16px;
+            color: var(--text-light) !important;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: inherit;
+            outline: none !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            box-shadow: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .custom-dropdown-select:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+            background: rgba(139, 92, 246, 0.02);
+            color: var(--text-light) !important;
+        }
+
+        .custom-dropdown-select:focus {
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 10px rgba(139, 92, 246, 0.2);
+            background: rgba(139, 92, 246, 0.05);
+            outline: none !important;
+            color: var(--text-light) !important;
+        }
+
+        .custom-dropdown-select:active {
+            outline: none !important;
+            border-color: var(--primary-purple);
+            color: var(--text-light) !important;
+        }
+
+        .custom-dropdown-select.selected {
+            color: var(--text-light) !important;
+        }
+
+        .custom-dropdown-select.placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .custom-dropdown-text {
+            color: inherit;
+        }
+
+        .custom-dropdown-arrow {
+            position: absolute;
+            right: 1rem;
+            width: 1rem;
+            height: 1rem;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-dropdown.open .custom-dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .custom-dropdown-options {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.98);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 16px;
+            overflow: hidden;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .custom-dropdown.open .custom-dropdown-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            max-height: 400px;
+        }
+
+        .custom-dropdown-option {
+            padding: 1rem 2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .custom-dropdown-option:last-child {
+            border-bottom: none;
+        }
+
+        .custom-dropdown-option:hover {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--text-light);
+            padding-left: 2.5rem;
+        }
+
+        .custom-dropdown-option.selected {
+            background: rgba(139, 92, 246, 0.3);
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+
+        .custom-dropdown-option.disabled {
+            color: rgba(255, 255, 255, 0.4);
+            font-style: italic;
+            cursor: not-allowed;
+        }
+
+        .custom-dropdown-option.disabled:hover {
+            background: transparent;
+            padding-left: 2rem;
+        }
+
+        /* Hide native select but keep it for form submission */
+        .contact-form select.native-select {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            width: 0;
+        }
+
+        /* Stats and feature cards */
+        .stats-grid, .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card, .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .stat-card:hover, .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.25), 0 0 15px rgba(139, 92, 246, 0.2);
+            border-color: var(--primary-purple);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-purple);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h4 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced footer */
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            text-align: center;
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid var(--border-glass);
+            position: relative;
+            z-index: 10;
+            margin-top: 2rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-purple);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 1200px) {
+            .section-subtitle {
+                font-size: clamp(1rem, 2.2vw, 1.3rem);
+                max-width: 88%;
+                padding: 0 1.2rem;
+            }
+            
+            .page-hero .section-subtitle {
+                font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+                max-width: 92%;
+                padding: 0 1.8rem;
+            }
+        }
+
+        /* Mobile-specific fixes to prevent fluctuation */
+        @media (max-width: 768px) {
+            /* Prevent horizontal scrolling and fluctuation */
+            body {
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                font-size: 16px;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                position: relative;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            /* Ensure main content can scroll */
+            main {
+                overflow: visible;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            /* Prevent zoom on input focus */
+            input, textarea, select {
+                font-size: 16px !important;
+                -webkit-text-size-adjust: 100%;
+            }
+            
+            /* Stabilize container widths */
+            .container, .page-content, .hero-content {
+                width: 100%;
+                max-width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                box-sizing: border-box;
+            }
+            
+            /* Fix text sizing and prevent zoom */
+            h1, h2, h3, h4, h5, h6, p, span, div {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+                word-wrap: break-word;
+                hyphens: auto;
+                -webkit-hyphens: auto;
+                -ms-hyphens: auto;
+            }
+            
+            /* Stabilize hero section */
+            .hero {
+                min-height: 100vh;
+                height: auto;
+                max-height: none;
+                overflow: visible;
+            }
+            
+            /* Ensure all pages can scroll */
+            .page {
+                overflow: visible;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .page-content {
+                overflow: visible;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .hero-content {
+                padding: 2rem 1rem;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .hero h1 {
+                font-size: 2rem !important;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+                word-wrap: break-word;
+            }
+            
+            .hero p {
+                font-size: 1rem !important;
+                line-height: 1.5;
+                margin-bottom: 1.5rem;
+                word-wrap: break-word;
+            }
+            
+            /* Stabilize page-hero */
+            .page-hero {
+                padding: 1rem 0.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .page-hero h1 {
+                font-size: 1.8rem !important;
+                line-height: 1.2;
+                margin-bottom: 0.8rem;
+                word-wrap: break-word;
+            }
+            
+            .page-hero .section-subtitle {
+                font-size: 1rem !important;
+                line-height: 1.4;
+                margin-bottom: 1.5rem;
+                word-wrap: break-word;
+            }
+            
+            /* Fix content sections */
+            .content-section {
+                padding: 1.5rem 0.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .content-section h2 {
+                font-size: 1.5rem !important;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+                word-wrap: break-word;
+            }
+            
+            .content-section p {
+                font-size: 0.95rem !important;
+                line-height: 1.5;
+                margin-bottom: 1rem;
+                word-wrap: break-word;
+            }
+            
+            /* Fix buttons */
+            .cta-button {
+                font-size: 0.9rem !important;
+                padding: 0.8rem 1.5rem;
+                margin: 0.5rem;
+                white-space: nowrap;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                border-top: 1px solid var(--border-glass);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-section {
+                padding: 3rem 2rem;
+            }
+
+            .address-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .address-card {
+                padding: 2rem;
+            }
+
+            .map-container iframe {
+                height: 300px;
+            }
+
+            .footer-links {
+                gap: 1.5rem;
+            }
+
+            .content-section {
+                padding: 1.5rem 0;
+                margin-bottom: 3rem;
+            }
+
+            .content-section h2 {
+                font-size: clamp(1.6rem, 4vw, 2.2rem);
+                margin-bottom: 1.5rem;
+            }
+
+            .content-section p {
+                font-size: 1rem;
+                line-height: 1.7;
+                text-align: left;
+            }
+
+            .section-subtitle {
+                font-size: clamp(1rem, 3.5vw, 1.25rem);
+                margin-bottom: 2.5rem;
+                padding: 0 1.5rem;
+                max-width: 92%;
+                line-height: 1.6;
+            }
+
+            .page-hero .section-subtitle {
+                font-size: clamp(1.1rem, 4vw, 1.35rem);
+                margin-bottom: 3rem;
+                padding: 0 2rem;
+                max-width: 95%;
+                line-height: 1.7;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-subtitle {
+                font-size: clamp(0.95rem, 4vw, 1.15rem);
+                margin-bottom: 2rem;
+                padding: 0 1rem;
+                line-height: 1.5;
+                max-width: 95%;
+            }
+
+            .page-hero .section-subtitle {
+                font-size: clamp(1rem, 4.5vw, 1.25rem);
+                margin-bottom: 2.5rem;
+                padding: 0 1.5rem;
+                max-width: 98%;
+                line-height: 1.6;
+            }
+            
+            /* Extra small mobile fixes for better readability */
+            body {
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem !important;
+                line-height: 1.1;
+                margin-bottom: 0.8rem;
+            }
+            
+            .hero p {
+                font-size: 0.9rem !important;
+                line-height: 1.4;
+                margin-bottom: 1.2rem;
+            }
+            
+            .page-hero h1 {
+                font-size: 1.5rem !important;
+                line-height: 1.1;
+                margin-bottom: 0.6rem;
+            }
+            
+            .content-section h2 {
+                font-size: 1.3rem !important;
+                line-height: 1.1;
+                margin-bottom: 0.8rem;
+            }
+            
+            .content-section p {
+                font-size: 0.85rem !important;
+                line-height: 1.4;
+                margin-bottom: 0.8rem;
+            }
+            
+            .cta-button {
+                font-size: 0.8rem !important;
+                padding: 0.7rem 1.2rem;
+                margin: 0.3rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .service-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .stats-grid, .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-section {
+                padding: 5.5rem 0;
+                margin-bottom: 2.5rem;
+            }
+
+            .content-section h2 {
+                font-size: clamp(1.4rem, 5vw, 1.8rem);
+                margin-bottom: 1rem;
+            }
+
+            .content-section p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .section-subtitle {
+                font-size: clamp(0.9rem, 5vw, 1.05rem);
+                margin-bottom: 1.5rem;
+                padding: 0 0.5rem;
+                line-height: 1.4;
+                max-width: 98%;
+            }
+
+            .page-hero .section-subtitle {
+                font-size: clamp(0.95rem, 5.5vw, 1.15rem);
+                margin-bottom: 2rem;
+                padding: 0 1rem;
+                max-width: 100%;
+                line-height: 1.5;
+            }
+
+            .content-section {
+                padding: 0.8rem 0;
+                margin-bottom: 2rem;
+            }
+
+            .content-section h2 {
+                font-size: clamp(1.2rem, 6vw, 1.6rem);
+                margin-bottom: 0.8rem;
+            }
+
+            .content-section p {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+        }
+
+        /* Animation improvements */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Technology stack showcase */
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-badge {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary-purple);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid var(--border-glass);
+        }
+
+        /* Accessibility improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Focus styles for better accessibility */
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus,
+        .cta-button:focus {
+            outline: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+        
+        .custom-dropdown-select:focus {
+            outline: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+
+        /* Remove all outlines from form elements globally */
+        .contact-form *:focus {
+            outline: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+
+        /* Ensure text stays white when fields are filled */
+        .contact-form input[type="text"],
+        .contact-form input[type="email"],
+        .contact-form input[type="tel"],
+        .contact-form textarea {
+            color: var(--text-light) !important;
+        }
+
+        .contact-form input[type="text"]:not(:placeholder-shown),
+        .contact-form input[type="email"]:not(:placeholder-shown),
+        .contact-form input[type="tel"]:not(:placeholder-shown),
+        .contact-form textarea:not(:placeholder-shown) {
+            color: var(--text-light) !important;
+            background: rgba(10, 10, 10, 0.9) !important;
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-purple);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 1000;
+            border-radius: 4px;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+    </style>
+    
+    <!-- Enhanced JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "GLOBONIKS",
+        "alternateName": ["Globoniks", "globoniks", "globonics", "Globonics"],
+        "description": "Leading software development company specializing in MERN stack, mobile apps, and tech mentorship programs. Expert developers in React, Node.js, MongoDB.",
+        "url": "https://globoniks.com",
+        "logo": "https://globoniks.com/full_logo.png",
+        "foundingDate": "2024",
+        "founder": {
+            "@type": "Person",
+            "name": "GLOBONIKS Team"
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "361, Third Floor, Medallion 68",
+            "addressLocality": "Medallion 68, Sector 68, Sahibzada Ajit Singh Nagar",
+            "addressRegion": "Punjab",
+            "postalCode": "160062",
+            "addressCountry": "IN"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+91-9988-909-556",
+            "contactType": "customer service",
+            "email": "info@globoniks.com"
+        },
+        "sameAs": [
+            "https://globoniks.com",
+            "https://www.linkedin.com/company/globoniks",
+            "https://github.com/globoniks"
+        ],
+        "offers": [
+            {
+                "@type": "Offer",
+                "name": "MERN Stack Development",
+                "description": "Full-stack web application development using MongoDB, Express.js, React, and Node.js"
+            },
+            {
+                "@type": "Offer",
+                "name": "Mobile App Development",
+                "description": "Cross-platform mobile applications using React Native and Flutter"
+            },
+            {
+                "@type": "Offer",
+                "name": "Tech Mentorship Programs",
+                "description": "Revolutionary tech mentorship programs for career advancement"
+            },
+            {
+                "@type": "Offer",
+                "name": "Custom Software Development",
+                "description": "Tailored software solutions for businesses of all sizes"
+            }
+        ],
+        "serviceArea": {
+            "@type": "Country",
+            "name": "India"
+        },
+        "knowsAbout": [
+            "MERN Stack Development",
+            "React.js",
+            "Node.js",
+            "MongoDB",
+            "Express.js",
+            "Mobile App Development",
+            "React Native",
+            "Flutter",
+            "Software Development",
+            "Tech Mentorship",
+            "Web Development",
+            "Full-Stack Development"
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Particles background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo" onclick="showPage('home')">
+                <div class="logo-icon">
+                    <!-- Container for proper positioning -->
+                    <div class="logo-container" style="width: 60px; height: 60px; position: relative;">
+                        <!-- Full Logo -->
+                        <img src="full logo.svg" alt="GLOBONIKS Logo" class="logo-full" style="width: 60px; height: 60px; pointer-events: none;" loading="eager" width="60" height="60">
+                    </div>
+                </div>
+                <span class="logo-text">GLOBONIKS</span>
+            </div>
+            <ul class="nav-links" id="navLinks" role="navigation" aria-label="Main navigation">
+                <li><a href="#" onclick="showPage('home')" class="active" aria-current="page">Home</a></li>
+                <li><a href="#" onclick="showPage('services')" aria-label="View our software development services">Services</a></li>
+                <li><a href="#" onclick="showPage('about')" aria-label="Learn about GLOBONIKS team and company">About Us</a></li>
+                <li><a href="#" onclick="showPage('projects')" aria-label="View our software development portfolio">Projects</a></li>
+                <li><a href="#" onclick="showPage('mentorship')" aria-label="Learn about our tech mentorship programs">Mentorship</a></li>
+                <li><a href="#" onclick="showPage('contact')" aria-label="Contact us for a free consultation">Contact</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle mobile navigation menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+        </nav>
+    </header>
+
+    <!-- Home Page -->
+    <main class="page active" id="home">
+        <section class="hero" role="banner" id="main-content">
+            <div class="hero-content">
+                <h1>GLOBONIKS - Premium Software Solutions</h1>
+                <p>GLOBONIKS delivers cutting-edge software development services including MERN stack applications, React development, Node.js expertise, mobile app development, and revolutionary tech mentorship programs. We transform your business with expert developers specializing in MongoDB, Express.js, React, and Node.js technologies.</p>
+                <div class="hero-buttons">
+                    <button class="cta-button" onclick="showPage('services')" aria-label="Explore our software development services">Explore Services</button>
+                    <button class="cta-button secondary" onclick="showPage('contact')" aria-label="Get a free quote for your project">Get Quote</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="services" role="main" aria-labelledby="services-heading">
+            <h2 id="services-heading" class="section-title">Our Core Services</h2>
+            <p class="section-subtitle">Comprehensive software development solutions tailored to your business needs</p>
+            
+            <div class="services-grid" role="list" aria-label="Software development services">
+                <article class="service-card animate-on-scroll" role="listitem">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16,18 22,12 16,6"></polyline>
+                            <polyline points="8,6 2,12 8,18"></polyline>
+                        </svg>
+                    </div>
+                    <h3>MERN Stack Development</h3>
+                    <p>Full-stack web applications using MongoDB, Express.js, React, and Node.js for scalable, modern solutions. Expert developers delivering high-performance applications.</p>
+                </article>
+                
+                <article class="service-card animate-on-scroll" role="listitem">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <h3>Mobile App Development</h3>
+                    <p>Native iOS/Android and cross-platform mobile applications with exceptional user experiences. React Native and Flutter expertise for all platforms.</p>
+                </article>
+                
+                <article class="service-card animate-on-scroll" role="listitem">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <path d="M9 9h6v6H9z"></path>
+                        </svg>
+                    </div>
+                    <h3>Custom Software Solutions</h3>
+                    <p>Bespoke software applications built from scratch to match your unique business requirements. Tailored solutions for enterprise and startup needs.</p>
+                </article>
+                
+                <article class="service-card animate-on-scroll" role="listitem">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                    </div>
+                    <h3>Software Updates & Maintenance</h3>
+                    <p>Keep your applications secure, efficient, and up-to-date with our comprehensive maintenance services. 24/7 support and monitoring included.</p>
+                </article>
+                
+                <article class="service-card animate-on-scroll" role="listitem">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                    </div>
+                    <h3>Tech Mentorship Programs</h3>
+                    <p>Revolutionary hands-on mentorship that transforms careers through real-world project experience. Learn MERN stack, mobile development, and leadership skills.</p>
+                </article>
+                
+                <article class="service-card animate-on-scroll" role="listitem">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
+                        </svg>
+                    </div>
+                    <h3>Digital Transformation</h3>
+                    <p>Modernize your business processes with cutting-edge technology solutions and cloud migration. Complete digital overhaul for competitive advantage.</p>
+                </article>
+            </div>
+        </section>
+        
+        <!-- SEO Content Section -->
+        <section class="seo-content" style="display: none;" aria-hidden="true">
+            <h2>Software Development Services</h2>
+            <p>GLOBONIKS is a leading software development company specializing in MERN stack development, full-stack web applications, mobile app development, custom software solutions, and enterprise software development. Our expert developers use cutting-edge technologies including React.js, Node.js, MongoDB, Express.js, React Native, Flutter, and modern web frameworks to deliver high-performance applications.</p>
+            <p>We offer comprehensive software development services including web application development, mobile application development, custom software development, software consulting, digital transformation, cloud migration, API development, database design, UI/UX design, software testing, quality assurance, and ongoing software maintenance and support.</p>
+            <p>Our tech mentorship programs provide hands-on learning experiences in MERN stack development, mobile development, full-stack development, software engineering, programming languages, web development, app development, and career advancement in the technology industry.</p>
+            <p>Located in Punjab, India, GLOBONIKS serves clients globally with premium software development solutions, competitive pricing, 24/7 support, and guaranteed quality. We specialize in startup software development, enterprise software solutions, e-commerce development, SaaS applications, and custom business software.</p>
+            
+            <!-- SEO Content for Misspellings -->
+            <h2>Looking for GLOBONIKS?</h2>
+            <p>If you're searching for "globonics" software development, you're looking for GLOBONIKS - the leading software development company. We provide premium MERN stack development, mobile app development, and tech mentorship services.</p>
+            <p>GLOBONIKS is located in Medallion 68, Sector 68, Sahibzada Ajit Singh Nagar, Punjab 160062. Our expert developers specialize in MERN stack, mobile applications, custom software solutions, and revolutionary tech mentorship programs.</p>
+        </section>
+    </main>
+
+    <!-- Services Page -->
+    <main class="page" id="services">
+        <div class="page-content">
+            <header class="page-hero">
+                <h1>Our Services</h1>
+                <p class="section-subtitle">Comprehensive software development solutions for the digital age</p>
+            </header>
+
+            <div class="content-section">
+                <h2>MERN Stack Development</h2>
+                <p>We specialize in modern web application development using the powerful MERN stack (MongoDB, Express.js, React, Node.js). This technology combination enables us to create fast, scalable, and maintainable applications that grow with your business.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                        </div>
+                        <h4>Native iOS Development</h4>
+                        <p>Swift and Objective-C applications optimized for iPhone and iPad with platform-specific features.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <h4>Native Android Development</h4>
+                        <p>Kotlin and Java applications for Android devices with Google Play Store optimization.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h4>Cross-Platform Solutions</h4>
+                        <p>React Native and Flutter applications for simultaneous iOS and Android deployment.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                            </svg>
+                        </div>
+                        <h4>UI/UX Design</h4>
+                        <p>Beautiful, intuitive mobile interfaces following platform design guidelines and best practices.</p>
+                    </div>
+                </div>
+
+                <div class="tech-stack">
+                    <span class="tech-badge">React Native</span>
+                    <span class="tech-badge">Flutter</span>
+                    <span class="tech-badge">Swift</span>
+                    <span class="tech-badge">Kotlin</span>
+                    <span class="tech-badge">Firebase</span>
+                    <span class="tech-badge">SQLite</span>
+                    <span class="tech-badge">Push Notifications</span>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Custom Software Development</h2>
+                <p>Every business is unique, and your software should reflect that. We create bespoke applications tailored to your specific requirements, workflows, and business objectives.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h4>Requirements Analysis</h4>
+                        <p>Comprehensive analysis of your business needs to design the perfect software solution.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h4>System Architecture</h4>
+                        <p>Scalable, maintainable architecture designed for performance and future growth.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <circle cx="12" cy="16" r="1"></circle>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h4>Security First</h4>
+                        <p>Built-in security measures, encryption, and compliance with industry standards.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                            </svg>
+                        </div>
+                        <h4>Integration Ready</h4>
+                        <p>Seamless integration with existing systems, APIs, and third-party services.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Software Updates & Maintenance</h2>
+                <p>Keep your applications running smoothly with our comprehensive maintenance and update services. We ensure your software stays secure, efficient, and compatible with the latest technologies.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h4>Security Updates</h4>
+                        <p>Regular security patches and vulnerability assessments to protect your data and users.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
+                            </svg>
+                        </div>
+                        <h4>Performance Optimization</h4>
+                        <p>Continuous monitoring and optimization to maintain peak application performance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                        </div>
+                        <h4>Feature Updates</h4>
+                        <p>Regular feature enhancements and functionality improvements based on user feedback.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <h4>24/7 Support</h4>
+                        <p>Round-the-clock technical support to resolve issues and maintain system uptime.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Why Choose Our Services?</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Client Satisfaction</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support Available</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Technologies Mastered</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30%</div>
+                        <div class="stat-label">Faster Delivery</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- About Us Page -->
+    <main class="page" id="about">
+        <div class="page-content">
+            <header class="page-hero">
+                <h1>About GLOBONIKS</h1>
+                <p class="section-subtitle">Innovation meets passion in everything we do</p>
+            </header>
+
+            <div class="content-section">
+                <h2>Our Story</h2>
+                <p>Founded in 2024, GLOBONIKS was born from a vision to revolutionize how businesses approach software development and technology education. We're not just another development company — we're innovators, mentors, and problem-solvers who believe in the power of fresh perspectives.</p>
+                <p>As a new company, we bring unmatched enthusiasm and dedication to every project. Our team consists of passionate developers who have worked with leading tech companies and are now channeling that expertise into building something extraordinary.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h4>Vision-Driven</h4>
+                        <p>Revolutionizing software development and tech education through innovative approaches and fresh perspectives.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Expert Team</h4>
+                        <p>Passionate developers with experience from leading tech companies, bringing unmatched expertise to every project.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
+                            </svg>
+                        </div>
+                        <h4>Innovation Focus</h4>
+                        <p>Building something extraordinary by combining cutting-edge technology with creative problem-solving approaches.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Our Mission</h2>
+                <p>To bridge the gap between traditional software development and modern business needs while revolutionizing tech education through mentorship rather than conventional training methods. We strive to create digital solutions that not only meet today's requirements but anticipate tomorrow's challenges.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h4>Future-Ready Solutions</h4>
+                        <p>Creating digital solutions that anticipate tomorrow's challenges while meeting today's requirements.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10,9 9,9 8,9"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Revolutionary Education</h4>
+                        <p>Transforming tech education through hands-on mentorship rather than conventional training methods.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h4>Business Integration</h4>
+                        <p>Bridging the gap between traditional development and modern business needs seamlessly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Why Choose Us?</h2>
+                <p>We bring a unique combination of fresh perspectives, cutting-edge technology, and personalized attention to every project. Our approach ensures exceptional quality and long-term partnerships.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
+                            </svg>
+                        </div>
+                        <h4>Fresh Perspectives</h4>
+                        <p>Being new means we're not bound by outdated practices. We bring innovative solutions and cutting-edge technologies to every project.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                            </svg>
+                        </div>
+                        <h4>Agile Development</h4>
+                        <p>Iterative development with regular updates and feedback loops to keep you involved in every step of the process.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20,6 9,17 4,12"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Quality Assurance</h4>
+                        <p>Rigorous testing and quality checks to ensure your software is bug-free, secure, and performs optimally.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h4>Personalized Attention</h4>
+                        <p>With a focused client base, every project receives dedicated attention from our core team, ensuring exceptional quality.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                            </svg>
+                        </div>
+                        <h4>Competitive Pricing</h4>
+                        <p>Premium services at competitive rates while building our reputation in the market.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Partnership Approach</h4>
+                        <p>We don't just deliver projects; we build long-term partnerships, growing alongside our clients' success.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Our Achievements</h2>
+                <p>Since our founding in 2024, we've achieved remarkable success in delivering high-quality software solutions and building lasting client relationships.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Client Satisfaction</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Projects Delivered</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support Available</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2024</div>
+                        <div class="stat-label">Founded</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Projects Page -->
+    <main class="page" id="projects">
+        <div class="page-content">
+            <header class="page-hero">
+                <h1>Our Projects</h1>
+                <p class="section-subtitle">Quality over quantity - Every project tells a story of innovation</p>
+            </header>
+
+            <div class="content-section">
+                <h2>EduMapping - College Placement Management Platform<span class="project-badge live">Live</span></h2>
+                <p>Comprehensive placement service platform for colleges and universities, connecting students with top employers. EduMapping streamlines the entire placement process from job posting to candidate selection, featuring automated matching algorithms, interview scheduling, and comprehensive analytics. The platform is live and actively serving educational institutions, helping colleges improve placement rates and students secure their dream careers.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <path d="M20 8v6"></path>
+                                <path d="M23 11h-6"></path>
+                            </svg>
+                        </div>
+                        <h4>Student-Employer Matching</h4>
+                        <p>Intelligent algorithm-based matching system connecting qualified students with relevant job opportunities based on skills and preferences.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <h4>Interview Scheduling</h4>
+                        <p>Automated interview scheduling system with calendar integration, reminder notifications, and conflict resolution.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <h4>Placement Analytics</h4>
+                        <p>Comprehensive dashboard with real-time placement statistics, success rates, and performance metrics for colleges and administrators.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h4>Multi-College Management</h4>
+                        <p>Centralized platform supporting multiple colleges with role-based access control and institutional customization.</p>
+                    </div>
+                </div>
+
+                    <div class="tech-stack">
+                        <span class="tech-badge">MERN Stack</span>
+                        <span class="tech-badge">React</span>
+                        <span class="tech-badge">Node.js</span>
+                        <span class="tech-badge">MongoDB</span>
+                        <span class="tech-badge">Express.js</span>
+                        <span class="tech-badge">JWT Authentication</span>
+                        <span class="tech-badge">RESTful API</span>
+                </div>
+                <div class="project-actions">
+                    <a href="https://edumapping.com" target="_blank" rel="noopener noreferrer" class="project-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15,3 21,3 21,9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        View Live Site
+                    </a>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Pharmaceutical Supply Chain & Production Management System<span class="project-badge enterprise">Enterprise</span></h2>
+                <p>End-to-end enterprise solution for pharmaceutical companies managing the complete order-to-delivery lifecycle. This comprehensive platform handles order placement, inventory management, production scheduling, quality control, packaging workflows, and advanced analytics. The system ensures regulatory compliance, batch tracking, and real-time visibility across the entire supply chain, optimizing operations and reducing production costs by up to 35%.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                <path d="M9 14l2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <h4>Order Management</h4>
+                        <p>Complete order processing system with automated workflows, approval chains, and real-time order tracking from placement to fulfillment.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <path d="M9 9h6v6H9z"></path>
+                                <path d="M9 1v6"></path>
+                                <path d="M9 17v6"></path>
+                                <path d="M15 1v6"></path>
+                                <path d="M15 17v6"></path>
+                                <path d="M1 9h6"></path>
+                                <path d="M17 9h6"></path>
+                            </svg>
+                        </div>
+                        <h4>Production Planning</h4>
+                        <p>Advanced production scheduling with resource allocation, capacity planning, and automated workflow optimization for manufacturing efficiency.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h4>Quality Control & Compliance</h4>
+                        <p>Integrated quality assurance system with batch tracking, regulatory compliance checks, and comprehensive audit trails for pharmaceutical standards.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path>
+                                <circle cx="18" cy="18" r="3"></circle>
+                            </svg>
+                        </div>
+                        <h4>Advanced Analytics</h4>
+                        <p>Real-time business intelligence with predictive analytics, production metrics, supply chain insights, and customizable reporting dashboards.</p>
+                    </div>
+                </div>
+
+                    <div class="tech-stack">
+                        <span class="tech-badge">React</span>
+                        <span class="tech-badge">Node.js</span>
+                        <span class="tech-badge">PostgreSQL</span>
+                        <span class="tech-badge">Express.js</span>
+                        <span class="tech-badge">Redis</span>
+                        <span class="tech-badge">Docker</span>
+                        <span class="tech-badge">Microservices</span>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Handcrafted Artisan E-Commerce Platform<span class="project-badge">E-Commerce</span></h2>
+                <p>Specialized e-commerce solution designed exclusively for handcrafted products and artisan marketplaces. This platform empowers crafters and artisans to showcase and sell their unique creations with features including vendor management, custom product galleries, commission-based transactions, and integrated payment processing. The platform supports multiple sellers, handles inventory for handmade items, and provides tools for artisans to manage their online presence, resulting in increased sales and better market reach for independent creators.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                        </div>
+                        <h4>Multi-Vendor Marketplace</h4>
+                        <p>Comprehensive vendor management system allowing multiple artisans to create stores, manage products, and process orders independently.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21,15 16,10 5,21"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Product Gallery & Showcase</h4>
+                        <p>Rich media galleries with high-resolution image support, video demonstrations, and detailed product descriptions for showcasing handcrafted items.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                        <h4>Payment & Commission</h4>
+                        <p>Secure payment processing with automated commission calculations, vendor payouts, and financial reporting for marketplace operators.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Artisan Tools</h4>
+                        <p>Dedicated dashboard for artisans with order management, inventory tracking, sales analytics, and customer communication tools.</p>
+                    </div>
+                </div>
+
+                    <div class="tech-stack">
+                        <span class="tech-badge">MERN Stack</span>
+                        <span class="tech-badge">React</span>
+                        <span class="tech-badge">MongoDB</span>
+                        <span class="tech-badge">Stripe API</span>
+                        <span class="tech-badge">Cloudinary</span>
+                        <span class="tech-badge">Redux</span>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Direct Sales Agent Management SaaS<span class="project-badge">SaaS Platform</span></h2>
+                <p>Comprehensive Software-as-a-Service platform designed specifically for direct sales organizations and independent sales agents. This cloud-based solution streamlines sales operations with lead management, customer relationship tracking, commission calculations, performance analytics, and team collaboration tools. The platform enables sales teams to manage their entire sales pipeline, track conversions, automate follow-ups, and generate detailed reports, resulting in improved sales productivity and increased revenue for direct sales businesses.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Lead Management</h4>
+                        <p>Advanced CRM functionality with lead capture, qualification, assignment, and automated nurturing workflows for sales pipeline optimization.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <h4>Commission Tracking</h4>
+                        <p>Automated commission calculation system with multi-tier structures, performance-based bonuses, and real-time earnings tracking for sales agents.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path>
+                            </svg>
+                        </div>
+                        <h4>Sales Analytics</h4>
+                        <p>Comprehensive reporting dashboard with sales performance metrics, conversion rates, revenue forecasting, and team performance comparisons.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <h4>Team Collaboration</h4>
+                        <p>Built-in communication tools, task management, shared calendars, and team performance dashboards for enhanced sales team coordination.</p>
+                    </div>
+                </div>
+
+                    <div class="tech-stack">
+                        <span class="tech-badge">React</span>
+                        <span class="tech-badge">Node.js</span>
+                        <span class="tech-badge">PostgreSQL</span>
+                        <span class="tech-badge">Express.js</span>
+                        <span class="tech-badge">SaaS Architecture</span>
+                        <span class="tech-badge">Stripe Billing</span>
+                        <span class="tech-badge">AWS</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mentorship Page -->
+    <main class="page" id="mentorship">
+        <div class="page-content">
+            <header class="page-hero">
+                <h1>Revolutionary Tech Mentorship</h1>
+                <p class="section-subtitle">Beyond traditional coaching - Real-world learning that transforms careers</p>
+            </header>
+
+            <div class="content-section">
+                <h2>Why Traditional Coaching Fails</h2>
+                <p>Traditional tech coaching often relies on spoon-feeding information through lectures, tutorials, and theoretical exercises. This approach creates passive learners who struggle to apply knowledge in real-world scenarios.</p>
+                <p>At GLOBONIKS, we believe in <strong>mentorship over coaching</strong> — a hands-on approach that develops critical thinking, problem-solving skills, and genuine expertise.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h4>Active Learning</h4>
+                        <p>Hands-on approach that develops critical thinking and problem-solving skills through real-world application.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20,6 9,17 4,12"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Practical Application</h4>
+                        <p>Learn through real projects and scenarios rather than theoretical exercises and passive learning.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Expert Guidance</h4>
+                        <p>One-on-one mentorship with experienced developers who guide you to discover solutions independently.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Our Mentorship Philosophy</h2>
+                <p>Our revolutionary approach focuses on hands-on learning, critical thinking development, and real-world project experience. We believe in mentorship over coaching, creating confident developers ready for any challenge.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10,9 9,9 8,9"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Learn by Doing</h4>
+                        <p>Work on real projects with actual clients under expert guidance. Experience the complete software development lifecycle from conception to deployment.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6l4 2"></path>
+                            </svg>
+                        </div>
+                        <h4>Critical Thinking Development</h4>
+                        <p>Instead of providing answers, we guide you to discover solutions independently. This builds lasting problem-solving abilities.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Collaborative Learning</h4>
+                        <p>Work alongside experienced developers, learning through observation, collaboration, and gradual responsibility increase.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                        </div>
+                        <h4>Continuous Feedback</h4>
+                        <p>Regular code reviews, pair programming sessions, and constructive feedback to accelerate your growth.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>MERN Stack Mentorship</h2>
+                <p>Perfect for aspiring full-stack developers. Work on real MERN stack projects while learning MongoDB, Express.js, React, and Node.js through hands-on experience. This comprehensive program covers everything from database design to deployment.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h4>Full-Stack Development</h4>
+                        <p>Complete understanding of frontend, backend, and database technologies in the MERN ecosystem.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10,9 9,9 8,9"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Real Project Experience</h4>
+                        <p>Build actual applications from scratch, learning industry best practices and modern development workflows.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h4>Security & Best Practices</h4>
+                        <p>Learn authentication, authorization, data validation, and security best practices for production applications.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                        </div>
+                        <h4>Deployment & DevOps</h4>
+                        <p>Learn to deploy applications to production with CI/CD pipelines, cloud services, and monitoring.</p>
+                    </div>
+                </div>
+
+                    <div class="tech-stack">
+                        <span class="tech-badge">MongoDB</span>
+                        <span class="tech-badge">Express.js</span>
+                        <span class="tech-badge">React</span>
+                        <span class="tech-badge">Node.js</span>
+                        <span class="tech-badge">TypeScript</span>
+                        <span class="tech-badge">Redux</span>
+                    <span class="tech-badge">3-6 Months</span>
+                    </div>
+                </div>
+
+            <div class="content-section">
+                <h2>Mobile Development Track</h2>
+                <p>Deep dive into mobile app development using React Native or Flutter. Build real mobile applications for iOS and Android platforms with native performance and cross-platform efficiency.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <h4>Cross-Platform Development</h4>
+                        <p>Build apps for both iOS and Android using React Native or Flutter for maximum efficiency.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h4>Native Performance</h4>
+                        <p>Learn to optimize apps for native performance while maintaining code reusability across platforms.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                            </svg>
+                        </div>
+                        <h4>UI/UX Design</h4>
+                        <p>Create beautiful, intuitive mobile interfaces following platform design guidelines and best practices.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <h4>Push Notifications</h4>
+                        <p>Implement push notifications, offline capabilities, and real-time features for engaging user experiences.</p>
+                    </div>
+                </div>
+
+                    <div class="tech-stack">
+                        <span class="tech-badge">React Native</span>
+                        <span class="tech-badge">Flutter</span>
+                        <span class="tech-badge">Firebase</span>
+                        <span class="tech-badge">Redux</span>
+                        <span class="tech-badge">Native Modules</span>
+                    <span class="tech-badge">2-4 Months</span>
+                    </div>
+                </div>
+
+            <div class="content-section">
+                <h2>Leadership & Architecture</h2>
+                <p>For experienced developers transitioning to technical leadership. Learn system design, team management, and architectural decision-making through real scenarios and hands-on experience.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h4>System Design</h4>
+                        <p>Learn to design scalable, maintainable systems that can handle millions of users and massive data loads.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Team Leadership</h4>
+                        <p>Develop skills to lead development teams, manage projects, and mentor junior developers effectively.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h4>Architecture Decisions</h4>
+                        <p>Learn to make critical architectural decisions that impact scalability, performance, and maintainability.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                        </div>
+                        <h4>DevOps & Deployment</h4>
+                        <p>Master CI/CD pipelines, containerization, cloud deployment, and infrastructure management.</p>
+                    </div>
+                </div>
+
+                    <div class="tech-stack">
+                        <span class="tech-badge">System Design</span>
+                        <span class="tech-badge">Team Leadership</span>
+                        <span class="tech-badge">Architecture</span>
+                        <span class="tech-badge">DevOps</span>
+                        <span class="tech-badge">Project Management</span>
+                    <span class="tech-badge">4-8 Months</span>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Success Stories</h2>
+                <p>Our mentorship programs have transformed careers and opened doors to exciting opportunities. Here are some of the remarkable achievements of our mentees.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Job Placement Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3x</div>
+                        <div class="stat-label">Average Salary Increase</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Weeks Average Job Hunt</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Satisfaction Rating</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contact Page -->
+    <main class="page" id="contact">
+        <div class="page-content">
+            <header class="page-hero">
+                <h1>Get In Touch!</h1>
+                <p class="section-subtitle">Ready to transform your business with cutting-edge software solutions? Get in touch for a free consultation.</p>
+            </header>
+
+            <div class="content-section">
+                <h2>Get Your Free Quote</h2>
+                <p>Ready to transform your business with cutting-edge software solutions? Fill out the form below and we'll get back to you within 24 hours with a detailed project analysis and free consultation.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6l4 2"></path>
+                            </svg>
+                        </div>
+                        <h4>24-Hour Response</h4>
+                        <p>We respond to all inquiries within 24 hours with detailed project analysis and recommendations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h4>Free Consultation</h4>
+                        <p>Complimentary 30-minute consultation to discuss your project requirements and provide initial recommendations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h4>Quality Guaranteed</h4>
+                        <p>Every project comes with quality assurance, testing, and 30-day post-launch support included.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h4>Transparent Pricing</h4>
+                        <p>No hidden costs or surprise fees. Clear, competitive pricing with detailed project breakdowns.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Contact Form</h2>
+                <p>Tell us about your project and we'll provide a detailed proposal tailored to your specific needs and budget.</p>
+
+            <section class="contact-section" aria-labelledby="contact-form-heading">
+                <form class="contact-form" id="contactForm" role="form" aria-label="Contact form for project inquiry">
+                    <fieldset>
+                        <legend class="sr-only">Contact Information</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                                <label for="name" class="sr-only">Full Name</label>
+                                <input type="text" id="name" name="name" placeholder="Your Name *" required aria-required="true" aria-describedby="name-error">
+                                <div id="name-error" class="error-message" role="alert" aria-live="polite"></div>
+                        </div>
+                        <div class="form-group">
+                                <label for="email" class="sr-only">Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="Your Email *" required aria-required="true" aria-describedby="email-error">
+                                <div id="email-error" class="error-message" role="alert" aria-live="polite"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                                <label for="company" class="sr-only">Company Name</label>
+                                <input type="text" id="company" name="company" placeholder="Company Name" aria-describedby="company-help">
+                                <div id="company-help" class="sr-only">Optional: Your company name</div>
+                        </div>
+                        <div class="form-group">
+                                <label for="phone" class="sr-only">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" placeholder="Phone Number *" required aria-required="true" aria-describedby="phone-error">
+                                <div id="phone-error" class="error-message" role="alert" aria-live="polite"></div>
+                        </div>
+                    </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend class="sr-only">Project Details</legend>
+                    <div class="form-group">
+                            <label for="service">Service Interest *</label>
+                            <div class="custom-dropdown" data-select-id="service">
+                                <select id="service" name="service" class="native-select" required aria-required="true" aria-describedby="service-help">
+                                    <option value="" disabled selected>Please select a service</option>
+                                    <option value="mern-stack">MERN Stack Development</option>
+                                    <option value="mobile-development">Mobile App Development</option>
+                                    <option value="custom-software">Custom Software Development</option>
+                                    <option value="software-updates">Software Updates & Maintenance</option>
+                                    <option value="mentorship">Tech Mentorship Program</option>
+                                    <option value="consultation">Free Consultation</option>
+                                </select>
+                                <div class="custom-dropdown-select placeholder">
+                                    <span class="custom-dropdown-text">Please select a service</span>
+                                    <svg class="custom-dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6,9 12,15 18,9"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="custom-dropdown-options">
+                                    <div class="custom-dropdown-option disabled" data-value="">Please select a service</div>
+                                    <div class="custom-dropdown-option" data-value="mern-stack">MERN Stack Development</div>
+                                    <div class="custom-dropdown-option" data-value="mobile-development">Mobile App Development</div>
+                                    <div class="custom-dropdown-option" data-value="custom-software">Custom Software Development</div>
+                                    <div class="custom-dropdown-option" data-value="software-updates">Software Updates & Maintenance</div>
+                                    <div class="custom-dropdown-option" data-value="mentorship">Tech Mentorship Program</div>
+                                    <div class="custom-dropdown-option" data-value="consultation">Free Consultation</div>
+                                </div>
+                            </div>
+                            <div id="service-help" class="sr-only">Please select the service you're most interested in</div>
+                    </div>
+                    <div class="form-group">
+                            <label for="budget">Project Budget Range *</label>
+                            <div class="custom-dropdown" data-select-id="budget">
+                                <select id="budget" name="budget" class="native-select" required aria-required="true" aria-describedby="budget-help">
+                                    <option value="" disabled selected>Please select a budget range</option>
+                                    <option value="under-5k">Under $5,000</option>
+                                    <option value="5k-15k">$5,000 - $15,000</option>
+                                    <option value="15k-50k">$15,000 - $50,000</option>
+                                    <option value="50k-100k">$50,000 - $100,000</option>
+                                    <option value="100k-plus">$100,000+</option>
+                                    <option value="mentorship-inquiry">Mentorship Inquiry</option>
+                                </select>
+                                <div class="custom-dropdown-select placeholder">
+                                    <span class="custom-dropdown-text">Please select a budget range</span>
+                                    <svg class="custom-dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6,9 12,15 18,9"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="custom-dropdown-options">
+                                    <div class="custom-dropdown-option disabled" data-value="">Please select a budget range</div>
+                                    <div class="custom-dropdown-option" data-value="under-5k">Under $5,000</div>
+                                    <div class="custom-dropdown-option" data-value="5k-15k">$5,000 - $15,000</div>
+                                    <div class="custom-dropdown-option" data-value="15k-50k">$15,000 - $50,000</div>
+                                    <div class="custom-dropdown-option" data-value="50k-100k">$50,000 - $100,000</div>
+                                    <div class="custom-dropdown-option" data-value="100k-plus">$100,000+</div>
+                                    <div class="custom-dropdown-option" data-value="mentorship-inquiry">Mentorship Inquiry</div>
+                                </div>
+                            </div>
+                            <div id="budget-help" class="sr-only">Select your estimated budget range for planning purposes</div>
+                    </div>
+                    <div class="form-group">
+                            <label for="message">Project Requirements *</label>
+                            <textarea id="message" name="message" placeholder="Tell us about your project requirements, timeline, and specific needs..." required aria-required="true" aria-describedby="message-help"></textarea>
+                            <div id="message-help" class="sr-only">Describe your project requirements, timeline, and any specific needs</div>
+                    </div>
+                    </fieldset>
+                    <button type="submit" class="cta-button" style="width: 100%; margin-top: 1rem;" aria-describedby="submit-help">Get Free Quote & Consultation</button>
+                    <div id="submit-help" class="sr-only">Submit your inquiry to receive a free consultation and quote</div>
+                </form>
+            </section>
+
+            <div class="content-section">
+                <h2>Why Choose GLOBONIKS?</h2>
+                <p>We bring a unique combination of fresh perspectives, cutting-edge technology, and personalized attention to every project. Our approach ensures exceptional quality and long-term partnerships that grow with your business.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"></polygon>
+                            </svg>
+                        </div>
+                        <h4>Future-Ready Solutions</h4>
+                        <p>Scalable, modern solutions using the latest technologies to ensure long-term value and competitive advantage.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h4>Personalized Approach</h4>
+                        <p>Every project receives dedicated attention from our core team, ensuring exceptional quality and tailored solutions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4>Partnership Focus</h4>
+                        <p>We don't just deliver projects; we build long-term partnerships, growing alongside our clients' success.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                            </svg>
+                        </div>
+                        <h4>Competitive Advantage</h4>
+                        <p>Premium services at competitive rates while building our reputation in the market with innovative solutions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Ready to Get Started?</h2>
+                <p>Join satisfied clients who've transformed their businesses with our innovative solutions. Whether you're a startup needing your first application or an established business ready to modernize, we're here to exceed your expectations.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">Free</div>
+                        <div class="stat-label">Initial Consultation</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24hrs</div>
+                        <div class="stat-label">Response Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30-Day</div>
+                        <div class="stat-label">Support Included</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Visit Our Office</h2>
+                <p>Come visit us at our modern office space in Sahibzada Ajit Singh Nagar (SAS Nagar). We're located in the heart of the tech hub with easy access and ample parking.</p>
+                
+                <div class="address-container">
+                    <div class="address-info">
+                        <div class="address-card">
+                            <div class="address-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
+                            <div class="address-details">
+                                <h3>GLOBONIKS Office</h3>
+                                <p class="address-text">361, Third Floor, <strong>Medallion 68</strong><br>Medallion 68, Sector 68, Sahibzada Ajit Singh Nagar<br>Punjab 160062, India</p>
+                                <div class="contact-methods">
+                                    <div class="contact-item">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                        </svg>
+                                        <span>+91-9988-909-556</span>
+                                    </div>
+                                    <div class="contact-item">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                            <polyline points="22,6 12,13 2,6"></polyline>
+                                        </svg>
+                                        <span>info@globoniks.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="map-container">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3429.1234567890123!2d76.7254957!3d30.6831026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390fef04ae6be0dd:0x568585b15674e183!2zMzDCsDQwJzU5LjIiTiA3NsKwNDMnMzEuOCJF!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                            width="100%" 
+                            height="400" 
+                            style="border:0; border-radius: 16px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="GLOBONIKS Office Location - Medallion 68, Sector 68, Sahibzada Ajit Singh Nagar, Punjab"
+                            aria-label="Interactive map showing GLOBONIKS office location at Medallion 68, Sector 68, Sahibzada Ajit Singh Nagar, Punjab 160062">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <nav class="footer-links" role="navigation" aria-label="Footer navigation">
+                <a href="#" onclick="showPage('home')" aria-label="Go to home page">Home</a>
+                <a href="#" onclick="showPage('services')" aria-label="View our services">Services</a>
+                <a href="#" onclick="showPage('about')" aria-label="Learn about us">About</a>
+                <a href="#" onclick="showPage('projects')" aria-label="View our projects">Projects</a>
+                <a href="#" onclick="showPage('mentorship')" aria-label="Learn about mentorship">Mentorship</a>
+                <a href="#" onclick="showPage('contact')" aria-label="Contact us">Contact</a>
+            </nav>
+            <p>&copy; 2025 GLOBONIKS. All rights reserved. GLOBONIKS - Transforming businesses through innovative software development and revolutionary tech mentorship. Choose GLOBONIKS for premium software solutions.</p>
+            <p class="sr-only">GLOBONIKS is a premium software development company specializing in MERN stack development, mobile applications, custom software solutions, and tech mentorship programs. If you searched for "globonics", you found GLOBONIKS - the correct spelling of our company name.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced particle system
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 30 : 60;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Enhanced page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                
+                // Update main content ID for accessibility
+                const currentMainContent = document.getElementById('main-content');
+                if (currentMainContent) {
+                    currentMainContent.removeAttribute('id');
+                }
+                
+                // Add main content ID to the first section of the active page
+                const firstSection = targetPage.querySelector('section');
+                if (firstSection) {
+                    firstSection.id = 'main-content';
+                }
+                
+                // Immediately check for page-hero and initialize scroll effects
+                const pageHero = targetPage.querySelector('.page-hero');
+                if (pageHero) {
+                    setTimeout(handleScrollEffects, 50);
+                }
+            }
+
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find and activate the corresponding nav link
+            const activeLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Reinitialize scroll effects for the new page
+            setTimeout(() => {
+                handleScrollEffects();
+            }, 100);
+            
+            // Also call immediately
+            setTimeout(() => {
+                handleScrollEffects();
+            }, 10);
+
+            // Close mobile menu if open
+            const navLinksContainer = document.getElementById('navLinks');
+            if (navLinksContainer) {
+                navLinksContainer.classList.remove('show');
+            }
+
+            // Update page title for SEO
+            updatePageTitle(pageId);
+        }
+
+        // Update page title based on current page
+        function updatePageTitle(pageId) {
+            const titles = {
+                'home': 'GLOBONIKS - Premium Software Development & Tech Mentorship',
+                'services': 'Our Services - MERN Stack, Mobile Apps & Software Development | GLOBONIKS',
+                'about': 'About Us - Meet the GLOBONIKS Team',
+                'projects': 'Our Projects - Software Development Portfolio | GLOBONIKS',
+                'mentorship': 'Tech Mentorship Programs - Real-World Learning | GLOBONIKS',
+                'contact': 'Contact Us - Get Your Free Quote | GLOBONIKS'
+            };
+            
+            if (titles[pageId]) {
+                document.title = titles[pageId];
+            }
+        }
+
+        // Mobile menu toggle with accessibility
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const menuButton = document.querySelector('.mobile-menu-btn');
+            
+            if (navLinks && menuButton) {
+                const isExpanded = navLinks.classList.contains('show');
+                navLinks.classList.toggle('show');
+                menuButton.setAttribute('aria-expanded', !isExpanded);
+                
+                // Update button text for screen readers
+                if (!isExpanded) {
+                    menuButton.setAttribute('aria-label', 'Close mobile navigation menu');
+                } else {
+                    menuButton.setAttribute('aria-label', 'Open mobile navigation menu');
+                }
+            }
+        }
+
+        // Enhanced form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const button = this.querySelector('.cta-button');
+            const originalText = button.textContent;
+            
+            // Show loading state
+            button.textContent = 'Sending...';
+            button.style.background = 'linear-gradient(45deg, #ffc107, #fd7e14)';
+            button.disabled = true;
+            
+            // Simulate form submission (replace with actual form handling)
+            setTimeout(() => {
+                button.textContent = 'Message Sent Successfully!';
+                button.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                
+                // Reset after delay
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(45deg, var(--primary-purple), var(--secondary-purple))';
+                    button.disabled = false;
+                    this.reset();
+                }, 3000);
+            }, 2000);
+        });
+
+        // Enhanced hero section scroll effects
+        let scrollTimeout;
+        let isScrolling = false;
+        
+        function handleScrollEffects() {
+            // Only target the active page
+            const activePage = document.querySelector('.page.active');
+            if (!activePage) return;
+            
+            const pageHero = activePage.querySelector('.page-hero');
+            const hero = document.querySelector('.hero');
+            const contentSections = activePage.querySelectorAll('.content-section');
+            const scrollY = window.scrollY;
+            
+            // Minimize page hero on scroll
+            if (pageHero) {
+                if (scrollY > 150) {
+                    pageHero.classList.add('minimize');
+            } else {
+                    pageHero.classList.remove('minimize');
+                }
+            }
+            
+            // Minimize hero section on scroll
+            if (hero) {
+                if (scrollY > 150) {
+                    hero.classList.add('minimize');
+                } else {
+                    hero.classList.remove('minimize');
+                }
+            }
+            
+            // Do not minimize or hide any content-section text on scroll
+            contentSections.forEach(section => {
+                section.classList.remove('hide-paragraphs');
+            });
+        }
+        
+        window.addEventListener('scroll', function() {
+            // Use requestAnimationFrame for smoother scroll effects
+            if (!isScrolling) {
+                requestAnimationFrame(function() {
+                    handleScrollEffects();
+                    isScrolling = false;
+                });
+                isScrolling = true;
+            }
+        });
+        
+        // Also run on page load and page changes
+        document.addEventListener('DOMContentLoaded', handleScrollEffects);
+        
+        // Run when page changes (for SPA-like behavior)
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    // Check if page content changed
+                    const pageHero = document.querySelector('.page-hero');
+                    if (pageHero) {
+                        setTimeout(handleScrollEffects, 100);
+                    }
+                }
+            });
+        });
+        
+        // Observe changes to the main content area
+        const mainContent = document.querySelector('main');
+        if (mainContent) {
+            observer.observe(mainContent, { childList: true, subtree: true });
+        }
+
+        // Initialize particles when page loads
+        window.addEventListener('load', function() {
+            createParticles();
+            initScrollAnimations();
+        });
+
+        // Enhanced scroll animations
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animatable elements
+            document.querySelectorAll('.animate-on-scroll, .service-card, .stat-card, .feature-card').forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (nav && navLinks && !nav.contains(e.target) && navLinks.classList.contains('show')) {
+                navLinks.classList.remove('show');
+            }
+        });
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const navLinks = document.getElementById('navLinks');
+                if (navLinks && navLinks.classList.contains('show')) {
+                    navLinks.classList.remove('show');
+                }
+            }
+        });
+
+        // Enhanced smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                // Only proceed if href is not empty and not just '#'
+                if (href && href !== '#' && href.length > 1) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Performance optimization: Debounced resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                // Recreate particles on resize for better performance
+                const particlesContainer = document.getElementById('particles');
+                if (particlesContainer) {
+                    particlesContainer.innerHTML = '';
+                    createParticles();
+                }
+            }, 250);
+        });
+
+        // Form validation enhancement
+        const formInputs = document.querySelectorAll('input, textarea, select');
+        formInputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.style.borderColor = '#dc3545';
+                } else {
+                    this.style.borderColor = 'var(--border-glass)';
+                }
+            });
+
+            input.addEventListener('focus', function() {
+                this.style.borderColor = 'var(--primary-purple)';
+            });
+        });
+
+        // Email validation
+        const emailInput = document.querySelector('input[type="email"]');
+        if (emailInput) {
+            emailInput.addEventListener('blur', function() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (this.value && !emailRegex.test(this.value)) {
+                    this.style.borderColor = '#dc3545';
+                    this.setCustomValidity('Please enter a valid email address');
+                } else {
+                    this.style.borderColor = 'var(--border-glass)';
+                    this.setCustomValidity('');
+                }
+            });
+        }
+
+        // Phone number formatting
+        const phoneInput = document.querySelector('input[type="tel"]');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length >= 6) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+                } else if (value.length >= 3) {
+                    value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+                }
+                this.value = value;
+            });
+        }
+
+        // Custom Dropdown with Smooth Animations
+        function initCustomDropdowns() {
+            const customDropdowns = document.querySelectorAll('.custom-dropdown');
+            
+            customDropdowns.forEach(dropdown => {
+                const select = dropdown.querySelector('.native-select');
+                const customSelect = dropdown.querySelector('.custom-dropdown-select');
+                const customText = dropdown.querySelector('.custom-dropdown-text');
+                const options = dropdown.querySelectorAll('.custom-dropdown-option:not(.disabled)');
+                
+                // Update display when native select changes
+                function updateDisplay() {
+                    const selectedOption = select.options[select.selectedIndex];
+                    if (selectedOption && selectedOption.value) {
+                        customText.textContent = selectedOption.text;
+                        customSelect.classList.remove('placeholder');
+                        customSelect.classList.add('selected');
+                        
+                        // Update selected state in options
+                        options.forEach(opt => {
+                            opt.classList.remove('selected');
+                            if (opt.dataset.value === selectedOption.value) {
+                                opt.classList.add('selected');
+                            }
+                        });
+                    } else {
+                        const placeholder = select.querySelector('option[disabled][selected]');
+                        customText.textContent = placeholder ? placeholder.text : 'Please select...';
+                        customSelect.classList.add('placeholder');
+                        customSelect.classList.remove('selected');
+                        options.forEach(opt => opt.classList.remove('selected'));
+                    }
+                }
+                
+                // Toggle dropdown
+                customSelect.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isOpen = dropdown.classList.contains('open');
+                    
+                    // Close all other dropdowns
+                    customDropdowns.forEach(d => {
+                        if (d !== dropdown) {
+                            d.classList.remove('open');
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    dropdown.classList.toggle('open');
+                });
+                
+                // Handle option selection
+                options.forEach(option => {
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const value = this.dataset.value;
+                        select.value = value;
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                        updateDisplay();
+                        dropdown.classList.remove('open');
+                    });
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+                
+                // Keyboard navigation
+                customSelect.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        dropdown.classList.toggle('open');
+                    } else if (e.key === 'Escape') {
+                        dropdown.classList.remove('open');
+                    }
+                });
+                
+                // Handle arrow key navigation in dropdown
+                let currentIndex = -1;
+                dropdown.addEventListener('keydown', function(e) {
+                    if (!dropdown.classList.contains('open')) return;
+                    
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        currentIndex = Math.min(currentIndex + 1, options.length - 1);
+                        options[currentIndex].focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        currentIndex = Math.max(currentIndex - 1, 0);
+                        options[currentIndex].focus();
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (currentIndex >= 0 && options[currentIndex]) {
+                            options[currentIndex].click();
+                        }
+                    }
+                });
+                
+                // Make options focusable
+                options.forEach(option => {
+                    option.setAttribute('tabindex', '0');
+                });
+                
+                // Sync with native select changes
+                select.addEventListener('change', updateDisplay);
+                
+                // Initial display update
+                updateDisplay();
+            });
+        }
+        
+        // Initialize custom dropdowns when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCustomDropdowns);
+        } else {
+            initCustomDropdowns();
+        }
+
+        // Add loading states for better UX
+        function addLoadingState(element) {
+            element.style.opacity = '0.7';
+            element.style.pointerEvents = 'none';
+        }
+
+        function removeLoadingState(element) {
+            element.style.opacity = '1';
+            element.style.pointerEvents = 'auto';
+        }
+
+        // Service card interactions
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial page
+            showPage('home');
+            
+            // Add entrance animations
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // SEO and Analytics ready functions
+        function trackPageView(page) {
+            // Add your analytics tracking code here
+            console.log(`Page viewed: ${page}`);
+        }
+
+        function trackFormSubmission(formData) {
+            // Add your analytics tracking for form submissions
+            console.log('Form submitted:', formData);
+        }
+
+        // Enhanced accessibility
+        document.addEventListener('keydown', function(e) {
+            // Tab navigation improvements
+            if (e.key === 'Tab') {
+                document.body.classList.add('using-keyboard');
+            }
+        });
+
+        document.addEventListener('mousedown', function() {
+            document.body.classList.remove('using-keyboard');
+        });
+
+        // Add CSS for keyboard navigation
+        const style = document.createElement('style');
+        style.textContent = `
+            .using-keyboard *:focus {
+                outline: none !important;
+                box-shadow: 0 0 0 2px var(--primary-purple) !important;
+            }
+            .using-keyboard .custom-dropdown-select:focus {
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 10px rgba(139, 92, 246, 0.2) !important;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

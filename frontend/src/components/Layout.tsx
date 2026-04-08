@@ -128,10 +128,8 @@ export default function Layout() {
             to={isParent ? '/app/parent-portal' : isDriver ? '/app/driver-dashboard' : '/app/dashboard'}
             className="flex items-center min-h-[2.75rem] gap-2"
           >
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-black" style={{ background: 'linear-gradient(135deg, #000666 0%, #1a237e 100%)' }}>
-              <GraduationCap className="w-4 h-4" />
-            </div>
-            <span className="text-lg font-bold text-blue-900 font-headline tracking-tight">EdSchool</span>
+            <img src="/logo.svg" alt="Globoniks Logo" className="w-8 h-8 object-contain" />
+            <span className="text-lg font-bold text-blue-900 font-headline tracking-tight">G Schools</span>
           </Link>
         </div>
 
@@ -202,14 +200,9 @@ export default function Layout() {
         <div className="flex flex-col h-full pt-16 lg:pt-0">
           {/* Logo — Desktop only */}
           <div className="hidden lg:flex items-center gap-3 h-16 px-6 border-b border-slate-200/60">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
-              style={{ background: 'linear-gradient(135deg, #000666 0%, #1a237e 100%)' }}
-            >
-              <GraduationCap className="w-5 h-5" />
-            </div>
+            <img src="/logo.svg" alt="Globoniks Logo" className="w-9 h-9 object-contain" />
             <div>
-              <h1 className="text-base font-bold text-blue-900 font-headline leading-none">EdSchool</h1>
+              <h1 className="text-base font-bold text-blue-900 font-headline leading-none">G Schools</h1>
               <p className="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Management Portal</p>
             </div>
           </div>

@@ -66,7 +66,7 @@ async function main() {
   console.log('✅ Tags created');
 
   // Hash password for all users
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  const hashedPassword = await bcrypt.hash('Guest@68', 10);
 
   // Create SUPER_ADMIN user
   const superAdminUser = await prisma.user.upsert({
@@ -528,8 +528,8 @@ async function main() {
 
   console.log('✅ Parent-Student links created');
 
-  // STEP 8 — Demo users (@test.com, password 123456) for RBAC testing
-  const demoPasswordHash = await bcrypt.hash('123456', 10);
+  // STEP 8 — Demo users (@test.com, password Guest@68) for RBAC testing
+  const demoPasswordHash = await bcrypt.hash('Guest@68', 10);
 
   const superAdminTest = await prisma.user.upsert({
     where: { email: 'superadmin@test.com' },

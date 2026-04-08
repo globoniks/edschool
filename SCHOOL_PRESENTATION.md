@@ -135,3 +135,7 @@ See **DEPLOYMENT.md** for step-by-step server setup.
 ## Next Steps
 
 We can schedule a demo, set up a trial instance, or prepare a custom deployment plan. Contact [your contact details].
+
+**Related documents:**
+- **FEATURES_AND_USER_FLOWS.md** — Features list and step-by-step user flows (Admin setup, Teacher day, Parent journey) for presenting to school admin.
+- **USER_GUIDE.md** — Detailed user guide for all roles.

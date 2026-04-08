@@ -99,7 +99,7 @@ export default function PWAInstallPrompt() {
             <Smartphone className="w-6 h-6 text-white" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-gray-900 text-base">Install EdSchool</h3>
+            <h3 className="font-bold text-gray-900 text-base">Install G Schools</h3>
             <p className="text-xs text-gray-600">
               Access faster with offline support
             </p>
@@ -172,7 +172,7 @@ export default function PWAInstallPrompt() {
           ) : (
             <>
               <div className="flex-1 text-xs text-gray-600 bg-blue-50 p-3 rounded-lg">
-                <p className="font-medium text-primary-700 mb-1">Install EdSchool</p>
+                <p className="font-medium text-primary-700 mb-1">Install G Schools</p>
                 <p className="text-xs">Look for the install icon (⊕) in your browser's address bar, or use the browser menu → "Install app"</p>
               </div>
               <button
