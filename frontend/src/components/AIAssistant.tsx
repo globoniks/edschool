@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Button } from './design-system';
@@ -33,6 +34,7 @@ export default function AIAssistant({
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
 
   const positionClasses = {
     'bottom-right': 'bottom-4 right-4',
@@ -102,6 +104,10 @@ export default function AIAssistant({
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
   };
+
+  if (location.pathname === '/' || location.pathname === '/login') {
+    return null;
+  }
 
   return (
     <div className={clsx('fixed z-50', positionClasses[position], className)}>

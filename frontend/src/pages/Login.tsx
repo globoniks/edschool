@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import api from '../lib/api';
 import { GraduationCap } from 'lucide-react';
@@ -67,13 +67,11 @@ export default function Login() {
       {/* ── Glass Nav ─────────────────────────────────────────── */}
       <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl shadow-sm shadow-blue-900/5">
         <div className="flex items-center justify-between px-6 py-4 max-w-lg mx-auto">
-          <div className="flex items-center gap-2 text-blue-900 font-extrabold font-headline text-xl tracking-tight">
+          <Link to="/" className="flex items-center gap-2 text-blue-900 font-extrabold font-headline text-xl tracking-tight hover:opacity-80 transition-opacity">
             <img src="/logo.svg" alt="Globoniks Logo" className="w-8 h-8 object-contain" />
             G Schools
-          </div>
-          <div className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 text-sm font-bold">
-            ?
-          </div>
+          </Link>
+
         </div>
       </nav>
 
@@ -117,8 +115,8 @@ export default function Login() {
                   if (formErrors.email) setFormErrors({ ...formErrors, email: undefined });
                 }}
                 required
-                placeholder="superadmin@school.com"
-                className={`w-full pl-16 pr-4 py-4 bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-900/30 focus:bg-white transition-all font-semibold text-base text-blue-900 outline-none placeholder:text-slate-400 ${formErrors.email ? 'ring-2 ring-red-400' : ''}`}
+                placeholder="Email Address"
+                className={`w-full text-center pl-14 pr-14 py-4 bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-900/30 focus:bg-white transition-all font-semibold text-base text-blue-900 outline-none placeholder:text-slate-400 ${formErrors.email ? 'ring-2 ring-red-400' : ''}`}
               />
               {formErrors.email && (
                 <p className="text-red-500 text-xs mt-1 ml-1">{formErrors.email}</p>
@@ -140,7 +138,7 @@ export default function Login() {
                 }}
                 required
                 placeholder="Enter Password"
-                className={`w-full pl-16 pr-12 py-4 bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-900/30 focus:bg-white transition-all font-semibold text-base text-blue-900 outline-none placeholder:text-slate-400 ${formErrors.password ? 'ring-2 ring-red-400' : ''}`}
+                className={`w-full text-center pl-14 pr-14 py-4 bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-900/30 focus:bg-white transition-all font-semibold text-base text-blue-900 outline-none placeholder:text-slate-400 ${formErrors.password ? 'ring-2 ring-red-400' : ''}`}
               />
               <button
                 type="button"
@@ -176,10 +174,7 @@ export default function Login() {
           </div>
         </section>
 
-        {/* Demo credentials */}
-        <div className="mt-8 text-center text-sm text-slate-500">
-          <p className="font-medium">Demo: <code className="bg-slate-200 px-2 py-0.5 rounded text-blue-900">superadmin@school.com</code> / <code className="bg-slate-200 px-2 py-0.5 rounded text-blue-900">password123</code></p>
-        </div>
+
 
         {/* Feature trust badges */}
         <div className="mt-10 flex items-center justify-center gap-8">
