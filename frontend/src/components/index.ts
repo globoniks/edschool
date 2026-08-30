@@ -1,5 +1,6 @@
 // Loading States
 export { default as LoadingSpinner } from './LoadingSpinner';
+export { default as Logo, LogoMark } from './Logo';
 export { default as LoadingState } from './LoadingState';
 export { default as Skeleton, SkeletonCard, SkeletonTable, SkeletonList, SkeletonGrid, SkeletonDashboard, SkeletonAvatar, SkeletonButton, SkeletonInput, SkeletonParagraph } from './Skeleton';
 

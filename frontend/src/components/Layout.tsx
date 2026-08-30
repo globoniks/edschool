@@ -24,8 +24,11 @@ import {
   Bus,
   Navigation,
   Shield,
+  ScrollText,
+  KeyRound,
 } from 'lucide-react';
 import BottomNavigation from './BottomNavigation';
+import Logo from './Logo';
 import { usePermissions } from '../hooks/usePermissions';
 import { clsx } from 'clsx';
 
@@ -49,6 +52,7 @@ const navigation: { name: string; href: string; icon: typeof LayoutDashboard; sh
   { name: 'Messages', href: '/app/messages', icon: MessageSquare, show: () => true },
   { name: 'Academic', href: '/app/academic', icon: BookMarked, show: (p) => p.showAcademicSetup() },
   { name: 'Users & permissions', href: '/app/users', icon: User, show: (p) => p.showUsersAndPermissions() },
+  { name: 'Audit trail', href: '/app/audit-logs', icon: ScrollText, show: (p) => p.showUsersAndPermissions() },
 ];
 
 function getProfileHref(role: string | undefined): string {
@@ -128,8 +132,7 @@ export default function Layout() {
             to={isParent ? '/app/parent-portal' : isDriver ? '/app/driver-dashboard' : '/app/dashboard'}
             className="flex items-center min-h-[2.75rem] gap-2"
           >
-            <img src="/logo.svg" alt="Globoniks Logo" className="w-8 h-8 object-contain" />
-            <span className="text-lg font-bold text-blue-900 font-headline tracking-tight">G Schools</span>
+            <Logo variant="compact" size="sm" />
           </Link>
         </div>
 
@@ -173,6 +176,14 @@ export default function Layout() {
                   <UserCircle className="w-4 h-4 flex-shrink-0 text-blue-700" />
                   {isParent ? 'Profile' : 'Account'}
                 </Link>
+                <Link
+                  to="/change-password"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+                  onClick={() => setUserMenuOpen(false)}
+                >
+                  <KeyRound className="w-4 h-4 flex-shrink-0 text-blue-700" />
+                  Change password
+                </Link>
                 <button
                   type="button"
                   onClick={() => { setUserMenuOpen(false); logout(); }}
@@ -200,11 +211,7 @@ export default function Layout() {
         <div className="flex flex-col h-full pt-16 lg:pt-0">
           {/* Logo — Desktop only */}
           <div className="hidden lg:flex items-center gap-3 h-16 px-6 border-b border-slate-200/60">
-            <img src="/logo.svg" alt="Globoniks Logo" className="w-9 h-9 object-contain" />
-            <div>
-              <h1 className="text-base font-bold text-blue-900 font-headline leading-none">G Schools</h1>
-              <p className="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Management Portal</p>
-            </div>
+            <Logo variant="stacked" size="md" subtitle="Management Portal" />
           </div>
 
           {/* Navigation */}

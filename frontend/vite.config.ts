@@ -14,12 +14,12 @@ export default defineConfig({
       srcDir: 'src',
       filename: 'sw.ts',
       injectRegister: 'auto',
-      includeAssets: ['pwa-192x192.png', 'pwa-512x512.png', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.ico', 'favicon.svg', 'pwa-192x192.png', 'pwa-512x512.png', 'apple-touch-icon.png'],
       manifest: {
         name: 'Globoniks Schools - School Management System',
         short_name: 'G Schools',
         description: 'Comprehensive multi-tenant school management system for students, teachers, and parents',
-        theme_color: '#0284c7',
+        theme_color: '#000666',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
@@ -39,7 +39,7 @@ export default defineConfig({
             purpose: 'any'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'pwa-maskable-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'

@@ -89,6 +89,22 @@ export default {
           900: '#111827',
           DEFAULT: '#6b7280',
         },
+        // Globoniks brand palette — the deep indigo of the logo mark.
+        // Use these instead of hardcoding #000666 / #1a237e inline.
+        brand: {
+          50: '#eef0fb',
+          100: '#d9ddf6',
+          200: '#b3bbec',
+          300: '#8c9eff',
+          400: '#5c6bc0',
+          500: '#3949ab',
+          600: '#283593',
+          700: '#1a237e',
+          800: '#0d1360',
+          900: '#000666',
+          950: '#00042e',
+          DEFAULT: '#000666',
+        },
         // Role-specific accent colors (for visual distinction)
         role: {
           admin: '#7c3aed',      // Purple

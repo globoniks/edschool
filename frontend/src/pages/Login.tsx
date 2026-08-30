@@ -5,6 +5,7 @@ import api from '../lib/api';
 import { GraduationCap } from 'lucide-react';
 import { useToast } from '../components/ToastProvider';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Logo, { LogoMark } from '../components/Logo';
 import { isPushSupported, subscribeToPush } from '../utils/pushNotifications';
 
 export default function Login() {
@@ -67,9 +68,8 @@ export default function Login() {
       {/* ── Glass Nav ─────────────────────────────────────────── */}
       <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl shadow-sm shadow-blue-900/5">
         <div className="flex items-center justify-between px-6 py-4 max-w-lg mx-auto">
-          <Link to="/" className="flex items-center gap-2 text-blue-900 font-extrabold font-headline text-xl tracking-tight hover:opacity-80 transition-opacity">
-            <img src="/logo.svg" alt="Globoniks Logo" className="w-8 h-8 object-contain" />
-            G Schools
+          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Logo variant="compact" size="sm" />
           </Link>
 
         </div>
@@ -197,7 +197,7 @@ export default function Login() {
       <footer className="bg-slate-100 pt-6 pb-10 px-6">
         <div className="max-w-lg mx-auto flex flex-col items-center text-center">
           <div className="flex items-center gap-2 text-slate-400 font-bold font-headline text-lg opacity-50 grayscale mb-4">
-            <img src="/logo.svg" alt="Globoniks Logo" className="w-5 h-5 object-contain" />
+            <LogoMark className="w-5 h-5" />
             G Schools
           </div>
           <p className="text-[11px] text-slate-400 font-medium">
