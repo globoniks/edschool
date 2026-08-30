@@ -178,6 +178,33 @@
   white-space: nowrap;
 }
 
+/*
+ * Respect the OS "reduce motion" setting across the whole app.
+ *
+ * Scrolling, blinking and auto-moving content is disorienting or physically
+ * unpleasant for people with vestibular or attention conditions, and WCAG 2.2.2
+ * requires it be stoppable. Nothing here honoured that setting before.
+ *
+ * Animations are reduced to a single instantaneous step rather than removed
+ * outright, so anything that relies on an animation/transition end event still
+ * fires and does not leave the UI stuck mid-state.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-marquee {
+    animation: none !important;
+    white-space: normal;
+  }
+}
+
 /* Scrollbar styling for desktop */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
