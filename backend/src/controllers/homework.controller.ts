@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { appUrl, APP_ROUTES } from '../utils/appUrl.js';
 import { getTeacherAccessibleClasses, getParentAccessibleStudents } from '../utils/permissions.js';
 import { sendPushToUsers } from '../utils/pushNotification.js';
 
@@ -103,7 +104,7 @@ export const createHomework = async (
           sendPushToUsers(userIds, {
             title: 'New Homework',
             body: `${data.title} – due ${homework.dueDate.toLocaleDateString()}`,
-            url: '/edschool/app/homework',
+            url: appUrl(APP_ROUTES.parentHomework),
           });
         }
       }
@@ -295,8 +296,11 @@ export const submitHomework = async (
       throw new AppError('Student not found', 404);
     }
 
-    const homework = await prisma.homework.findUnique({
-      where: { id },
+    const homework = await prisma.homework.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN' ? { schoolId: req.user!.schoolId } : {}),
+      },
     });
 
     if (!homework) {
@@ -357,8 +361,15 @@ export const evaluateHomework = async (
     const { id } = req.params;
     const { marks, remarks } = req.body;
 
-    const submission = await prisma.homeworkSubmission.findUnique({
-      where: { id },
+    // Scope through the parent homework's school, or a teacher can set marks on
+    // a student at another school entirely.
+    const submission = await prisma.homeworkSubmission.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN'
+          ? { homework: { schoolId: req.user!.schoolId } }
+          : {}),
+      },
     });
 
     if (!submission) {

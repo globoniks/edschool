@@ -1,46 +1,26 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware.js';
-import { prisma } from '../lib/prisma.js';
-import { AppError } from '../middleware/errorHandler.js';
 
+/**
+ * GET /api/videos
+ *
+ * NOT IMPLEMENTED. There is no video model in the schema yet.
+ *
+ * This previously returned invented lesson videos whose URLs 404'd. Returning
+ * an empty list lets the page show its "Subject videos will appear here once
+ * uploaded" state instead of advertising lessons that do not exist.
+ *
+ * To implement: add a Video model (schoolId, classId, subjectId, title, url,
+ * thumbnail) and filter by the search/classId/subjectId query params.
+ */
 export const getVideos = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const schoolId = req.user!.schoolId;
-    const { search, classId, subjectId } = req.query;
-
-    // For now, return mock data structure
-    // TODO: Implement actual video library when schema is updated
-    const videos = [
-      {
-        id: '1',
-        title: 'Introduction to Mathematics',
-        subject: 'Mathematics',
-        className: 'Class 10',
-        thumbnail: null,
-        url: '/videos/math-intro.mp4',
-      },
-      {
-        id: '2',
-        title: 'English Grammar Basics',
-        subject: 'English',
-        className: 'Class 10',
-        thumbnail: null,
-        url: '/videos/english-grammar.mp4',
-      },
-    ].filter((video) => {
-      if (search && !video.title.toLowerCase().includes((search as string).toLowerCase())) {
-        return false;
-      }
-      return true;
-    });
-
-    res.json(videos);
+    res.json([]);
   } catch (error) {
     next(error);
   }
 };
-

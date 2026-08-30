@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { appUrl, APP_ROUTES } from '../utils/appUrl.js';
 import { canTeacherAccessClass, getTeacherAccessibleClasses, getParentAccessibleStudents } from '../utils/permissions.js';
 import { sendPushToUsers } from '../utils/pushNotification.js';
 
@@ -149,7 +150,7 @@ export const markBulkAttendance = async (
           const dateStr = data.date.toLocaleDateString();
           sendPushToUsers(
             [...new Set(userIds)],
-            { title: 'Absence Recorded', body: `Your child was marked absent on ${dateStr}.`, url: '/edschool/app/alerts' }
+            { title: 'Absence Recorded', body: `Your child was marked absent on ${dateStr}.`, url: appUrl(APP_ROUTES.parentAlerts) }
           );
         }
       }

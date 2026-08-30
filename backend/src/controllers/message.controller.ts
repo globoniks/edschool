@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { appUrl, APP_ROUTES } from '../utils/appUrl.js';
 import { sendPushToUser } from '../utils/pushNotification.js';
 import { getTeacherAccessibleClasses } from '../utils/permissions.js';
 
@@ -196,7 +197,7 @@ export const sendToClass = async (
       const payload = {
         title: 'New Message (Class)',
         body: (data.subject || data.content).slice(0, 80) + ((data.subject || data.content).length > 80 ? '…' : ''),
-        url: '/edschool/app/messages',
+        url: appUrl(APP_ROUTES.messages),
       };
       const { sendPushToUsers } = await import('../utils/pushNotification.js');
       sendPushToUsers(parentUserIds, payload);
@@ -230,7 +231,7 @@ export const sendMessage = async (
       sendPushToUser(data.receiverId, {
         title: 'New Message',
         body: (data.subject || data.content).slice(0, 80) + ((data.subject || data.content).length > 80 ? '…' : ''),
-        url: '/edschool/app/messages',
+        url: appUrl(APP_ROUTES.messages),
       });
     } catch (_) {}
 
