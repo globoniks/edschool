@@ -45,19 +45,18 @@ party, and two of them touch real money or personal data.
 
 ---
 
-## 🔵 White-labelling — not built
+## 🔵 White-labelling — both models now built
 
-You mentioned this will be white-labelled. It isn't, yet, and it is the largest
-missing piece. Right now **every school sees "G Schools" and the Globoniks logo**.
+You said both models are likely, so both are implemented; they compose rather
+than conflict. What remains is per-deployment configuration, not code.
 
-| # | What | Detail |
+| # | What | Status |
 |---|------|--------|
-| 16 | **`School.logo` is a dead column** | The field exists in `schema.prisma` and is written by the school API, but **nothing in the app ever reads it**. Neither is `School.name` — the school's own identity appears nowhere in the interface a parent or teacher uses. |
-| 17 | **Branding is hardcoded in 4 components** | `Logo.tsx` renders the Globoniks mark and the literal "G Schools" wordmark; `Login.tsx`, `Landing.tsx` and `PWAInstallPrompt.tsx` repeat the name. These need to come from the signed-in user's school. |
-| 18 | **The app shell can't vary per school** | `index.html` (title, `og:` tags, apple app title) and the PWA manifest in `vite.config.ts` (`name`, `short_name`, `theme_color`, icons) are baked in at build time. A single deployment serving many schools cannot give each its own installed-app name, icon or splash colour — that needs a runtime-generated manifest per school. |
-| 19 | **Decide the white-label model** | Two very different builds: **(a)** one deployment, branding resolved per signed-in school — cheaper to run, but the PWA manifest and favicon have to be generated at runtime and the login page can't be branded until you know who's logging in; or **(b)** a deployment per school with build-time branding — simpler and fully branded, but you operate N deployments. I need this answer before building it. |
-
----
+| 16 | **Runtime branding (shared deployment)** — once a user signs in, the app chrome, tab title and install prompt carry their school's name and logo, resolved from the school record on their session. `School.logo` is no longer a dead column. | Built |
+| 17 | **A School settings page** (`/app/school-settings`, admins only) — set the school's name and upload/replace/remove its logo; the chrome rebrands immediately, not at next sign-in. | Built |
+| 18 | **Build-time branding (dedicated deployment)** — set `VITE_BRAND_NAME`, `VITE_BRAND_SHORT_NAME`, `VITE_BRAND_TAGLINE`, `VITE_BRAND_LOGO_URL`, `VITE_BRAND_THEME_COLOR` and build; the login page, install prompt **and the PWA manifest** (installed-app name, icon label, theme colour) take the school's identity. Documented in `frontend/.env.example`. An unset build is exactly the Globoniks-branded product. | Built |
+| 19 | **Known limit: PWA identity on the shared deployment.** The manifest is emitted at build time, so on a shared deployment the *installed app's* name/icon stay "G Schools" for every school, even though everything inside the app rebrands. Fixing that needs a runtime-generated manifest per school (a backend endpoint plus per-school icons). Say the word if shared-deployment schools must have their own installed-app identity. | Open — decide if needed |
+| 20 | **Landing page on dedicated builds.** The public landing is pinned to the vendor identity because its copy is Globoniks marketing. A dedicated school build likely wants "/" to go straight to login instead. One-line change once you confirm. | Open |
 
 ## 🟢 Housekeeping I'd do if you want it
 

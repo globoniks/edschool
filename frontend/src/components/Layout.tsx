@@ -26,6 +26,7 @@ import {
   Shield,
   ScrollText,
   KeyRound,
+  Building2,
 } from 'lucide-react';
 import BottomNavigation from './BottomNavigation';
 import Logo from './Logo';
@@ -53,6 +54,7 @@ const navigation: { name: string; href: string; icon: typeof LayoutDashboard; sh
   { name: 'Academic', href: '/app/academic', icon: BookMarked, show: (p) => p.showAcademicSetup() },
   { name: 'Users & permissions', href: '/app/users', icon: User, show: (p) => p.showUsersAndPermissions() },
   { name: 'Audit trail', href: '/app/audit-logs', icon: ScrollText, show: (p) => p.showUsersAndPermissions() },
+  { name: 'School settings', href: '/app/school-settings', icon: Building2, show: (p) => p.showUsersAndPermissions() },
 ];
 
 function getProfileHref(role: string | undefined): string {

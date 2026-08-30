@@ -1,5 +1,7 @@
 import { useId } from 'react';
 import { clsx } from 'clsx';
+import { useBrand } from '../hooks/useBrand';
+import { VENDOR_BRAND, type Brand } from '../lib/brand';
 
 /**
  * Globoniks Schools brand mark — the "G" globe.
@@ -55,9 +57,30 @@ interface LogoProps {
   /** `mark` is the tile alone; `compact` adds the wordmark; `stacked` adds a subtitle under it. */
   variant?: 'mark' | 'compact' | 'stacked';
   size?: LogoSize;
-  /** Subtitle for the `stacked` variant. */
+  /** Subtitle for the `stacked` variant; defaults to the brand tagline. */
   subtitle?: string;
+  /**
+   * Pin the vendor identity regardless of who is signed in — for surfaces that
+   * are Globoniks' own (the public landing page), not the school's.
+   */
+  vendor?: boolean;
   className?: string;
+}
+
+/**
+ * The mark for the current brand: the school's uploaded logo when one exists,
+ * the built-in G globe otherwise. School logos are arbitrary images, so they
+ * get contained in the same rounded square footprint as the globe.
+ */
+function BrandMark({ brand, className }: { brand: Brand; className?: string }) {
+  if (!brand.logoUrl) return <LogoMark className={className} />;
+  return (
+    <img
+      src={brand.logoUrl}
+      alt={brand.name}
+      className={clsx('shrink-0 rounded-xl object-contain', className)}
+    />
+  );
 }
 
 const markSize: Record<LogoSize, string> = {
@@ -76,27 +99,31 @@ export default function Logo({
   variant = 'compact',
   size = 'md',
   subtitle,
+  vendor = false,
   className,
 }: LogoProps) {
+  const viewerBrand = useBrand();
+  const brand = vendor ? VENDOR_BRAND : viewerBrand;
+
   if (variant === 'mark') {
-    return <LogoMark className={clsx(markSize[size], className)} />;
+    return <BrandMark brand={brand} className={clsx(markSize[size], className)} />;
   }
 
   return (
     <span className={clsx('flex items-center gap-2.5', className)}>
-      <LogoMark className={markSize[size]} />
+      <BrandMark brand={brand} className={markSize[size]} />
       <span className="flex flex-col leading-tight min-w-0">
         <span
           className={clsx(
-            'font-headline font-extrabold tracking-tight text-brand-900',
+            'font-headline font-extrabold tracking-tight text-brand-900 truncate',
             wordSize[size]
           )}
         >
-          G Schools
+          {brand.shortName}
         </span>
-        {variant === 'stacked' && (
+        {variant === 'stacked' && (subtitle ?? brand.tagline) && (
           <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 truncate">
-            {subtitle ?? 'Globoniks Schools'}
+            {subtitle ?? brand.tagline}
           </span>
         )}
       </span>

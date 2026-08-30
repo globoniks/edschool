@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import { ToastProvider } from './components/ToastProvider';
@@ -8,6 +8,7 @@ import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import AIAssistant from './components/AIAssistant';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import { useBrand } from './hooks/useBrand';
 
 // Lazy load pages for code splitting
 const Landing = lazy(() => import('./pages/Landing'));
@@ -36,6 +37,7 @@ const Drivers = lazy(() => import('./pages/Drivers'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const ChangePassword = lazy(() => import('./pages/ChangePassword'));
 const AuditLogs = lazy(() => import('./pages/AuditLogs'));
+const SchoolSettings = lazy(() => import('./pages/SchoolSettings'));
 
 // Parent-specific pages
 const ParentAttendance = lazy(() => import('./pages/parent/Attendance'));
@@ -52,6 +54,15 @@ const ParentDownloads = lazy(() => import('./pages/parent/Downloads'));
 const ParentMessages = lazy(() => import('./pages/parent/Messages'));
 const ParentProfile = lazy(() => import('./pages/parent/Profile'));
 const ParentAlerts = lazy(() => import('./pages/parent/Alerts'));
+
+/** Keeps the tab title on the viewer's brand — the school's name once signed in. */
+function BrandTitle() {
+  const brand = useBrand();
+  useEffect(() => {
+    document.title = `${brand.name} - School Management`;
+  }, [brand.name]);
+  return null;
+}
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -120,6 +131,7 @@ function AppRoutes() {
           <Route path="drivers" element={<Drivers />} />
           <Route path="users" element={<Users />} />
           <Route path="audit-logs" element={<AuditLogs />} />
+          <Route path="school-settings" element={<SchoolSettings />} />
           <Route path="leave" element={<Leave />} />
 
           {/* Parent-specific routes */}
@@ -172,6 +184,7 @@ function App() {
         }}
       >
         <ErrorBoundary>
+          <BrandTitle />
           <AppRoutes />
           <AIAssistant position="bottom-right" />
           <PWAInstallPrompt />

@@ -247,7 +247,7 @@ export default function Landing() {
             className="rounded-lg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
             aria-label="Globoniks Schools, home"
           >
-            <Logo variant="stacked" size="md" />
+            <Logo variant="stacked" size="md" vendor />
           </Link>
 
           <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">

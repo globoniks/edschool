@@ -6,9 +6,11 @@ import { GraduationCap } from 'lucide-react';
 import { useToast } from '../components/ToastProvider';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Logo, { LogoMark } from '../components/Logo';
+import { useBrand } from '../hooks/useBrand';
 import { isPushSupported, subscribeToPush } from '../utils/pushNotifications';
 
 export default function Login() {
+  const brand = useBrand();
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
   const { showError } = useToast();
@@ -82,7 +84,7 @@ export default function Login() {
         <div className="mb-10 relative">
           <div className="absolute -top-6 -right-4 w-32 h-32 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
           <h1 className="font-headline text-4xl font-bold text-blue-900 leading-tight mb-3">
-            Welcome back<br />to <span style={{ background: 'linear-gradient(135deg, #000666, #1a237e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Globoniks Schools.</span>
+            Welcome back<br />to <span style={{ background: 'linear-gradient(135deg, #000666, #1a237e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{brand.name}.</span>
           </h1>
           <p className="text-slate-500 font-medium">Log in to manage your school, track students, and communicate effectively.</p>
         </div>

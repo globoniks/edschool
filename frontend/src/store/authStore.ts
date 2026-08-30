@@ -9,6 +9,12 @@ interface User {
   permissions?: string[];
   /** Admin issued a temporary password; the app forces a change before anything else. */
   mustChangePassword?: boolean;
+  /** The user's school — drives white-label branding in the app chrome. */
+  school?: {
+    id: string;
+    name: string;
+    logo?: string | null;
+  } | null;
   profile?: {
     firstName: string;
     lastName: string;
