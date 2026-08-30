@@ -17,15 +17,16 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { showCharts, showMetrics } = useRoleUI();
 
-  // Redirect parents to parent portal
-  if (user?.role === 'PARENT') {
-    return <Navigate to="/app/parent-portal" replace />;
-  }
-
-  // Redirect teachers to teacher dashboard
-  if (user?.role === 'TEACHER') {
-    return <Navigate to="/app/teacher-dashboard" replace />;
-  }
+  // NOTE: the parent/teacher redirects live *below* the hooks, not here.
+  // Returning early above a hook call changes the hook count between renders,
+  // which makes React throw "rendered fewer hooks than expected" the moment a
+  // role changes in-session.
+  const redirectTo =
+    user?.role === 'PARENT'
+      ? '/app/parent-portal'
+      : user?.role === 'TEACHER'
+        ? '/app/teacher-dashboard'
+        : null;
 
   const isAdmin = ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'SUB_ADMIN'].includes(user?.role || '');
   const isParent = user?.role === 'PARENT';
@@ -34,7 +35,7 @@ export default function Dashboard() {
   const { data: parentDashboard } = useQuery({
     queryKey: ['parent-dashboard'],
     queryFn: () => api.get('/parents/dashboard').then((res) => res.data),
-    enabled: isParent,
+    enabled: !redirectTo && isParent,
   });
 
   // Admin Dashboard Stats
@@ -43,31 +44,25 @@ export default function Dashboard() {
     queryFn: async () => {
       if (!isAdmin) return null;
 
-      const [studentsRes, teachersRes, attendanceRes, feesRes] = await Promise.all([
+      const [studentsRes, teachersRes, attendanceRes, feeStats] = await Promise.all([
         api.get('/students?limit=1').then((res) => res.data).catch(() => ({ pagination: { total: 0 }, students: [] })),
         api.get('/teachers?limit=1').then((res) => res.data).catch(() => ({ pagination: { total: 0 }, teachers: [] })),
         api.get('/attendance/stats').then((res) => res.data).catch(() => ({ percentage: 0, total: 0, present: 0 })),
-        api.get('/fees/payments').then((res) => res.data || []).catch(() => []),
+        // Aggregated in the database. A sub-admin without a finance permission
+        // gets a 403 here, and the fee tiles simply read zero for them.
+        api
+          .get('/fees/stats')
+          .then((res) => res.data)
+          .catch(() => ({ collected: 0, pending: 0, collectionRate: 0 })),
       ]);
 
       const totalStudents = studentsRes.pagination?.total || studentsRes.students?.length || 0;
       const totalTeachers = teachersRes.pagination?.total || teachersRes.teachers?.length || 0;
       const attendancePercentage = parseFloat(attendanceRes.percentage || '0');
-      
-      // Fee stats: backend returns payments with amount (paid), finalAmount (total due), status (PAID|PENDING|PARTIAL|FAILED)
-      const allFees = feesRes || [];
-      const totalFees = allFees.reduce((sum: number, fee: any) => sum + (fee.finalAmount || 0), 0);
-      const collectedFees = allFees
-        .filter((fee: any) => fee.status === 'PAID')
-        .reduce((sum: number, fee: any) => sum + (fee.amount ?? fee.finalAmount ?? 0), 0);
-      const pendingFees = allFees
-        .filter((fee: any) => fee.status === 'PENDING' || fee.status === 'PARTIAL')
-        .reduce((sum: number, fee: any) => {
-          const total = fee.finalAmount ?? 0;
-          const paid = fee.amount ?? 0;
-          return sum + Math.max(0, total - paid);
-        }, 0);
-      const collectionRate = totalFees > 0 ? (collectedFees / totalFees) * 100 : 0;
+
+      const collectedFees = feeStats.collected ?? 0;
+      const pendingFees = feeStats.pending ?? 0;
+      const collectionRate = feeStats.collectionRate ?? 0;
 
       // Calculate month-over-month changes (mock for now)
       const studentsChange = 5.2; // +5.2%
@@ -88,7 +83,7 @@ export default function Dashboard() {
         feesChange,
       };
     },
-    enabled: isAdmin,
+    enabled: !redirectTo && isAdmin,
   });
 
   // Alerts for Admin Dashboard
@@ -161,7 +156,7 @@ export default function Dashboard() {
 
       return alertsList;
     },
-    enabled: isAdmin && !!adminStats,
+    enabled: !redirectTo && isAdmin && !!adminStats,
   });
 
   // Chart data for attendance trends (last 7 days)
@@ -184,7 +179,7 @@ export default function Dashboard() {
         return [];
       }
     },
-    enabled: isAdmin,
+    enabled: !redirectTo && isAdmin,
   });
 
   // Chart data for fee collection (last 6 months)
@@ -208,7 +203,7 @@ export default function Dashboard() {
         return [];
       }
     },
-    enabled: isAdmin,
+    enabled: !redirectTo && isAdmin,
   });
 
   // Chart data for student-teacher ratio
@@ -221,7 +216,7 @@ export default function Dashboard() {
         { name: 'Teachers', value: adminStats.teachers },
       ];
     },
-    enabled: isAdmin && !!adminStats,
+    enabled: !redirectTo && isAdmin && !!adminStats,
   });
 
   // Chart data for exam performance
@@ -241,7 +236,7 @@ export default function Dashboard() {
         return [];
       }
     },
-    enabled: isAdmin,
+    enabled: !redirectTo && isAdmin,
   });
 
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
@@ -273,12 +268,13 @@ export default function Dashboard() {
       }
       return {};
     },
-    enabled: !isAdmin && (!isParent || !!parentDashboard),
+    enabled: !redirectTo && !isAdmin && (!isParent || !!parentDashboard),
   });
 
   const { data: announcements } = useQuery({
     queryKey: ['recent-announcements'],
     queryFn: () => api.get('/announcements?limit=5').then((res) => res.data).catch(() => []),
+    enabled: !redirectTo,
   });
 
   // Admin Dashboard KPI Cards
@@ -317,6 +313,11 @@ export default function Dashboard() {
       subtitle: `${adminStats.feeCollectionRate.toFixed(1)}% collection rate`,
     },
   ] : [];
+
+  // Safe here: every hook above has already run.
+  if (redirectTo) {
+    return <Navigate to={redirectTo} replace />;
+  }
 
   return (
     <RoleBasedLayout>

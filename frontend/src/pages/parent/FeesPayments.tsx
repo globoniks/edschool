@@ -24,7 +24,11 @@ export default function ParentFeesPayments() {
 
   const { data: payments } = useQuery({
     queryKey: ['fee-payments', activeChild?.studentId],
-    queryFn: () => api.get('/fees/payments').then((res) => res.data).catch(() => []),
+    queryFn: () =>
+      api
+        .get('/fees/payments', { params: { limit: 10 } })
+        .then((res) => res.data?.payments ?? [])
+        .catch(() => []),
     enabled: !!dashboardData,
   });
 
@@ -125,7 +129,7 @@ export default function ParentFeesPayments() {
         <h2 className="text-lg font-semibold mb-4">Payment History</h2>
         {payments && payments.length > 0 ? (
           <div className="space-y-3">
-            {payments.slice(0, 10).map((payment: any) => (
+            {payments.map((payment: any) => (
               <div key={payment.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div>

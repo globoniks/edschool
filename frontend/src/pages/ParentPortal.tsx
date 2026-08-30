@@ -47,13 +47,6 @@ export default function ParentPortal() {
     enabled: showAlerts && user?.role === 'PARENT',
   });
 
-  // Fetch fees data (HIGH PRIORITY for parents)
-  const { data: feesData } = useQuery({
-    queryKey: ['parent-fees'],
-    queryFn: () => api.get('/fees/payments?status=PENDING').then((res) => res.data || []).catch(() => []),
-    enabled: showFinance && user?.role === 'PARENT',
-  });
-
   // Fetch additional data
   const { data: announcements } = useQuery({
     queryKey: ['announcements'],

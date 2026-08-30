@@ -42,10 +42,14 @@ export default function Fees() {
     queryFn: () => api.get('/fees/structures').then((res) => res.data),
   });
 
-  const { data: payments } = useQuery({
-    queryKey: ['payments'],
-    queryFn: () => api.get('/fees/payments').then((res) => res.data),
+  // Only the five most recent are rendered below, so fetch five — this list
+  // was previously pulling up to 5000 rows to show a handful.
+  const { data: paymentsPage } = useQuery({
+    queryKey: ['payments', 'recent'],
+    queryFn: () => api.get('/fees/payments', { params: { limit: 5 } }).then((res) => res.data),
   });
+  const payments = paymentsPage?.payments;
+  const totalPayments = paymentsPage?.pagination?.total ?? 0;
 
   const { data: students } = useQuery({
     queryKey: ['students-for-payment', isPaymentModalOpen],
@@ -202,9 +206,16 @@ export default function Fees() {
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold mb-4">Recent Payments</h2>
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="text-xl font-semibold">Recent Payments</h2>
+            {totalPayments > 0 && (
+              <span className="text-sm text-gray-500">
+                showing {payments?.length ?? 0} of {totalPayments}
+              </span>
+            )}
+          </div>
           <div className="space-y-3">
-            {payments?.slice(0, 5).map((payment: any) => (
+            {payments?.map((payment: any) => (
               <div key={payment.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div>

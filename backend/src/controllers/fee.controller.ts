@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../middleware/errorHandler.js';
+import { recordAudit } from '../utils/auditLog.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { appUrl, APP_ROUTES } from '../utils/appUrl.js';
 import { getParentAccessibleStudents, canParentAccessStudent } from '../utils/permissions.js';
 import { sendPushToUsers } from '../utils/pushNotification.js';
 
@@ -131,10 +133,28 @@ export const createPayment = async (
         sendPushToUsers(userIds, {
           title: 'Fee Payment Recorded',
           body: `Receipt ${payment.receiptNumber} – ${payment.feeStructure.name}.`,
-          url: '/edschool/app/fees',
+          url: appUrl(APP_ROUTES.parentFees),
         });
       }
     } catch (_) {}
+
+    await recordAudit(req, {
+      action: 'fee_payment.created',
+      entity: 'FeePayment',
+      entityId: payment.id,
+      summary:
+        `Recorded ${payment.feeStructure.name} of ${payment.finalAmount} ` +
+        `(receipt ${payment.receiptNumber}) for ` +
+        `${payment.student.firstName} ${payment.student.lastName}`,
+      metadata: {
+        studentId: data.studentId,
+        amount: data.amount,
+        discount,
+        scholarship,
+        finalAmount,
+        receiptNumber: payment.receiptNumber,
+      },
+    });
 
     res.status(201).json(payment);
   } catch (error) {
@@ -151,8 +171,14 @@ export const updatePayment = async (
     const { id } = req.params;
     const { status, paymentDate, paymentMethod, transactionId } = req.body;
 
-    const payment = await prisma.feePayment.findUnique({
-      where: { id },
+    // FeePayment has no schoolId of its own — the tenant comes from the student.
+    const payment = await prisma.feePayment.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN'
+          ? { student: { schoolId: req.user!.schoolId } }
+          : {}),
+      },
     });
 
     if (!payment) {
@@ -173,6 +199,20 @@ export const updatePayment = async (
       },
     });
 
+    await recordAudit(req, {
+      action: 'fee_payment.updated',
+      entity: 'FeePayment',
+      entityId: updated.id,
+      summary:
+        `Receipt ${updated.receiptNumber}: status ${payment.status} -> ${updated.status}`,
+      metadata: {
+        previousStatus: payment.status,
+        newStatus: updated.status,
+        paymentMethod: updated.paymentMethod,
+        transactionId: updated.transactionId,
+      },
+    });
+
     res.json(updated);
   } catch (error) {
     next(error);
@@ -185,7 +225,7 @@ export const getPayments = async (
   next: NextFunction
 ) => {
   try {
-    const { studentId, status, startDate, endDate } = req.query;
+    const { studentId, status, startDate, endDate, page, limit } = req.query;
 
     const where: any = {};
 
@@ -234,17 +274,48 @@ export const getPayments = async (
     }
 
     const MAX_PAYMENTS_LIST = 5000;
-    const payments = await prisma.feePayment.findMany({
-      where,
-      include: {
-        student: true,
-        feeStructure: true,
-      },
-      orderBy: { createdAt: 'desc' },
-      take: MAX_PAYMENTS_LIST,
-    });
+    const include = { student: true, feeStructure: true };
+    const orderBy = { createdAt: 'desc' as const };
 
-    res.json(payments);
+    // Pagination is opt-in: callers that need the whole set (the dashboard's
+    // fee totals) still get a plain array, while list views ask for a page and
+    // get an envelope. Changing the shape unconditionally would break every
+    // existing caller.
+    const wantsPage = page !== undefined || limit !== undefined;
+
+    if (!wantsPage) {
+      const payments = await prisma.feePayment.findMany({
+        where,
+        include,
+        orderBy,
+        take: MAX_PAYMENTS_LIST,
+      });
+      return res.json(payments);
+    }
+
+    const limitNum = Math.min(Math.max(1, Number(limit) || 25), MAX_PAYMENTS_LIST);
+    const pageNum = Math.max(1, Number(page) || 1);
+
+    const [payments, total] = await Promise.all([
+      prisma.feePayment.findMany({
+        where,
+        include,
+        orderBy,
+        skip: (pageNum - 1) * limitNum,
+        take: limitNum,
+      }),
+      prisma.feePayment.count({ where }),
+    ]);
+
+    res.json({
+      payments,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.max(1, Math.ceil(total / limitNum)),
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -308,3 +379,63 @@ export const getFeeDues = async (
   }
 };
 
+
+/**
+ * GET /api/fees/stats — fee totals computed in the database.
+ *
+ * The dashboard used to fetch every payment row and add them up in the browser,
+ * which meant shipping thousands of records to render four numbers. These are
+ * the same figures, aggregated server-side.
+ *
+ * Raw SQL rather than Prisma's aggregate because `pending` needs a per-row
+ * GREATEST(0, due - paid): summing the two columns separately and subtracting
+ * would let an overpaid row cancel out a genuine due elsewhere.
+ */
+export const getFeeStats = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const actor = req.user!;
+
+    // SUPER_ADMIN may inspect one school; everyone else is pinned to their own.
+    const requestedSchoolId =
+      typeof req.query.schoolId === 'string' ? req.query.schoolId : undefined;
+    const schoolId =
+      actor.role === 'SUPER_ADMIN' ? requestedSchoolId ?? actor.schoolId : actor.schoolId;
+
+    if (!schoolId) {
+      throw new AppError('School context required', 400);
+    }
+
+    const [row] = await prisma.$queryRaw<
+      { totalBilled: number; collected: number; pending: number; paymentCount: number }[]
+    >`
+      SELECT
+        COALESCE(SUM(fp."finalAmount"), 0)::double precision AS "totalBilled",
+        COALESCE(SUM(CASE WHEN fp."status" = 'PAID'
+                          THEN fp."amount" ELSE 0 END), 0)::double precision AS "collected",
+        COALESCE(SUM(CASE WHEN fp."status" IN ('PENDING', 'PARTIAL')
+                          THEN GREATEST(0, fp."finalAmount" - fp."amount")
+                          ELSE 0 END), 0)::double precision AS "pending",
+        COUNT(*)::int AS "paymentCount"
+      FROM "FeePayment" fp
+      JOIN "Student" s ON s."id" = fp."studentId"
+      WHERE s."schoolId" = ${schoolId}
+    `;
+
+    const totalBilled = row?.totalBilled ?? 0;
+    const collected = row?.collected ?? 0;
+
+    res.json({
+      totalBilled,
+      collected,
+      pending: row?.pending ?? 0,
+      paymentCount: row?.paymentCount ?? 0,
+      collectionRate: totalBilled > 0 ? (collected / totalBilled) * 100 : 0,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
