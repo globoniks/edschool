@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     // In production, you might want to log to an error reporting service
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       // Example: logErrorToService(error, errorInfo);
     }
   }

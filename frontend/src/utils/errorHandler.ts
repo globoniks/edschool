@@ -27,11 +27,20 @@ export function parseError(error: any): AppError {
     const status = error.response.status;
     const data = error.response.data;
 
+    // Validation failures come back as { error, fields: { path: message } } —
+    // show the actual field problems rather than a bare "Validation failed".
+    const fields: Record<string, string> | undefined = data?.fields;
+    const fieldSummary = fields
+      ? Object.entries(fields)
+          .map(([field, message]) => `${field}: ${message}`)
+          .join(', ')
+      : undefined;
+
     return {
-      message: data?.message || data?.error || getDefaultErrorMessage(status),
+      message: fieldSummary || data?.message || data?.error || getDefaultErrorMessage(status),
       code: data?.code,
       status,
-      details: data?.details || data,
+      details: fields || data?.details || data,
     };
   }
 
@@ -141,7 +150,7 @@ export function logError(error: any, context?: string) {
   });
 
   // In production, send to error tracking service
-  if (process.env.NODE_ENV === 'production') {
+  if (import.meta.env.PROD) {
     // Example: sendToErrorTracking(parsed, context);
   }
 }

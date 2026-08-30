@@ -33,6 +33,9 @@ const DriverDashboard = lazy(() => import('./pages/DriverDashboard'));
 const Users = lazy(() => import('./pages/Users'));
 const Leave = lazy(() => import('./pages/Leave'));
 const Drivers = lazy(() => import('./pages/Drivers'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const ChangePassword = lazy(() => import('./pages/ChangePassword'));
+const AuditLogs = lazy(() => import('./pages/AuditLogs'));
 
 // Parent-specific pages
 const ParentAttendance = lazy(() => import('./pages/parent/Attendance'));
@@ -63,6 +66,10 @@ const getDefaultRoute = (role?: string): string => {
   return '/app/dashboard';
 };
 
+/** Where a signed-in user belongs right now — a temporary password comes first. */
+const getLandingRoute = (user?: { role?: string; mustChangePassword?: boolean }): string =>
+  user?.mustChangePassword ? '/change-password' : getDefaultRoute(user?.role);
+
 // Routes that depend on auth – rendered inside Router so hooks and useNavigate work correctly
 function AppRoutes() {
   const { token, user } = useAuthStore();
@@ -71,9 +78,17 @@ function AppRoutes() {
       <Routes>
         <Route
           path="/"
-          element={token ? <Navigate to={getDefaultRoute(user?.role)} replace /> : <Landing />}
+          element={token ? <Navigate to={getLandingRoute(user ?? undefined)} replace /> : <Landing />}
         />
-        <Route path="/login" element={token ? <Navigate to={getDefaultRoute(user?.role)} replace /> : <Login />} />
+        <Route path="/login" element={token ? <Navigate to={getLandingRoute(user ?? undefined)} replace /> : <Login />} />
+        <Route
+          path="/change-password"
+          element={
+            <ProtectedRoute allowPasswordChange>
+              <ChangePassword />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/app"
           element={
@@ -104,6 +119,7 @@ function AppRoutes() {
           <Route path="driver-dashboard" element={<DriverDashboard />} />
           <Route path="drivers" element={<Drivers />} />
           <Route path="users" element={<Users />} />
+          <Route path="audit-logs" element={<AuditLogs />} />
           <Route path="leave" element={<Leave />} />
 
           {/* Parent-specific routes */}
@@ -121,6 +137,7 @@ function AppRoutes() {
         <Route path="parent/messages" element={<ParentMessages />} />
         <Route path="parent/profile" element={<ParentProfile />} />
         <Route path="parent/alerts" element={<ParentAlerts />} />
+        <Route path="*" element={<NotFound />} />
         </Route>
         {/* Redirect old routes to new /app routes for backward compatibility */}
         <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
@@ -135,6 +152,7 @@ function AppRoutes() {
         <Route path="/messages" element={<Navigate to="/app/messages" replace />} />
         <Route path="/academic" element={<Navigate to="/app/academic" replace />} />
         <Route path="/holidays" element={<Navigate to="/app/holidays" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

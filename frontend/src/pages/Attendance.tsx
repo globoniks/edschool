@@ -58,7 +58,7 @@ export default function Attendance() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const queryClient = useQueryClient();
   const { canMarkAttendance, canManageHR } = usePermissions();
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [attendanceTab, setAttendanceTab] = useState<'students' | 'staff'>('students');
   const showStaffAttendance = user?.role === 'TEACHER' || canManageHR();
 

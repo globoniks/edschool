@@ -109,7 +109,7 @@ export default function ErrorState({
           )}
         </div>
       )}
-      {process.env.NODE_ENV === 'development' && error && typeof error === 'object' && error.stack && (
+      {import.meta.env.DEV && error && typeof error === 'object' && error.stack && (
         <details className="mt-6 text-left w-full max-w-2xl">
           <summary className="cursor-pointer text-sm text-gray-500 mb-2">
             Error Details (Development Only)
