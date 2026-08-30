@@ -10,7 +10,7 @@ import { authenticate, authorizeByPermission, requireParentWithChildren } from '
 
 export const parentRoutes = Router();
 
-parentRoutes.post('/', createParent);
+parentRoutes.post('/', authenticate, authorizeByPermission('manageHR'), createParent);
 parentRoutes.get('/profile', authenticate, requireParentWithChildren, getParent);
 parentRoutes.get('/dashboard', authenticate, requireParentWithChildren, getParentDashboard);
 parentRoutes.get('/homework', authenticate, requireParentWithChildren, getParentHomework);

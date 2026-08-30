@@ -87,8 +87,14 @@ export const updateHoliday = async (
     const { id } = req.params;
     const data = createHolidaySchema.partial().parse(req.body);
 
-    const holiday = await prisma.holiday.findUnique({
-      where: { id },
+    // findFirst scoped to the caller's school, not findUnique by id: otherwise
+    // a school admin can edit another school's calendar. A miss returns 404
+    // rather than 403 so the id's existence isn't disclosed.
+    const holiday = await prisma.holiday.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN' ? { schoolId: req.user!.schoolId } : {}),
+      },
     });
 
     if (!holiday) {
@@ -114,8 +120,12 @@ export const deleteHoliday = async (
   try {
     const { id } = req.params;
 
-    const holiday = await prisma.holiday.findUnique({
-      where: { id },
+    // Same scoping as update — deleting another school's holiday is worse.
+    const holiday = await prisma.holiday.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN' ? { schoolId: req.user!.schoolId } : {}),
+      },
     });
 
     if (!holiday) {

@@ -40,14 +40,19 @@ export const createSchool = async (
   }
 };
 
+/** SUPER_ADMIN sees the whole platform; everyone else only ever sees their own school. */
 export const getSchools = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    const actor = req.user!;
     const schools = await prisma.school.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        ...(actor.role === 'SUPER_ADMIN' ? {} : { id: actor.schoolId }),
+      },
       include: {
         _count: {
           select: {
@@ -66,12 +71,17 @@ export const getSchools = async (
 };
 
 export const getSchool = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
+    const actor = req.user!;
+
+    if (actor.role !== 'SUPER_ADMIN' && id !== actor.schoolId) {
+      throw new AppError('Access denied to this school', 403);
+    }
 
     const school = await prisma.school.findUnique({
       where: { id },
@@ -98,12 +108,19 @@ export const getSchool = async (
 };
 
 export const updateSchool = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
+    const actor = req.user!;
+
+    // A SCHOOL_ADMIN may only edit their own school, not any id they can guess.
+    if (actor.role !== 'SUPER_ADMIN' && id !== actor.schoolId) {
+      throw new AppError('Access denied to this school', 403);
+    }
+
     const data = createSchoolSchema.partial().parse(req.body);
 
     const school = await prisma.school.update({

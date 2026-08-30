@@ -108,7 +108,16 @@ export const deleteFile = async (req: AuthRequest, res: Response, next: NextFunc
   try {
     const { filename } = req.params;
     const schoolId = req.user!.schoolId;
-    const filePath = path.join(uploadsDir, schoolId, filename);
+
+    // req.params is URL-decoded, so a '..%2F..%2F' filename would otherwise walk
+    // out of the school's directory. Strip any path segments, then verify the
+    // resolved path really is inside the school's upload folder.
+    const schoolDir = path.resolve(uploadsDir, schoolId);
+    const filePath = path.resolve(schoolDir, path.basename(filename));
+
+    if (filePath !== schoolDir && !filePath.startsWith(schoolDir + path.sep)) {
+      throw new AppError('Invalid filename', 400);
+    }
 
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);

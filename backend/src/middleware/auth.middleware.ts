@@ -32,6 +32,7 @@ export const authenticate = async (
       email: string;
       role: string;
       schoolId: string;
+      iat?: number;
     };
 
     const user = await prisma.user.findUnique({
@@ -44,6 +45,22 @@ export const authenticate = async (
 
     if (!user || !user.isActive) {
       throw new AppError('User not found or inactive', 401);
+    }
+
+    // A password change (self-service or an admin reset) retires every token
+    // issued before it, so a rotation actually ends existing sessions instead
+    // of leaving them valid for the remainder of the token's lifetime.
+    //
+    // `iat` only has second granularity, so a token minted in the *same* second
+    // as the change would survive a strict `<` comparison — a small but real
+    // hole. No legitimate token is ever issued in the same second as a password
+    // change (neither login nor register stamps passwordChangedAt), so tokens
+    // from that second are retired too.
+    if (user.passwordChangedAt && decoded.iat) {
+      const changedAtSeconds = Math.floor(user.passwordChangedAt.getTime() / 1000);
+      if (decoded.iat <= changedAtSeconds) {
+        throw new AppError('Session expired, please sign in again', 401);
+      }
     }
 
     const permissions = getUserPermissions(user);

@@ -3,6 +3,7 @@ import { AppError } from '../middleware/errorHandler.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { appUrl, APP_ROUTES } from '../utils/appUrl.js';
 import { sendPushToSchool, sendPushToSchoolRole } from '../utils/pushNotification.js';
 
 const createAnnouncementSchema = z.object({
@@ -48,7 +49,7 @@ export const createAnnouncement = async (
       const payload = {
         title: data.title,
         body: data.content.slice(0, 120) + (data.content.length > 120 ? '…' : ''),
-        url: '/edschool/app/notices',
+        url: appUrl(APP_ROUTES.announcements),
       };
       if (data.targetAudience.includes('ALL')) {
         sendPushToSchool(schoolId, payload);
@@ -123,8 +124,11 @@ export const getAnnouncement = async (
   try {
     const { id } = req.params;
 
-    const announcement = await prisma.announcement.findUnique({
-      where: { id },
+    const announcement = await prisma.announcement.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN' ? { schoolId: req.user!.schoolId } : {}),
+      },
     });
 
     if (!announcement) {

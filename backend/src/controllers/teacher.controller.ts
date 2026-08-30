@@ -127,8 +127,13 @@ export const getTeacher = async (
   try {
     const { id } = req.params;
 
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+    // Scoped to the caller's school: findUnique by id alone exposes another
+    // school's staff records, including their user profile.
+    const teacher = await prisma.teacher.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN' ? { schoolId: req.user!.schoolId } : {}),
+      },
       include: {
         user: {
           include: {
@@ -158,8 +163,11 @@ export const updateTeacher = async (
     const { id } = req.params;
     const data = createTeacherSchema.partial().parse(req.body);
 
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+    const teacher = await prisma.teacher.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN' ? { schoolId: req.user!.schoolId } : {}),
+      },
     });
 
     if (!teacher) {
@@ -192,8 +200,11 @@ export const deleteTeacher = async (
   try {
     const { id } = req.params;
 
-    const teacher = await prisma.teacher.findUnique({
-      where: { id },
+    const teacher = await prisma.teacher.findFirst({
+      where: {
+        id,
+        ...(req.user!.role !== 'SUPER_ADMIN' ? { schoolId: req.user!.schoolId } : {}),
+      },
     });
 
     if (!teacher) {
