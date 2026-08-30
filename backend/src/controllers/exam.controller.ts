@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../middleware/errorHandler.js';
+import { recordAudit } from '../utils/auditLog.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { appUrl, APP_ROUTES } from '../utils/appUrl.js';
 import { getTeacherAccessibleSubjects, getParentAccessibleStudents, getParentAccessibleClasses, canParentAccessStudent } from '../utils/permissions.js';
 import { sendPushToUsers } from '../utils/pushNotification.js';
 
@@ -154,6 +156,20 @@ export const createExamMark = async (
         data,
       });
 
+      await recordAudit(req, {
+        action: 'exam_mark.updated',
+        entity: 'ExamMark',
+        entityId: updated.id,
+        summary: `Changed marks from ${existing.marksObtained} to ${updated.marksObtained} (of ${updated.maxMarks})`,
+        metadata: {
+          examId: data.examId,
+          studentId: data.studentId,
+          subjectId: data.subjectId,
+          previousMarks: existing.marksObtained,
+          newMarks: updated.marksObtained,
+        },
+      });
+
       return res.json(updated);
     }
 
@@ -163,6 +179,22 @@ export const createExamMark = async (
         exam: true,
         student: true,
         subject: true,
+      },
+    });
+
+    await recordAudit(req, {
+      action: 'exam_mark.created',
+      entity: 'ExamMark',
+      entityId: mark.id,
+      summary:
+        `Entered ${mark.marksObtained}/${mark.maxMarks} for ` +
+        `${mark.student?.firstName ?? ''} ${mark.student?.lastName ?? ''}`.trim() +
+        ` in ${mark.subject?.name ?? 'subject'} (${mark.exam?.name ?? 'exam'})`,
+      metadata: {
+        examId: data.examId,
+        studentId: data.studentId,
+        subjectId: data.subjectId,
+        marksObtained: mark.marksObtained,
       },
     });
 
@@ -179,7 +211,7 @@ export const createExamMark = async (
         sendPushToUsers(userIds, {
           title: 'New Exam Result',
           body: `${examName} – ${subjName} result is available.`,
-          url: '/edschool/app/alerts',
+          url: appUrl(APP_ROUTES.parentAlerts),
         });
       }
     } catch (_) {}

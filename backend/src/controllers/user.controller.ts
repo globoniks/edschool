@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { AppError } from '../middleware/errorHandler.js';
+import { randomBytes } from 'crypto';
+import { hashPassword } from '../utils/password.util.js';
+import { recordAudit } from '../utils/auditLog.js';
 
 const updateTagsSchema = z.object({
   tagSlugs: z.array(z.string()).min(0),
@@ -115,8 +118,92 @@ export const updateUserTags = async (req: AuthRequest, res: Response, next: Next
       where: { id: userId },
       include: { userTags: { include: { tag: { select: { slug: true } } } } },
     });
+
+    await recordAudit(req, {
+      action: 'user.tags_updated',
+      entity: 'User',
+      entityId: userId,
+      summary: `Set permissions for ${targetUser.email} to [${body.tagSlugs.join(', ') || 'none'}]`,
+      metadata: { tagSlugs: body.tagSlugs },
+      schoolId: targetUser.schoolId || undefined,
+    });
+
     res.json({
       tags: updated?.userTags.map((ut) => ut.tag.slug) ?? [],
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Generate a readable temporary password.
+ *
+ * Uses a crypto RNG (not Math.random) and an alphabet with the characters that
+ * get misread over the phone removed — 0/O, 1/l/I — because an admin normally
+ * reads this out to a parent.
+ */
+const TEMP_PASSWORD_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+
+const generateTempPassword = (length = 12): string => {
+  const bytes = randomBytes(length);
+  let out = '';
+  for (let i = 0; i < length; i++) {
+    out += TEMP_PASSWORD_ALPHABET[bytes[i] % TEMP_PASSWORD_ALPHABET.length];
+  }
+  return out;
+};
+
+/**
+ * POST /api/users/:id/reset-password — admin issues a temporary password.
+ *
+ * There is no email or SMS in this system yet, so the new password is returned
+ * once in the response for the admin to hand over, and the account is flagged
+ * so the owner must replace it at next login. Stamping `passwordChangedAt`
+ * also kills any session the previous password still had open.
+ */
+export const resetUserPassword = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const actor = req.user!;
+
+    const target = await prisma.user.findFirst({
+      where: {
+        id,
+        ...(actor.role !== 'SUPER_ADMIN' ? { schoolId: actor.schoolId } : {}),
+      },
+      select: { id: true, email: true, role: true, schoolId: true },
+    });
+    if (!target) throw new AppError('User not found', 404);
+
+    // A school admin must not be able to seize a super admin account.
+    if (target.role === 'SUPER_ADMIN' && actor.role !== 'SUPER_ADMIN') {
+      throw new AppError('Only a super admin can reset a super admin password', 403);
+    }
+
+    const tempPassword = generateTempPassword();
+
+    await prisma.user.update({
+      where: { id: target.id },
+      data: {
+        password: await hashPassword(tempPassword),
+        mustChangePassword: true,
+        passwordChangedAt: new Date(),
+      },
+    });
+
+    await recordAudit(req, {
+      action: 'user.password_reset',
+      entity: 'User',
+      entityId: target.id,
+      summary: `Issued a temporary password for ${target.email}`,
+      schoolId: target.schoolId || undefined,
+    });
+
+    res.json({
+      message: 'Temporary password issued. Share it with the user — it is shown only once.',
+      email: target.email,
+      temporaryPassword: tempPassword,
     });
   } catch (error) {
     next(error);

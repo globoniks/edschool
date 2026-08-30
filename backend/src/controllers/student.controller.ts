@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../middleware/errorHandler.js';
+import { recordAudit } from '../utils/auditLog.js';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
@@ -85,6 +86,14 @@ export const createStudent = async (
           },
         },
       },
+    });
+
+    await recordAudit(req, {
+      action: 'student.created',
+      entity: 'Student',
+      entityId: student.id,
+      summary: `Admitted student ${student.firstName} ${student.lastName} (${student.admissionNumber})`,
+      metadata: { classId: student.classId },
     });
 
     res.status(201).json(student);
@@ -299,6 +308,14 @@ export const updateStudent = async (
       },
     });
 
+    await recordAudit(req, {
+      action: 'student.updated',
+      entity: 'Student',
+      entityId: updated.id,
+      summary: `Updated student ${updated.firstName} ${updated.lastName} (${updated.admissionNumber})`,
+      metadata: { changedFields: Object.keys(data) },
+    });
+
     res.json(updated);
   } catch (error) {
     next(error);
@@ -325,6 +342,13 @@ export const deleteStudent = async (
     await prisma.student.update({
       where: { id },
       data: { isActive: false },
+    });
+
+    await recordAudit(req, {
+      action: 'student.deleted',
+      entity: 'Student',
+      entityId: student.id,
+      summary: `Deactivated student ${student.firstName} ${student.lastName} (${student.admissionNumber})`,
     });
 
     res.json({ message: 'Student deactivated successfully' });

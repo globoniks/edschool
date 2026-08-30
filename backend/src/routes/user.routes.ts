@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getUsers, getUserById, updateUserTags } from '../controllers/user.controller.js';
+import { getUsers, getUserById, updateUserTags, resetUserPassword } from '../controllers/user.controller.js';
 import { authenticate, authorize } from '../middleware/auth.middleware.js';
 
 export const userRoutes = Router();
@@ -10,3 +10,4 @@ userRoutes.use(authenticate);
 userRoutes.get('/', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN'), getUsers);
 userRoutes.get('/:id', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN'), getUserById);
 userRoutes.patch('/:id/tags', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN'), updateUserTags);
+userRoutes.post('/:id/reset-password', authorize('SUPER_ADMIN', 'SCHOOL_ADMIN'), resetUserPassword);

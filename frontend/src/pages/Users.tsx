@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../lib/api';
-import { X, Tag, Plus, Pencil, Trash2 } from 'lucide-react';
+import { X, Tag, Plus, Pencil, Trash2, KeyRound, Copy, Search, ShieldAlert } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useToast } from '../components/ToastProvider';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -51,24 +51,27 @@ export default function Users() {
   const [tagModal, setTagModal] = useState<{ mode: 'create' | 'edit'; tag?: TagRow } | null>(null);
   const [tagForm, setTagForm] = useState({ name: '', slug: '', type: 'SUB_ADMIN' as 'SUB_ADMIN' | 'TEACHER', permissions: [] as string[] });
   const [deleteTagId, setDeleteTagId] = useState<string | null>(null);
+  const [userSearch, setUserSearch] = useState('');
+  const [resetTarget, setResetTarget] = useState<UserRow | null>(null);
+  const [issuedCredentials, setIssuedCredentials] = useState<{ email: string; password: string } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const canManage = currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'SCHOOL_ADMIN';
-  if (!canManage) {
-    return (
-      <div className="p-4">
-        <p className="text-gray-600">Only School Admin and Super Admin can manage users and permissions.</p>
-      </div>
-    );
-  }
 
+  // The "not permitted" return is below, after every hook — an early return
+  // here would change the hook count between renders and crash React when a
+  // role changes in-session. The queries are gated instead, so a non-admin
+  // never fires a request that would only 403.
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ['users'],
     queryFn: () => api.get('/users').then((res) => res.data),
+    enabled: canManage,
   });
 
   const { data: tags = [], isLoading: tagsLoading } = useQuery({
     queryKey: ['tags'],
     queryFn: () => api.get('/tags').then((res) => res.data),
+    enabled: canManage,
   });
 
   const updateUserTagsMutation = useMutation({
@@ -83,6 +86,30 @@ export default function Users() {
       showError(err?.response?.data?.message || 'Failed to update tags');
     },
   });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: (userId: string) =>
+      api.post(`/users/${userId}/reset-password`).then((res) => res.data),
+    onSuccess: (data: { email: string; temporaryPassword: string }) => {
+      setResetTarget(null);
+      setCopied(false);
+      // Shown once — the server only ever returns the plaintext here.
+      setIssuedCredentials({ email: data.email, password: data.temporaryPassword });
+    },
+    onError: (err: any) => {
+      showError(err?.message || 'Failed to reset the password');
+    },
+  });
+
+  const copyCredentials = async () => {
+    if (!issuedCredentials) return;
+    try {
+      await navigator.clipboard.writeText(issuedCredentials.password);
+      setCopied(true);
+    } catch {
+      showError('Could not copy — please select and copy the password manually.');
+    }
+  };
 
   const createTagMutation = useMutation({
     mutationFn: (body: { name: string; slug: string; type: string; permissions: string[] }) =>
@@ -184,6 +211,23 @@ export default function Users() {
   };
 
   const faculty = users.filter((u: UserRow) => u.role === 'SUB_ADMIN' || u.role === 'TEACHER');
+
+  const searchTerm = userSearch.trim().toLowerCase();
+  const searchedUsers: UserRow[] = searchTerm
+    ? users.filter((u: UserRow) =>
+        [u.email, u.profile?.firstName, u.profile?.lastName, u.role]
+          .filter(Boolean)
+          .some((field) => String(field).toLowerCase().includes(searchTerm))
+      )
+    : [];
+
+  if (!canManage) {
+    return (
+      <div className="p-4">
+        <p className="text-gray-600">Only School Admin and Super Admin can manage users and permissions.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 lg:p-6">
@@ -331,6 +375,134 @@ export default function Users() {
           </div>
         )}
       </section>
+
+      {/* Account password resets — any account, not just faculty, because it is
+          usually a parent who has lost access. */}
+      <section className="mb-10">
+        <div className="mb-3">
+          <h2 className="text-lg font-semibold text-gray-900">Account access</h2>
+          <p className="text-gray-600 text-sm mt-1">
+            Search for an account to issue a temporary password. The user is required to
+            set their own password at next sign-in, and any session they had open is ended.
+          </p>
+        </div>
+
+        <div className="relative mb-3 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="search"
+            value={userSearch}
+            onChange={(e) => setUserSearch(e.target.value)}
+            placeholder="Search by name, email or role"
+            aria-label="Search accounts"
+            className="input pl-9"
+          />
+        </div>
+
+        {searchTerm.length === 0 ? (
+          <p className="text-sm text-gray-400">Start typing to find an account.</p>
+        ) : searchedUsers.length === 0 ? (
+          <p className="text-sm text-gray-500">No accounts match “{userSearch}”.</p>
+        ) : (
+          <ul className="divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden bg-white">
+            {searchedUsers.slice(0, 25).map((u) => (
+              <li key={u.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                <div className="min-w-0">
+                  <span className="font-medium text-gray-900 block truncate">
+                    {u.profile?.firstName} {u.profile?.lastName}
+                  </span>
+                  <span className="block text-sm text-gray-500 truncate">
+                    {u.email} · {u.role.replace(/_/g, ' ').toLowerCase()}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setResetTarget(u)}
+                  className="shrink-0 text-amber-700 hover:text-amber-900 text-sm font-medium inline-flex items-center gap-1"
+                >
+                  <KeyRound className="w-4 h-4" />
+                  Reset password
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {searchedUsers.length > 25 && (
+          <p className="text-xs text-gray-400 mt-2">
+            Showing the first 25 of {searchedUsers.length} matches — refine your search.
+          </p>
+        )}
+      </section>
+
+      {/* Confirm password reset */}
+      {resetTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <h2 className="text-lg font-semibold">Reset this password?</h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  <span className="font-medium">{resetTarget.email}</span> will be signed out
+                  everywhere and given a temporary password that you must pass on to them.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setResetTarget(null)}
+                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={resetPasswordMutation.isPending}
+                onClick={() => resetPasswordMutation.mutate(resetTarget.id)}
+                className="px-4 py-2 text-sm font-semibold text-white rounded-lg bg-amber-600 hover:bg-amber-700 disabled:opacity-60"
+              >
+                {resetPasswordMutation.isPending ? 'Resetting…' : 'Issue temporary password'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* The temporary password, shown once */}
+      {issuedCredentials && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h2 className="text-lg font-semibold mb-1">Temporary password</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              For <span className="font-medium">{issuedCredentials.email}</span>. This is shown
+              only once — copy it now and hand it over securely.
+            </p>
+            <div className="flex items-center gap-2 mb-4">
+              <code className="flex-1 px-3 py-2.5 bg-gray-100 rounded-lg font-mono text-base tracking-wide break-all">
+                {issuedCredentials.password}
+              </code>
+              <button
+                type="button"
+                onClick={copyCredentials}
+                className="shrink-0 px-3 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-50 inline-flex items-center gap-1 text-sm font-medium"
+              >
+                <Copy className="w-4 h-4" />
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIssuedCredentials(null)}
+                className="px-4 py-2 text-sm font-semibold text-white rounded-lg bg-primary-600 hover:bg-primary-700"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit user tags modal */}
       {editUser && (
